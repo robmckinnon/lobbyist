@@ -1,0 +1,25 @@
+.appointment
+  - new_or_existing = appointment.new_record? ? 'new' : 'existing'
+  - prefix = "appointee[#{new_or_existing}_appointment_attributes][]"
+  - fields_for prefix, appointment do |appointment_form|
+    %p
+      Appointment:
+      = label :appointment, :title, 'Title:'
+      = appointment_form.text_field :title
+      = label :appointment, :organisation_name, 'Organisation:'
+      = appointment_form.text_field :organisation_name
+    %p
+      = label :appointment, :acoba_advice, 'Advice:'
+      = appointment_form.text_field :acoba_advice, :size => '40x5'
+      = label :appointment, :date_tendered, 'Tendered:'
+      - if appointment.new_record?
+        = appointment_form.date_select :date_tendered, :index => ''
+      - else
+        = appointment_form.date_select :date_tendered
+      = label :appointment, :date_taken_up, 'Taken up:'
+      - if appointment.new_record?
+        = appointment_form.date_select :date_taken_up, :index => ''
+      - else
+        = appointment_form.date_select :date_taken_up
+      = link_to_function "remove" , "$(this).up('.appointment').remove()"
+

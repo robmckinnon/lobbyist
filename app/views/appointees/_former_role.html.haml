@@ -1,0 +1,17 @@
+.former_role
+  - new_or_existing = former_role.new_record? ? 'new' : 'existing'
+  - prefix = "appointee[#{new_or_existing}_former_role_attributes][]"
+  - fields_for prefix, former_role do |former_role_form|
+    %p
+      Former role:
+      = label :former_role, :title, 'Title:'
+      = former_role_form.text_field :title
+      = label :former_role, :department_name, 'Department:'
+      = former_role_form.text_field :department_name
+      = label :former_role, :leaving_service_date, 'Leaving service:'
+      - if former_role.new_record?
+        = former_role_form.date_select :leaving_service_date, :index => ''
+      - else
+        = former_role_form.date_select :leaving_service_date
+      = link_to_function "delete" , "$(this).up('.former_role').remove()"
+

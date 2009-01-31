@@ -1,0 +1,14 @@
+= error_messages_for :appointee
+
+- form_for @appointee do |f|
+  %p
+    Name:
+    = f.text_field :name
+  #former_roles
+    = render :partial => 'former_role', :collection => @appointee.former_roles
+    = add_former_role_link "Add role"
+  #appointments
+    = render :partial => 'appointment', :collection => @appointee.appointments
+    = add_appointment_link "Add an appointment"
+  %p
+    = f.submit "Submit"
