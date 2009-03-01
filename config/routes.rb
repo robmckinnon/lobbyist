@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.resources :people
   map.resources :appointees
 
   map.root :controller => "appointees"

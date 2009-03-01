@@ -1,0 +1,13 @@
+= error_messages_for :person
+
+- form_for @person do |f|
+  - field_set_tag 'Person' do
+    %p
+      Name *
+      = f.text_field :name
+    %p
+      Wikipedia URL
+      = f.text_field :wikipedia_url
+    %p
+      = f.submit "Submit"
+

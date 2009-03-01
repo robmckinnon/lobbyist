@@ -1,15 +1,36 @@
-class AppointeesController < ActionController::Base
+class AppointeesController < ApplicationController
 
-  layout "application"
+  layout "application", :except => :get_person_name
+
+  before_filter :set_people, :only => [:new, :edit]
+  before_filter :store_location, :only => [:new, :edit]
+
+  def get_person_name
+    person_id = params[:appointee][:person_id]
+    unless person_id.blank?
+      person = Person.find(person_id)
+      @person_name = person.name
+    else
+      @person_name = ''
+    end
+  end
 
   def index
     @appointees = Appointee.all
+  end
+
+  def show
+    @appointee = Appointee.find(params[:id])
   end
 
   def new
     @appointee = Appointee.new
     @appointee.former_roles.build
     @appointee.appointments.build
+  end
+
+  def edit
+    @appointee = Appointee.find(params[:id])
   end
 
   def create
@@ -20,10 +41,6 @@ class AppointeesController < ActionController::Base
     else
       render :action => 'new'
     end
-  end
-
-  def edit
-    @appointee = Appointee.find(params[:id])
   end
 
   def update
@@ -39,4 +56,18 @@ class AppointeesController < ActionController::Base
       render :action => 'edit'
     end
   end
+
+  private
+
+    def set_people
+      @person = nil
+      if person_id = session[:person_id]
+        begin
+          session[:person_id] = nil
+          @person = Person.find(person_id)
+        rescue
+        end
+      end
+      @people = Person.find(:all, :order => "name") || []
+    end
 end

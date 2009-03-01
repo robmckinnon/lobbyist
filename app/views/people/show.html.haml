@@ -1,0 +1,5 @@
+- @title = @person.name
+%p= h @person.inspect
+- @person.appointees.each do |appointee|
+  %p= h appointee.former_roles.inspect
+  %p= h appointee.appointments.inspect

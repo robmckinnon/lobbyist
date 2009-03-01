@@ -1,4 +1,3 @@
 %p
-  Name:
-  = appointee.name
-  = link_to 'Edit', edit_appointee_path(appointee)
+  = link_to appointee.name, edit_appointee_path(appointee)
+  = link_to 'Show', appointee_path(appointee)

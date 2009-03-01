@@ -1,9 +1,12 @@
 class Appointee < ActiveRecord::Base
 
+  belongs_to :person
+
   has_many :former_roles, :dependent => :destroy
   has_many :appointments, :dependent => :destroy
 
   validates_presence_of :name
+  validates_presence_of :person
   validates_associated :former_roles
   validates_associated :appointments
 
