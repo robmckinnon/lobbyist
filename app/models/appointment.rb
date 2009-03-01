@@ -2,6 +2,15 @@ class Appointment < ActiveRecord::Base
 
   belongs_to :appointee
 
+  validates_presence_of :title
+  validates_presence_of :organisation_name
+  validates_presence_of :acoba_advice
+  validates_presence_of :date_tendered
+  validates_presence_of :date_taken_up
+
+  before_validation :set_date_tendered
+  before_validation :set_date_taken_up
+
   def date_tendered_text
     if @date_tendered_text
       @date_tendered_text

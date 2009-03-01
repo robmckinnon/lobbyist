@@ -9,13 +9,18 @@
       p.indent { margin-left: 2em; }
       div.fieldWithErrors input,
       div.fieldWithErrors textarea { border: solid 1px #cc0000; background-color: #ffcccc; }
-      label {width: 8em; float: left; text-align: right; margin-right: 0.5em; display: block; }
+      label {width: 9em; float: left; text-align: right; margin-right: 0.5em; display: block; }
   %body
     #header
       %h1= @title || "WhosLobbying.com"
-    #content= yield
+    #content
+      %p
+        %i= flash[:notice]
+      = yield
     #footer
       %p
         = link_to 'People', people_path
         |
         = link_to 'Appointees', appointees_path
+        |
+        = link_to 'Data sources', data_sources_path

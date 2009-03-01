@@ -3,17 +3,8 @@ class AppointeesController < ApplicationController
   layout "application", :except => :get_person_name
 
   before_filter :set_people, :only => [:new, :edit]
+  before_filter :set_data_sources, :only => [:new, :edit]
   before_filter :store_location, :only => [:new, :edit]
-
-  def get_person_name
-    person_id = params[:appointee][:person_id]
-    unless person_id.blank?
-      person = Person.find(person_id)
-      @person_name = person.name
-    else
-      @person_name = ''
-    end
-  end
 
   def index
     @appointees = Appointee.all
@@ -39,8 +30,7 @@ class AppointeesController < ApplicationController
       flash[:notice] = "Successfully created appointee, former roles and appointments."
       redirect_to appointees_path
     else
-      session[:person_id] = @appointee.person_id
-      set_people
+      set_people_and_data_sources
       render :action => 'new'
     end
   end
@@ -51,16 +41,34 @@ class AppointeesController < ApplicationController
     params[:appointee][:existing_appointment_attributes] ||= {}
 
     if @appointee.update_attributes(params[:appointee])
-      flash[:notice] = "Successfully updated project, former roles and appointments."
+      flash[:notice] = "Successfully updated #{@appointee.name}."
       redirect_to appointees_path
     else
-      session[:person_id] = @appointee.person_id
-      set_people
+      set_people_and_data_sources
       render :action => 'edit'
     end
   end
 
   private
+
+    def set_people_and_data_sources
+      session[:person_id] = @appointee.person_id
+      session[:data_source_id] = @appointee.data_source_id
+      set_people
+      set_data_sources
+    end
+
+    def set_data_sources
+      @data_source = nil
+      if data_source_id = session[:data_source_id]
+        begin
+          session[:data_source_id] = nil
+          @data_source = DataSource.find(data_source_id)
+        rescue
+        end
+      end
+      @data_sources = DataSource.find(:all, :order => "name") || []
+    end
 
     def set_people
       @person = nil

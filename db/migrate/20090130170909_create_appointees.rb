@@ -6,6 +6,8 @@ class CreateAppointees < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :appointees, :person_id
   end
 
   def self.down

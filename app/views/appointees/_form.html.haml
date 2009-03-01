@@ -12,7 +12,15 @@
       = link_to 'create new person', new_person_path
   - field_set_tag 'Appointee' do
     %p
-      Name:
+      Data source
+      - if @data_source
+        = select_tag 'appointee[data_source_id]', options_from_collection_for_select(@data_sources, 'id', 'name', @data_source.id)
+      - else
+        = f.collection_select(:data_source_id, @data_sources, :id, :name, {:prompt => true}, { :index => nil }).gsub('appointee[]','appointee')
+      OR
+      = link_to 'create new data source', new_data_source_path
+    %p
+      Name as appointee
       = f.text_field :name
   - field_set_tag 'Former Roles' do
     #former_roles

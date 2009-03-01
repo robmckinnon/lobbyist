@@ -2,6 +2,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :people
   map.resources :appointees
+  map.resources :data_sources
+  map.resources :organisations
 
   map.root :controller => "appointees"
 

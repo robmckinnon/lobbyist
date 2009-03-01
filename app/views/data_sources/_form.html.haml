@@ -1,0 +1,13 @@
+= error_messages_for :data_source
+
+- form_for @data_source do |f|
+  - field_set_tag 'Data source' do
+    %p
+      = f.label :name
+      = f.text_field :name
+    %p
+      = f.label :url
+      = f.text_field :url
+    %p
+      = f.submit "Submit"
+

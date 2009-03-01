@@ -1,6 +1,7 @@
 class Appointee < ActiveRecord::Base
 
   belongs_to :person
+  belongs_to :data_source
 
   has_many :former_roles, :dependent => :destroy
   has_many :appointments, :dependent => :destroy

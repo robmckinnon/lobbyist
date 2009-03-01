@@ -3,11 +3,14 @@
 - form_for @person do |f|
   - field_set_tag 'Person' do
     %p
-      Name *
+      = f.label :name
       = f.text_field :name
     %p
-      Wikipedia URL
+      = f.label :wikipedia_url, 'Wikipedia URL'
       = f.text_field :wikipedia_url
+    %p
+      = f.label :wikipedia_url, 'SpinWatch URL'
+      = f.text_field :spinwatch_url
     %p
       = f.submit "Submit"
 

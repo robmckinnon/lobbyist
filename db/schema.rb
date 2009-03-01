@@ -9,14 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090228160229) do
+ActiveRecord::Schema.define(:version => 20090301214347) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "data_source_id"
   end
+
+  add_index "appointees", ["data_source_id"], :name => "index_appointees_on_data_source_id"
+  add_index "appointees", ["person_id"], :name => "index_appointees_on_person_id"
 
   create_table "appointments", :force => true do |t|
     t.integer  "appointee_id"
@@ -31,12 +35,38 @@ ActiveRecord::Schema.define(:version => 20090228160229) do
     t.datetime "updated_at"
   end
 
+  add_index "appointments", ["appointee_id"], :name => "index_appointments_on_appointee_id"
+
+  create_table "data_sources", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.integer  "organisation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "data_sources", ["organisation_id"], :name => "index_data_sources_on_organisation_id"
+
   create_table "former_roles", :force => true do |t|
     t.integer  "appointee_id"
     t.integer  "department_id"
     t.string   "title"
     t.string   "department_name"
     t.date     "leaving_service_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "former_roles", ["appointee_id"], :name => "index_former_roles_on_appointee_id"
+  add_index "former_roles", ["department_id"], :name => "index_former_roles_on_department_id"
+
+  create_table "organisations", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.string   "wikipedia_url"
+    t.string   "spinwatch_url"
+    t.string   "companieshouse_url"
+    t.integer  "company_number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

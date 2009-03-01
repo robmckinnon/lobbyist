@@ -9,6 +9,9 @@ class CreateFormerRoles < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :former_roles, :appointee_id
+    add_index :former_roles, :department_id
   end
 
   def self.down

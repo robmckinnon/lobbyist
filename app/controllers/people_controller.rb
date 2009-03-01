@@ -27,6 +27,17 @@ class PeopleController < ApplicationController
     end
   end
 
+  def update
+    @person = Person.find(params[:id])
+
+    if @person.update_attributes(params[:person])
+      flash[:notice] = "Successfully updated #{@person.name}."
+      redirect_to people_path
+    else
+      render :action => 'edit'
+    end
+  end
+
   private
 
     def find_person
