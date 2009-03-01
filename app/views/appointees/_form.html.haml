@@ -16,7 +16,7 @@
       = f.text_field :name
   - field_set_tag 'Former Roles' do
     #former_roles
-      = add_former_role_link "Add role"
+      = add_former_role_link "Add a role"
       = render :partial => 'former_role', :collection => @appointee.former_roles
   - field_set_tag 'Appointments' do
     #appointments

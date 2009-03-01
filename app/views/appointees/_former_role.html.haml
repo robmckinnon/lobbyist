@@ -4,10 +4,12 @@
   - fields_for prefix, former_role do |f|
     %p
       = label :former_role, :title
-      = f.text_field :title, :size=>25
+      = f.text_field :title
+      = link_to_function "delete role" , "$(this).up('.former_role').remove()"
+    %p
       = label :former_role, :department_name, 'Department'
       = f.text_field :department_name
+    %p
       = label :former_role, :leaving_service_date_text, 'Leaving service'
       = f.text_field :leaving_service_date_text, :size=>10
-      = link_to_function "delete" , "$(this).up('.former_role').remove()"
 

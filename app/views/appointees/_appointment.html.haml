@@ -4,17 +4,17 @@
   - fields_for prefix, appointment do |f|
     %p
       = label :appointment, :title
-      = f.text_field :title, :size=>25
+      = f.text_field :title
+      = link_to_function "delete appointment", "$(this).up('.appointment').remove()"
     %p
       = label :appointment, :organisation_name, 'Organisation'
       = f.text_field :organisation_name
     %p
       = label :appointment, :acoba_advice, 'Advice'
-      %br
       = f.text_area :acoba_advice, :size => '40x5'
     %p
       = label :appointment, :date_tendered_text, 'Tendered'
       = f.text_field :date_tendered_text, :size=>10
+    %p
       = label :appointment, :date_taken_up_text, 'Taken up'
       = f.text_field :date_taken_up_text, :size=>10
-      = link_to_function "delete" , "$(this).up('.appointment').remove()"
