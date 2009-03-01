@@ -7,7 +7,8 @@ class Appointee < ActiveRecord::Base
 
   validates_presence_of :name
   validates_presence_of :person
-  validates_associated :former_roles
+
+  validates_associated :former_roles, :message=>'are invalid, one or more dates may be wrong, or titles may be missing'
   validates_associated :appointments
 
   after_update :save_former_roles, :save_appointments

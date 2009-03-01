@@ -1,25 +1,20 @@
 .appointment
   - new_or_existing = appointment.new_record? ? 'new' : 'existing'
   - prefix = "appointee[#{new_or_existing}_appointment_attributes][]"
-  - fields_for prefix, appointment do |appointment_form|
+  - fields_for prefix, appointment do |f|
     %p
-      Appointment:
-      = label :appointment, :title, 'Title:'
-      = appointment_form.text_field :title
-      = label :appointment, :organisation_name, 'Organisation:'
-      = appointment_form.text_field :organisation_name
+      = label :appointment, :title
+      = f.text_field :title, :size=>25
     %p
-      = label :appointment, :acoba_advice, 'Advice:'
-      = appointment_form.text_field :acoba_advice, :size => '40x5'
-      = label :appointment, :date_tendered, 'Tendered:'
-      - if appointment.new_record?
-        = appointment_form.date_select :date_tendered, :index => ''
-      - else
-        = appointment_form.date_select :date_tendered
-      = label :appointment, :date_taken_up, 'Taken up:'
-      - if appointment.new_record?
-        = appointment_form.date_select :date_taken_up, :index => ''
-      - else
-        = appointment_form.date_select :date_taken_up
-      = link_to_function "remove" , "$(this).up('.appointment').remove()"
-
+      = label :appointment, :organisation_name, 'Organisation'
+      = f.text_field :organisation_name
+    %p
+      = label :appointment, :acoba_advice, 'Advice'
+      %br
+      = f.text_area :acoba_advice, :size => '40x5'
+    %p
+      = label :appointment, :date_tendered_text, 'Tendered'
+      = f.text_field :date_tendered_text, :size=>10
+      = label :appointment, :date_taken_up_text, 'Taken up'
+      = f.text_field :date_taken_up_text, :size=>10
+      = link_to_function "delete" , "$(this).up('.appointment').remove()"
