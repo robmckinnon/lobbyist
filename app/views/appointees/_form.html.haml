@@ -1,31 +1,30 @@
-- appointee = form
 = error_messages_for :appointee
 
-- form_for appointee do |f|
+- form_for @appointee do |f|
   - field_set_tag 'Person being appointed' do
     %p
       Choose
       - if @person
         = select_tag 'appointee[person_id]', options_from_collection_for_select(@people, 'id', 'name', @person.id)
       - else
-        = f.collection_select(:person_id, @people, :id, :name, {:prompt => true}, { :index => nil })
-    - form_remote_tag :url => {:action => 'create', :controller => 'person'} do
-      %p
-        OR
-        = link_to 'Create new person', new_person_path
+        = f.collection_select(:person_id, @people, :id, :name, {:prompt => true}, { :index => nil }).gsub('appointee[]','appointee')
+      - form_remote_tag :url => {:action => 'create', :controller => 'person'} do
+        %p
+          OR
+          = link_to 'Create new person', new_person_path
   - field_set_tag 'Appointee' do
     %p
-      Appointee name:
+      Name:
       = f.text_field :name
   - field_set_tag 'Former Roles' do
     #former_roles
-      = render :partial => 'former_role', :collection => appointee.former_roles
+      = render :partial => 'former_role', :collection => @appointee.former_roles
       = add_former_role_link "Add role"
   - field_set_tag 'Appointments' do
     #appointments
-      = render :partial => 'appointment', :collection => appointee.appointments
+      = render :partial => 'appointment', :collection => @appointee.appointments
       = add_appointment_link "Add an appointment"
   %p
-    = f.submit "Save changes"
+    = f.submit "Save"
 
 = link_to 'Back to Appointees', appointees_path

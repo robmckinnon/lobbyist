@@ -39,6 +39,8 @@ class AppointeesController < ApplicationController
       flash[:notice] = "Successfully created appointee, former roles and appointments."
       redirect_to appointees_path
     else
+      session[:person_id] = @appointee.person_id
+      set_people
       render :action => 'new'
     end
   end
@@ -51,8 +53,9 @@ class AppointeesController < ApplicationController
     if @appointee.update_attributes(params[:appointee])
       flash[:notice] = "Successfully updated project, former roles and appointments."
       redirect_to appointees_path
-      # redirect_to appointee_path(@appointee)
     else
+      session[:person_id] = @appointee.person_id
+      set_people
       render :action => 'edit'
     end
   end
