@@ -5,15 +5,15 @@
     %p
       = f.label :name
       = f.text_field :name
-      e.g. use "Baroness Amos" if appointee name is "The Rt Hon Baroness Amos"
+      %span.note e.g. use "Baroness Amos" if appointee name is "The Rt Hon Baroness Amos"
     %p
       = f.label :wikipedia_url, 'Wikipedia URL'
       = f.text_field :wikipedia_url
-      optional
+      %span.note optional
     %p
       = f.label :wikipedia_url, 'SpinWatch URL'
       = f.text_field :spinwatch_url
-      optional
+      %span.note optional
     %p
       = f.submit "Submit"
 

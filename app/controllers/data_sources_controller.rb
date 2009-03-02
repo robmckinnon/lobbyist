@@ -3,6 +3,7 @@ class DataSourcesController < ApplicationController
   before_filter :find_data_source, :only => [:show, :edit]
   before_filter :ensure_current_data_source_url, :only => :show
   before_filter :set_organisations, :only => [:new, :edit]
+  before_filter :store_second_location, :only => [:new, :edit]
 
   def index
     @data_sources = DataSource.all
@@ -24,7 +25,6 @@ class DataSourcesController < ApplicationController
       session[:data_source_id] = @data_source.id
       redirect_back_or_default data_sources_path
     else
-      session[:person_id] = @appointee.person_id
       set_organisations @data_source.organisation_id
       render :action => :new
     end
@@ -43,6 +43,13 @@ class DataSourcesController < ApplicationController
   end
 
   private
+
+    def store_second_location
+      unless @organisation
+        session[:second_return_to] = session[:return_to]
+        session[:return_to] = request.request_uri
+      end
+    end
 
     def set_organisations organisation_id=session[:organisation_id]
       @organisation = nil

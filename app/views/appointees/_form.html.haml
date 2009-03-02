@@ -3,16 +3,17 @@
 - form_for @appointee do |f|
   - field_set_tag 'Person being appointed' do
     %p
-      Select
+      = f.label :person_id, 'Person'
       - if @person
         = select_tag 'appointee[person_id]', options_from_collection_for_select(@people, 'id', 'name', @person.id)
       - else
         = f.collection_select(:person_id, @people, :id, :name, {:prompt => true}, { :index => nil }).gsub('appointee[]','appointee')
       OR
       = link_to 'create new person', new_person_path
+      %span.note e.g. "Baroness Amos"
   - field_set_tag 'Appointee' do
     %p
-      Data source
+      = f.label :data_source_id, 'Data source'
       - if @data_source
         = select_tag 'appointee[data_source_id]', options_from_collection_for_select(@data_sources, 'id', 'name', @data_source.id)
       - else
@@ -20,8 +21,9 @@
       OR
       = link_to 'create new data source', new_data_source_path
     %p
-      Name as appointee
+      = f.label :name, 'Appointee name'
       = f.text_field :name
+      %span.note e.g. "The Rt Hon Baroness Amos"
   - field_set_tag 'Former Roles' do
     #former_roles
       = add_former_role_link "Add a role"

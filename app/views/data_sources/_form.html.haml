@@ -3,19 +3,33 @@
 - form_for @data_source do |f|
   - field_set_tag 'Data source' do
     %p
-      = f.label :name
-      = f.text_field :name
-    %p
-      = f.label :url
-      = f.text_field :url
-    %p
-      Organisation
+      = f.label :organisation_id, 'Organisation'
       - if @organisation
         = select_tag 'appointee[organisation_id]', options_from_collection_for_select(@organisations, 'id', 'name', @organisation.id)
       - else
         = f.collection_select(:organisation_id, @organisations, :id, :name, {:prompt => true}, { :index => nil }).gsub('data_source[]','data_source')
       OR
       = link_to 'create new organisation', new_organisation_path
+    %p
+      = f.label :name, 'Short name'
+      = f.text_field :name
+      %span.note e.g. ACOBA 9th Report 2006–2008
+    %p
+      = f.label :name, 'Long name'
+      = f.text_field :long_name
+      %span.note e.g. The Advisory Committee on Business Appointments Ninth Report 2006–2008
+    %p
+      = f.label :url
+      = f.text_field :url
+      %span.note e.g. http://www.acoba.gov.uk/media/acoba/assets/acobaninthreport2006_08.pdf
+    %p
+      = f.label :period_start_text, 'Period start'
+      = f.text_field :period_start_text, :size=>12
+      %span.note e.g. January 2006
+    %p
+      = f.label :period_end_text, 'Period end'
+      = f.text_field :period_end_text, :size=>12
+      %span.note e.g. December 2008
     %p
       = f.submit "Submit"
 

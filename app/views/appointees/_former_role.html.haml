@@ -3,14 +3,18 @@
   - prefix = "appointee[#{new_or_existing}_former_role_attributes][]"
   - fields_for prefix, former_role do |f|
     %p
-      = label :former_role, :title
+      = f.label :title
       = f.text_field :title
-      = link_to_function "delete role" , "$(this).up('.former_role').remove()"
     %p
-      = label :former_role, :department_name, 'Department'
+      = f.label :department_name, 'Department'
       = f.text_field :department_name
-      optional
+      %span.note optional
     %p
-      = label :former_role, :leaving_service_date_text, 'Leaving service'
+      = f.label :leaving_service_date_text, 'Leaving service'
       = f.text_field :leaving_service_date_text, :size=>10
+      %span.note e.g. January 2008
+    %p
+      %label
+        &nbsp;
+      = link_to_function "delete this role" , "$(this).up('.former_role').remove()"
 

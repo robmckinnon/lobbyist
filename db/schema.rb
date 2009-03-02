@@ -39,8 +39,11 @@ ActiveRecord::Schema.define(:version => 20090301214347) do
 
   create_table "data_sources", :force => true do |t|
     t.string   "name"
+    t.string   "long_name"
     t.string   "url"
     t.integer  "organisation_id"
+    t.date     "period_start"
+    t.date     "period_end"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
