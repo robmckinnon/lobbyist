@@ -1,0 +1,7 @@
+- @title = @organisation.name
+%p= h @organisation.name
+- unless @organisation.data_sources.empty?
+  %h2 Data sources
+  - @organisation.data_sources.each do |data_source|
+    %p= link_to h(data_source.name), data_source_path(data_source)
+

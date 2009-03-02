@@ -1,7 +1,10 @@
 class OrganisationsController < ApplicationController
 
+  before_filter :find_organisation, :only => [:show, :edit]
+  before_filter :store_location, :only => [:index]
+
   def index
-    @organisations = Organisation.all
+    @organisations = Organisation.find(:all, :order => "name")
   end
 
   def new
@@ -34,4 +37,16 @@ class OrganisationsController < ApplicationController
       render :action => 'edit'
     end
   end
+
+  private
+
+    def find_organisation
+      begin
+        @organisation = Organisation.find(params[:id])
+        redirect_to @organisation, :status => :moved_permanently if @organisation.has_better_id?
+      rescue
+        render_not_found
+      end
+    end
+
 end

@@ -3,10 +3,11 @@ class DataSourcesController < ApplicationController
   before_filter :find_data_source, :only => [:show, :edit]
   before_filter :ensure_current_data_source_url, :only => :show
   before_filter :set_organisations, :only => [:new, :edit]
+  before_filter :store_location, :only => [:index]
   before_filter :store_second_location, :only => [:new, :edit]
 
   def index
-    @data_sources = DataSource.all
+    @data_sources = DataSource.find(:all, :order => "name")
   end
 
   def new

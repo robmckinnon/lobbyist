@@ -4,10 +4,10 @@ class AppointeesController < ApplicationController
 
   before_filter :set_people, :only => [:new, :edit]
   before_filter :set_data_sources, :only => [:new, :edit]
-  before_filter :store_location, :only => [:new, :edit]
+  before_filter :store_location, :only => [:index, :new, :edit]
 
   def index
-    @appointees = Appointee.all
+    @appointees = Appointee.find(:all, :order => "name")
   end
 
   def show

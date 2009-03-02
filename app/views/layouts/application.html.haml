@@ -17,8 +17,9 @@
     #header
       %h1= @title || "WhosLobbying.com"
     #content
-      %p
-        %i= flash[:notice]
+      - if flash[:notice]
+        %p
+          %em= flash[:notice]
       = yield
     #footer
       %p
@@ -27,3 +28,5 @@
         = link_to 'Appointees', appointees_path
         |
         = link_to 'Data sources', data_sources_path
+        |
+        = link_to 'Organisations', organisations_path
