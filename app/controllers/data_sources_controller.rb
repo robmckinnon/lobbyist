@@ -2,6 +2,7 @@ class DataSourcesController < ApplicationController
 
   before_filter :find_data_source, :only => [:show, :edit]
   before_filter :ensure_current_data_source_url, :only => :show
+  before_filter :set_organisations, :only => [:new, :edit]
 
   def index
     @data_sources = DataSource.all
@@ -23,6 +24,8 @@ class DataSourcesController < ApplicationController
       session[:data_source_id] = @data_source.id
       redirect_back_or_default data_sources_path
     else
+      session[:person_id] = @appointee.person_id
+      set_organisations @data_source.organisation_id
       render :action => :new
     end
   end
@@ -34,11 +37,24 @@ class DataSourcesController < ApplicationController
       flash[:notice] = "Successfully updated #{@data_source.name}."
       redirect_to data_sources_path
     else
+      set_organisations @data_source.organisation_id
       render :action => 'edit'
     end
   end
 
   private
+
+    def set_organisations organisation_id=session[:organisation_id]
+      @organisation = nil
+      if organisation_id
+        begin
+          session[:organisation_id] = nil
+          @organisation = Organisation.find(organisation_id)
+        rescue
+        end
+      end
+      @organisations = Organisation.find(:all, :order => "name") || []
+    end
 
     def find_data_source
       begin

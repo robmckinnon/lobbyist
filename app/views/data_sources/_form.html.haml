@@ -9,5 +9,13 @@
       = f.label :url
       = f.text_field :url
     %p
+      Organisation
+      - if @organisation
+        = select_tag 'appointee[organisation_id]', options_from_collection_for_select(@organisations, 'id', 'name', @organisation.id)
+      - else
+        = f.collection_select(:organisation_id, @organisations, :id, :name, {:prompt => true}, { :index => nil }).gsub('data_source[]','data_source')
+      OR
+      = link_to 'create new organisation', new_organisation_path
+    %p
       = f.submit "Submit"
 

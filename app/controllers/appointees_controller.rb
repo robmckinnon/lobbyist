@@ -52,15 +52,13 @@ class AppointeesController < ApplicationController
   private
 
     def set_people_and_data_sources
-      session[:person_id] = @appointee.person_id
-      session[:data_source_id] = @appointee.data_source_id
-      set_people
-      set_data_sources
+      set_people @appointee.person_id
+      set_data_sources @appointee.data_source_id
     end
 
-    def set_data_sources
+    def set_data_sources data_source_id=session[:data_source_id]
       @data_source = nil
-      if data_source_id = session[:data_source_id]
+      if data_source_id
         begin
           session[:data_source_id] = nil
           @data_source = DataSource.find(data_source_id)
@@ -70,9 +68,9 @@ class AppointeesController < ApplicationController
       @data_sources = DataSource.find(:all, :order => "name") || []
     end
 
-    def set_people
+    def set_people person_id=session[:person_id]
       @person = nil
-      if person_id = session[:person_id]
+      if person_id
         begin
           session[:person_id] = nil
           @person = Person.find(person_id)

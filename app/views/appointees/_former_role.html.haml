@@ -9,6 +9,7 @@
     %p
       = label :former_role, :department_name, 'Department'
       = f.text_field :department_name
+      optional
     %p
       = label :former_role, :leaving_service_date_text, 'Leaving service'
       = f.text_field :leaving_service_date_text, :size=>10
