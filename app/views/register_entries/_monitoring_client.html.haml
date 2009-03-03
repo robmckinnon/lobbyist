@@ -10,7 +10,7 @@
       )
     %p
       - organisation = monitoring_client.organisation_id ? Organisation.find(monitoring_client.organisation_id) : nil
-      = render :partial=>'organisation', :object=>organisation, :locals=>{:f=>f, :name=>monitoring_client.name, :index=>nil}
+      = render :partial=>'organisation', :object=>organisation, :locals=>{:f=>f, :name=>monitoring_client.name}
     %p
       %label
         &nbsp;

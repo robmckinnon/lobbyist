@@ -8,6 +8,9 @@
     %p
       = f.label :organisation_name, 'Organisation'
       = f.text_field :organisation_name
+    - organisation = appointment.organisation_id.blank? ? nil : Organisation.find(appointment.organisation_id)
+    - name = appointment.organisation_name.blank? ? nil : appointment.organisation_name
+    = render :partial=>'organisation', :object=>organisation, :locals=>{ :f=>f, :name=>name }
     %p
       = f.label :acoba_advice, 'Advice'
       = f.text_area :acoba_advice, :size => '40x5'

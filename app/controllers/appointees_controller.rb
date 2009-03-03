@@ -2,6 +2,7 @@ class AppointeesController < ApplicationController
 
   before_filter :set_people, :only => [:new, :edit]
   before_filter :set_data_sources, :only => [:new, :edit]
+  before_filter :set_organisations, :only => [:new, :edit]
   before_filter :store_location, :only => [:index, :new, :edit]
 
   def index
@@ -16,6 +17,7 @@ class AppointeesController < ApplicationController
     @appointee = Appointee.new
     @appointee.former_roles.build
     @appointee.appointments.build
+    @appointee.appointments.first.organisation_id = nil
   end
 
   def edit
@@ -28,7 +30,7 @@ class AppointeesController < ApplicationController
       flash[:notice] = "Successfully created appointee, former roles and appointments."
       redirect_to appointees_path
     else
-      set_people_and_data_sources
+      set_people_and_data_sources_and_organisations
       render :action => 'new'
     end
   end
@@ -42,27 +44,16 @@ class AppointeesController < ApplicationController
       flash[:notice] = "Successfully updated #{@appointee.name}."
       redirect_to appointees_path
     else
-      set_people_and_data_sources
+      set_people_and_data_sources_and_organisations
       render :action => 'edit'
     end
   end
 
   private
 
-    def set_people_and_data_sources
+    def set_people_and_data_sources_and_organisations
       set_people @appointee.person_id
       set_data_sources @appointee.data_source_id
-    end
-
-    def set_people person_id=session[:person_id]
-      @person = nil
-      if person_id
-        begin
-          session[:person_id] = nil
-          @person = Person.find(person_id)
-        rescue
-        end
-      end
-      @people = Person.find(:all, :order => "name") || []
+      set_organisations nil
     end
 end

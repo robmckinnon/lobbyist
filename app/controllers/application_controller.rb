@@ -51,4 +51,16 @@ class ApplicationController < ActionController::Base
       @organisations = Organisation.find(:all, :order => "name") || []
       @organisations_list = @organisations.collect{|o| [o.name, o.id]}
     end
+
+    def set_people person_id=session[:person_id]
+      @person = nil
+      if person_id
+        begin
+          session[:person_id] = nil
+          @person = Person.find(person_id)
+        rescue
+        end
+      end
+      @people = Person.find(:all, :order => "name") || []
+    end
 end
