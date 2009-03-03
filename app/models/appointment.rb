@@ -35,25 +35,25 @@ class Appointment < ActiveRecord::Base
     @date_taken_up_text = text
   end
 
-  protected
+  private
 
-  def set_date_tendered
-    if @date_tendered_text
-      begin
-        self.date_tendered = Date.parse @date_tendered_text
-      rescue
-        self.date_tendered = nil
+    def set_date_tendered
+      if @date_tendered_text
+        begin
+          self.date_tendered = Date.parse @date_tendered_text
+        rescue
+          self.date_tendered = nil
+        end
       end
     end
-  end
 
-  def set_date_taken_up
-    if @date_taken_up_text
-      begin
-        self.date_taken_up = Date.parse @date_taken_up_text
-      rescue
-        self.date_taken_up = nil
+    def set_date_taken_up
+      if @date_taken_up_text
+        begin
+          self.date_taken_up = Date.parse @date_taken_up_text
+        rescue
+          self.date_taken_up = nil
+        end
       end
     end
-  end
 end

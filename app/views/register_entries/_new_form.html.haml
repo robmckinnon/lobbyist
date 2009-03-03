@@ -1,0 +1,16 @@
+- field_set_tag 'Staff (employed and sub-contracted) providing public affairs consultancy services' do
+  #consultancy_staff_members
+    = f.label :consultancy_staff_members_text, 'List of staff'
+    = f.text_area :consultancy_staff_members_text, :size=>'40x12'
+    %span.note put each name on a new line
+- field_set_tag 'Public affairs consultancy services fee-paying clients' do
+  #consultancy_clients
+    = f.label :consultancy_clients_text, 'Consultancy clients'
+    = f.text_area :consultancy_clients_text, :size=>'40x12'
+    %span.note put each name on a new line
+- field_set_tag 'Only monitoring services fee-paying clients' do
+  #monitoring_clients
+    = f.label :monitoring_clients_text, 'Monitoring clients'
+    = f.text_area :monitoring_clients_text, :size=>'40x12'
+    %span.note put each name on a new line, e.g. HACAN Clearskies (Heathrow Association for the Control of Aircraft Noise)
+

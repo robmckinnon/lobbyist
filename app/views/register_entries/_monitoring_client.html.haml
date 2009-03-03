@@ -1,0 +1,18 @@
+.monitoring_client
+  - new_or_existing = monitoring_client.new_record? ? 'new' : 'existing'
+  - prefix = "register_entry[#{new_or_existing}_monitoring_client_attributes][]"
+  - fields_for prefix, monitoring_client do |f|
+    %p
+      = f.label :name
+      = f.text_field :name
+      (
+      = f.text_field :name_in_parentheses
+      )
+    %p
+      - organisation = monitoring_client.organisation_id ? Organisation.find(monitoring_client.organisation_id) : nil
+      = render :partial=>'organisation', :object=>organisation, :locals=>{:f=>f, :name=>monitoring_client.name, :index=>nil}
+    %p
+      %label
+        &nbsp;
+      = link_to_function "delete this monitoring_client", "$(this).up('.monitoring_client').remove()"
+

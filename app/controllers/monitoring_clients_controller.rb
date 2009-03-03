@@ -1,0 +1,2 @@
+class MonitoringClientsController < ApplicationController
+end

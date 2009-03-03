@@ -1,0 +1,45 @@
+= error_messages_for :register_entry
+
+- form_for @register_entry do |f|
+  - field_set_tag 'Register' do
+    %p
+      = f.label :data_source_id, 'Data source'
+      - if @data_source
+        = select_tag 'register_entry[data_source_id]', options_from_collection_for_select(@data_sources, 'id', 'name', @data_source.id)
+      - else
+        = f.collection_select(:data_source_id, @data_sources, :id, :name, {:prompt => true}, { :index => nil }).gsub('register_entry[]','register_entry')
+      OR
+      = link_to 'create new data source', new_data_source_path
+  - field_set_tag 'Consultancy details' do
+    %p
+      = render :partial=>'organisation', :object=>@organisation, :locals=>{:f=>f, :name=>@register_entry.organisation_name, :index=>nil}
+    %p
+      = f.label :organisation_name, 'Organisation'
+      = f.text_field :organisation_name, :size=>40
+    %p
+      = f.label :organisation_url, 'Organisation URL'
+      = f.text_field :organisation_name, :size=>40
+      %span.note optional
+  - field_set_tag 'Office contact details' do
+    #office_contacts
+      = add_office_contact_link "Add an office address and contact details"
+      = render :partial => 'office_contact', :collection => @register_entry.office_contacts
+
+  - if @register_entry.new_record?
+    = render :partial => 'new_form', :object => @register_entry, :locals => {:f=>f}
+  - else
+    = render :partial => 'edit_form', :object => @register_entry, :locals => {:f=>f}
+
+  - field_set_tag 'More details' do
+    %p
+      = f.label :offices_outside_the_uk, 'Offices outside UK'
+      = f.text_area :offices_outside_the_uk, :size=>'40x3'
+      %span.note optional
+    %p
+      = f.label :declaration_signed_or_submitted
+      = f.text_field :declaration_signed_or_submitted, :size=>45
+      %span.note optional
+  %p
+    = f.submit "Save"
+
+= link_to 'Back to Register entries', register_entries_path

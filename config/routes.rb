@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :data_sources
   map.resources :organisations
 
-  map.root :controller => "appointees"
+  map.resources :register_entries
 
   # The priority is based upon order of creation: first created -> highest priority.
 

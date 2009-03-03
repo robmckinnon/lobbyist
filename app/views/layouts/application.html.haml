@@ -12,7 +12,10 @@
       span.note { font-size: 0.7em; }
       label { width: 9em; float: left; text-align: right; margin-right: 0.5em; display: block; }
       div.appointment,
-      div.former_role { margin-bottom: 3em; }
+      div.former_role,
+      div.consultancy_client,
+      div.monitoring_client,
+      div.consultancy_staff_member { margin-bottom: 3em; }
   %body
     #header
       %h1= @title || "WhosLobbying.com"
@@ -30,3 +33,16 @@
         = link_to 'Data sources', data_sources_path
         |
         = link_to 'Organisations', organisations_path
+        |
+        = link_to 'Register entries', register_entries_path
+    - if RAILS_ENV == 'production'
+      #analytics
+        = %Q[<script type="text/javascript">]
+        = %Q[var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");]
+        = %Q[document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));]
+        = %Q[</script>]
+        = %Q[<script type="text/javascript">]
+        = %Q[try {]
+        = %Q[var pageTracker = _gat._getTracker("UA-7723073-1");]
+        = %Q[pageTracker._trackPageview();]
+        = %Q[} catch(err) {}</script>]

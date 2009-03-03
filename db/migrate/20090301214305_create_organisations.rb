@@ -5,7 +5,6 @@ class CreateOrganisations < ActiveRecord::Migration
       t.string :url
       t.string :wikipedia_url
       t.string :spinwatch_url
-      t.string :companieshouse_url
       t.integer :company_number
 
       t.timestamps

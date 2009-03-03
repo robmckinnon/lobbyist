@@ -1,0 +1,15 @@
+.consultancy_staff_member
+  - new_or_existing = consultancy_staff_member.new_record? ? 'new' : 'existing'
+  - prefix = "register_entry[#{new_or_existing}_consultancy_staff_member_attributes][]"
+  - fields_for prefix, consultancy_staff_member do |f|
+    %p
+      = f.label :name
+      = f.text_field :name
+    %p
+      = f.label :person_id
+      = f.text_field :person_id
+    %p
+      %label
+        &nbsp;
+      = link_to_function "delete this consultancy_staff_member", "$(this).up('.consultancy_staff_member').remove()"
+

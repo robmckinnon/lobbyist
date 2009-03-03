@@ -1,0 +1,13 @@
+- field_set_tag 'Staff (employed and sub-contracted) providing public affairs consultancy services' do
+  #consultancy_staff_members
+    = add_consultancy_staff_member_link "Add a staff member"
+    = render :partial => 'consultancy_staff_member', :collection => @register_entry.consultancy_staff_members
+- field_set_tag 'Public affairs consultancy services fee-paying clients' do
+  #consultancy_clients
+    = add_consultancy_client_link "Add a consultancy client"
+    = render :partial => 'consultancy_client', :collection => @register_entry.consultancy_clients
+- field_set_tag 'Only monitoring services fee-paying clients' do
+  #monitoring_clients
+    = add_monitoring_client_link "Add a monitoring client"
+    = render :partial => 'monitoring_client', :collection => @register_entry.monitoring_clients
+

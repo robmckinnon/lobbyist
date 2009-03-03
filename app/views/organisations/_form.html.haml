@@ -4,10 +4,25 @@
   - field_set_tag 'Organisation' do
     %p
       = f.label :name
-      = f.text_field :name
+      = f.text_field :name, :size=>40
     %p
-      = f.label :url
-      = f.text_field :url
+      = f.label :url, 'URL'
+      = f.text_field :url, :size=>40
+    %p
+      = f.label :wikipedia_url, 'Wikipedia URL'
+      = f.text_field :wikipedia_url, :size=>40
+      %span.note optional
+    %p
+      = f.label :spinwatch_url, 'Spinwatch URL'
+      = f.text_field :spinwatch_url, :size=>40
+      %span.note optional
+    %p
+      = f.label :company_number
+      = f.text_field :company_number, :size=>40
+      %span.note
+        if registered at
+        = link_to('companieshouse.gov.uk', "http://companieshouse.gov.uk/") + ','
+        optional
     %p
       = f.submit "Submit"
 

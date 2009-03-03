@@ -12,7 +12,9 @@ class CreateAppointments < ActiveRecord::Migration
 
       t.timestamps
     end
+
     add_index :appointments, :appointee_id
+    add_index :appointments, :organisation_id
   end
 
   def self.down

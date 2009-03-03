@@ -46,22 +46,10 @@ class DataSourcesController < ApplicationController
   private
 
     def store_second_location
-      unless @organisation
+      if request.request_uri != session[:return_to] && !request.request_uri.include?('data_sources')
         session[:second_return_to] = session[:return_to]
         session[:return_to] = request.request_uri
       end
-    end
-
-    def set_organisations organisation_id=session[:organisation_id]
-      @organisation = nil
-      if organisation_id
-        begin
-          session[:organisation_id] = nil
-          @organisation = Organisation.find(organisation_id)
-        rescue
-        end
-      end
-      @organisations = Organisation.find(:all, :order => "name") || []
     end
 
     def find_data_source

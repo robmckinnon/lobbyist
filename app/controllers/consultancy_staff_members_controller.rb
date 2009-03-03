@@ -1,0 +1,2 @@
+class ConsultancyStaffMembersController < ApplicationController
+end

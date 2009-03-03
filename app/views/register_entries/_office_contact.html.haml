@@ -1,0 +1,13 @@
+.office_contact
+  - new_or_existing = office_contact.new_record? ? 'new' : 'existing'
+  - prefix = "register_entry[#{new_or_existing}_office_contact_attributes][]"
+  - fields_for prefix, office_contact do |f|
+    %p
+      = f.label :details, 'Office details'
+      = f.text_area :details, :size=>'40x12'
+      %span.note include addresses, numbers, emails, etc
+    %p
+      %label
+        &nbsp;
+      = link_to_function "delete these office details" , "$(this).up('.office_contact').remove()"
+

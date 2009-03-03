@@ -1,7 +1,5 @@
 class AppointeesController < ApplicationController
 
-  layout "application", :except => :get_person_name
-
   before_filter :set_people, :only => [:new, :edit]
   before_filter :set_data_sources, :only => [:new, :edit]
   before_filter :store_location, :only => [:index, :new, :edit]
@@ -54,18 +52,6 @@ class AppointeesController < ApplicationController
     def set_people_and_data_sources
       set_people @appointee.person_id
       set_data_sources @appointee.data_source_id
-    end
-
-    def set_data_sources data_source_id=session[:data_source_id]
-      @data_source = nil
-      if data_source_id
-        begin
-          session[:data_source_id] = nil
-          @data_source = DataSource.find(data_source_id)
-        rescue
-        end
-      end
-      @data_sources = DataSource.find(:all, :order => "name") || []
     end
 
     def set_people person_id=session[:person_id]

@@ -6,6 +6,7 @@ class DataSource < ActiveRecord::Base
 
   has_many :appointees
 
+  validates_presence_of :organisation
   validates_presence_of :name
   validates_uniqueness_of :name
 

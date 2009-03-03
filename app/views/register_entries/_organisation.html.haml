@@ -1,0 +1,13 @@
+= f.label :organisation_id, 'Organisation'
+- unless organisation.nil?
+  - select_start_tag = f.select(:organisation_id, @organisations_list)[/<select[^>]+>/]
+  = select_tag('register_entry[organisation_id]', options_from_collection_for_select(@organisations, 'id', 'name', organisation.id)).sub(/<select[^>]+>/,select_start_tag)
+- else
+  = f.collection_select(:organisation_id, @organisations, :id, :name, {:prompt => true}).gsub('[]','')
+%span.note optional
+%label
+  OR
+- form_for(Organisation.new) do |form|
+  = form.hidden_field :name, :value => name
+  = form.submit "Create new organisation"
+

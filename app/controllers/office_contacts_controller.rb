@@ -1,0 +1,2 @@
+class OfficeContactsController < ApplicationController
+end

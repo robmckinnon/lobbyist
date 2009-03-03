@@ -1,0 +1,18 @@
+.consultancy_client
+  - new_or_existing = consultancy_client.new_record? ? 'new' : 'existing'
+  - prefix = "register_entry[#{new_or_existing}_consultancy_client_attributes][]"
+  - fields_for prefix, consultancy_client do |f|
+    %p
+      = f.label :name
+      = f.text_field :name
+      (
+      = f.text_field :name_in_parentheses
+      )
+    %p
+      - organisation = consultancy_client.organisation_id ? Organisation.find(consultancy_client.organisation_id) : nil
+      = render :partial=>'organisation', :object=>organisation, :locals=>{:f=>f, :name=>consultancy_client.name, :index=>nil}
+    %p
+      %label
+        &nbsp;
+      = link_to_function "delete this consultancy_client", "$(this).up('.consultancy_client').remove()"
+
