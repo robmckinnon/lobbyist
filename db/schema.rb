@@ -113,7 +113,6 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
     t.string   "url"
     t.string   "wikipedia_url"
     t.string   "spinwatch_url"
-    t.string   "companieshouse_url"
     t.integer  "company_number"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -129,7 +128,7 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
 
   create_table "register_entries", :force => true do |t|
     t.string   "organisation_name"
-    t.string   "organistion_url"
+    t.string   "organisation_url"
     t.integer  "organisation_id"
     t.integer  "data_source_id"
     t.string   "declaration_signed_or_submitted"

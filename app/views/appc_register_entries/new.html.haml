@@ -1,0 +1,6 @@
+-@title = 'New APPC register entry'
+
+- form_tag('/appc_register_entries', :method=>:post) do
+  = text_area :appc_register_entry, :data, :size=>'80x40'
+  = submit_tag "Create entry"
+

@@ -1,0 +1,2 @@
+module AppcRegisterEntriesHelper
+end

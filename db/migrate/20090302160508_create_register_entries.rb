@@ -2,7 +2,7 @@ class CreateRegisterEntries < ActiveRecord::Migration
   def self.up
     create_table :register_entries do |t|
       t.string :organisation_name
-      t.string :organistion_url
+      t.string :organisation_url
       t.integer :organisation_id
       t.integer :data_source_id
       t.string :declaration_signed_or_submitted

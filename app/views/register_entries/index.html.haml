@@ -1,3 +1,11 @@
 - @title = 'Register entries'
-= link_to "Add register entry", new_register_entry_path
-= render :partial => 'register_entry', :collection => @register_entries
+
+%p
+  = link_to "Add APPC register entry", new_appc_register_entry_path
+  |
+  = link_to "Add PRCA register entry", new_prca_register_entry_path
+  |
+  = link_to "Add generic register entry", new_register_entry_path
+
+.register_entries
+  = render :partial => 'register_entry', :collection => @register_entries

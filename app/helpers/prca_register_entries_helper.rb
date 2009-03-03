@@ -1,0 +1,2 @@
+module PrcaRegisterEntriesHelper
+end

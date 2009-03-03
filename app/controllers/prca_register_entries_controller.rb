@@ -1,0 +1,2 @@
+class PrcaRegisterEntriesController < ApplicationController
+end

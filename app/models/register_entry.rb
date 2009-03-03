@@ -21,6 +21,27 @@ class RegisterEntry < ActiveRecord::Base
 
   after_update :save_consultancy_clients, :save_monitoring_clients, :save_consultancy_staff_members, :save_office_contacts
 
+  class << self
+    def clean_name text
+      text.sub('•','').strip.squeeze(' ')
+    end
+
+    def valid_name? text
+      !text.blank? && !text[/^None$/i] && !text[/^N\/A$/i]
+    end
+
+    def get_names text
+      name = text[/^(.+)\s\(([^\(]+)\)$/,1]
+      if name
+        name_in_parentheses = text[/^(.+)\s\(([^\(]+)\)$/,2]
+      else
+        name = text
+        name_in_parentheses = nil
+      end
+      return name, name_in_parentheses
+    end
+  end
+
   def consultancy_staff_members_text
     if @consultancy_staff_members_text
       @consultancy_staff_members_text
@@ -115,25 +136,6 @@ class RegisterEntry < ActiveRecord::Base
 
   private
 
-    def get_names text
-      name = text[/^(.+)\s\(([^\(]+)\)$/,1]
-      if name
-        name_in_parentheses = text[/^(.+)\s\(([^\(]+)\)$/,2]
-      else
-        name = text
-        name_in_parentheses = nil
-      end
-      return name, name_in_parentheses
-    end
-
-    def clean_name text
-      text.sub('•','').strip.squeeze(' ')
-    end
-
-    def valid_name? text
-      !text.blank? && !text[/^None$/i] && !text[/^N\/A$/i]
-    end
-
     def set_consultancy_staff_members
       if @consultancy_staff_members_text
         begin
@@ -151,9 +153,9 @@ class RegisterEntry < ActiveRecord::Base
       if @consultancy_clients_text
         begin
           @consultancy_clients_text.each_line do |text|
-            text = clean_name(text)
-            if valid_name?(text)
-              name, name_in_parentheses = get_names text
+            text = RegisterEntry.clean_name(text)
+            if RegisterEntry.valid_name?(text)
+              name, name_in_parentheses = RegisterEntry.get_names text
               consultancy_clients.build("name"=>name, "name_in_parentheses"=>name_in_parentheses)
             end
           end
@@ -167,9 +169,9 @@ class RegisterEntry < ActiveRecord::Base
       if @monitoring_clients_text
         begin
           @monitoring_clients_text.each_line do |text|
-            text = clean_name(text)
-            if valid_name?(text)
-              name, name_in_parentheses = get_names text
+            text = RegisterEntry.clean_name(text)
+            if RegisterEntry.valid_name?(text)
+              name, name_in_parentheses = RegisterEntry.get_names text
               monitoring_clients.build("name"=>name, "name_in_parentheses"=>name_in_parentheses)
             end
           end
