@@ -3,11 +3,21 @@
 
 class ApplicationController < ActionController::Base
 
+  before_filter :authenticate
+
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
+
+  def authenticate
+    auth = YAML.load_file(RAILS_ROOT+'/config/auth.yml')
+    auth.symbolize_keys!
+    authenticate_or_request_with_http_basic do |id, password|
+      id == auth[:user] && password == auth[:password]
+    end
+  end
 
   def render_not_found message='Page not found.'
     render :text => message, :status => :not_found
