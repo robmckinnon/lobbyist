@@ -1,7 +1,7 @@
 class AppcRegisterReportsController < ApplicationController
 
-  before_filter :set_data_sources, :only => [:new, :edit]
-  before_filter :store_location, :only => [:index, :new, :edit]
+  before_filter :set_data_sources, :only => [:new]
+  before_filter :store_location, :only => [:new]
 
   def new
     @appc_register_report = AppcRegisterReport.new

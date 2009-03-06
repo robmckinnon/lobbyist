@@ -1,6 +1,7 @@
 class RegisterEntry < ActiveRecord::Base
 
   belongs_to :data_source
+  belongs_to :organisation
 
   has_many :office_contacts
   has_many :consultancy_staff_members
@@ -13,6 +14,7 @@ class RegisterEntry < ActiveRecord::Base
   before_validation :set_consultancy_clients
   before_validation :set_monitoring_clients
   before_validation :set_consultancy_staff_members
+  before_validation :set_organisation
 
   validates_associated :office_contacts, :message=>"are invalid, they can't be blank"
   validates_associated :consultancy_clients
@@ -20,6 +22,7 @@ class RegisterEntry < ActiveRecord::Base
   validates_associated :consultancy_staff_members
 
   after_update :save_consultancy_clients, :save_monitoring_clients, :save_consultancy_staff_members, :save_office_contacts
+
 
   class << self
     def clean_name text
@@ -181,8 +184,6 @@ class RegisterEntry < ActiveRecord::Base
       end
     end
 
-    after_update :save_consultancy_clients, :save_monitoring_clients, :save_consultancy_staff_members, :save_office_contacts
-
     def save_consultancy_clients
       consultancy_clients.each do |consultancy_client|
         consultancy_client.save(false)
@@ -204,6 +205,18 @@ class RegisterEntry < ActiveRecord::Base
     def save_office_contacts
       office_contacts.each do |office_contact|
         office_contact.save(false)
+      end
+    end
+
+    def set_organisation
+      if organisation_name && !organisation_url.blank?
+        url = organisation_url.chomp('/')
+        if Organisation.exists?(:url=>url)
+          organisation = Organisation.find_by_url(url)
+        else
+          organisation = Organisation.create(:url=>url,:name=>organisation_name)
+        end
+        self.organisation_id = organisation.id
       end
     end
 end

@@ -17,4 +17,5 @@ class Organisation < ActiveRecord::Base
   validates_uniqueness_of :name
 
   validates_presence_of :url
+  validates_uniqueness_of :url
 end
