@@ -40,6 +40,8 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
 end
 
+require 'acts_as_wikipedia'
+
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(
   :month_year => "%B %Y"
 )

@@ -4,7 +4,8 @@ describe AppcRegisterEntry do
 
   describe 'when data is set' do
     before do
-  @data = "#{@organisation_name}
+      @appc_register_entry = AppcRegisterEntry.new
+      @data = "#{@organisation_name}
 #{@description}
 Address(es) in UK
 Contact
@@ -22,7 +23,6 @@ Fee-Paying Clients for whom only UK monitoring services provided this quarter
 
     it 'should create RegisterEntry correctly' do
       @appc_register_entry.data = @data
-      @appc_register_entry.data.should == @data
       @register_entry = @appc_register_entry.register_entry
 
       @register_entry.organisation_name.should == @organisation_name
@@ -55,7 +55,6 @@ Fee-Paying Clients for whom only UK monitoring services provided this quarter
   end
 
   before do
-    @appc_register_entry = AppcRegisterEntry.new
     @organisation_name = 'APCO Worldwide'
     @description = 'APPC Register Entry for 1 September 2008 to 30 November 2008'
     @office_contact = '90 Long Acre

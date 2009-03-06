@@ -1,4 +1,8 @@
+require 'acts_as_wikipedia'
+
 class Organisation < ActiveRecord::Base
+
+  acts_as_wikipedia
 
   has_friendly_id :name, :use_slug => true, :strip_diacritics => true
 

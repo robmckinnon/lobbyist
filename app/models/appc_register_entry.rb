@@ -1,10 +1,11 @@
 class AppcRegisterEntry
 
-  attr_reader :data, :register_entry
+  attr_reader :register_entry
+  attr_accessor :data_source_id
 
   def data= data
-    @data = data
     entry = RegisterEntry.new
+    entry.data_source_id = @data_source_id.to_i
     state = nil
 
     data.each_line do |line|
@@ -44,18 +45,22 @@ class AppcRegisterEntry
                   staff = ConsultancyStaffMember.new :name => text
                   entry.consultancy_staff_members << staff
                 when :consultancy_clients
-                  if line.strip[/^•/]
+                  if line.strip[/^•/] || line.starts_with?("􀂃")
                     client = ConsultancyClient.new :name => text
                     entry.consultancy_clients << client
                   else
                     entry.consultancy_clients.last.name = entry.consultancy_clients.last.name + ' ' + text
                   end
                 when :monitoring_clients
-                  if line.strip[/^•/]
+                  if line.strip[/^•/] || line.starts_with?("􀂃")
                     client = MonitoringClient.new :name => text
                     entry.monitoring_clients << client
                   else
-                    entry.monitoring_clients.last.name = entry.monitoring_clients.last.name + ' ' + text
+                    begin
+                      entry.monitoring_clients.last.name = entry.monitoring_clients.last.name + ' ' + text
+                    rescue
+                      raise state.to_s + ': ' + text
+                    end
                   end
                 end
           end

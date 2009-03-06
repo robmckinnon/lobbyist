@@ -7,6 +7,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :register_entries
   map.resources :appc_register_entries
+  map.resources :appc_register_reports
   map.resources :prca_register_entries
 
   # The priority is based upon order of creation: first created -> highest priority.

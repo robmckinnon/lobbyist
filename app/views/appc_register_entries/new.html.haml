@@ -1,6 +1,15 @@
 -@title = 'New APPC register entry'
 
 - form_tag('/appc_register_entries', :method=>:post) do
-  = text_area :appc_register_entry, :data, :size=>'80x40'
-  = submit_tag "Create entry"
-
+  %p
+    = label :appc_register_entry, 'Data source'
+    - if @data_source
+      = select_tag 'appc_register_entry[data_source_id]', options_from_collection_for_select(@data_sources, 'id', 'name', @data_source.id)
+    - else
+      = collection_select(:appc_register_entry, :data_source_id, @data_sources, :id, :name, {:prompt => true}, { :index => nil }).gsub('[]','')
+    OR
+    = link_to 'create new data source', new_data_source_path
+  %p
+    = text_area :appc_register_entry, :data, :size=>'80x40'
+  %p
+    = submit_tag "Create entry"
