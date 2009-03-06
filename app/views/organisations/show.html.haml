@@ -11,7 +11,10 @@
       to:
     %ul
     - register_entry.consultancy_clients.each do |client|
-      %li= client.name
+      %li
+        = client.name
+        - unless client.name_in_parentheses.blank?
+          %span.note= '(' + client.name_in_parentheses + ')'
     %p
       Data source:
       = link_to register_entry.data_source.name, register_entry.data_source.url

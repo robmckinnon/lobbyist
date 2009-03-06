@@ -44,9 +44,18 @@ Fee-Paying Clients for whom only UK monitoring services provided this quarter
       @consultancy_clients_list.each_line {|line| clients << line.strip}
       @register_entry.consultancy_clients.size.should == clients.size
       clients.each_with_index do |name, index|
-        @register_entry.consultancy_clients[index].name.should == name
+        client = @register_entry.consultancy_clients[index]
+        client.name.should == name
         if name == 'Business Software Alliance UK'
-          @register_entry.consultancy_clients[index].name_in_parentheses.should == 'Adobe, Altium, Apple, Attachmate, Autodesk, Avid, Babylon, Bentley Systems, FrontRange Solutions, CNC, Corel, CyberLink, Dassault Systèmes SolidWorks Corporation, Enteo Software, Famatech, LINKService, Mamut, Materialise Software, Microsoft, Mindjet, Monotype Imaging, O&O Software, Quark, Quest Software, Rosetta Stone, Ringler- Informatik, Scalable Software, Siemens, Staff & Line, Symantec, Tekla, and The MathWorks'
+          client.name_in_parentheses.should == 'Adobe, Altium, Apple, Attachmate, Autodesk, Avid, Babylon, Bentley Systems, FrontRange Solutions, CNC, Corel, CyberLink, Dassault Systèmes SolidWorks Corporation, Enteo Software, Famatech, LINKService, Mamut, Materialise Software, Microsoft, Mindjet, Monotype Imaging, O&O Software, Quark, Quest Software, Rosetta Stone, Ringler- Informatik, Scalable Software, Siemens, Staff & Line, Symantec, Tekla, and The MathWorks'
+        elsif name == 'G15 Housing Associations'
+          client.name_in_parentheses.should == 'comprising Genesis Housing Group, Family Mosaic, Hyde HA Ltd, London & Quadrant Housing Trust , Dominion Housing Group, Circle Anglia, East Thames, Notting Hill Housing Trust, Catalyst Housing Group, Affinity Homes Group, Network Housing Group, Peabody Trust, Southern Housing Group, Metropolitan Housing Trust & Amicus Horizon'
+        elsif name == 'Herba Sacra'
+          client.name_in_parentheses.should == 'a campaign to protect the market for herbal remedies, supported by a range of businesses in the sector including Solgar Vitamin and Herb, Pukka Herbs and others. Guildhouse Investment Management, Infracare Partnering/Babcock and Brown, Assura Group, Ryhurst, Sapphire Primary Care Developments, Sewell Group, Primary Plus, the Fulcrum Group, Land Securities Trillium, Equity Solutions and Galliford Try). Systems, CliniMed Ltd, and Hollister Ltd)'
+        elsif name == 'The Urology Trade Association'
+          client.name_in_parentheses.should == '(including Jade-Euro Med, Coloplast Ltd, DBT Medical Ltd, Bard Ltd, Astra Tech Ltd, LJL Healthcare Ltd, Beambridge Medical, Rochester Medical Ltd, Manfred Sauer, Hunter Urology Ltd, Unomedical Ltd, Great Bear Healthcare Ltd, LINC Medical'
+        elsif name == 'The Communication Trust'
+          client.name_in_parentheses.should == 'in association with I CAN, Afasic, The Department for Children Schools and Families, British Telecom’s “BT Better World Campaign”, and the Council for Disabled Children'
         end
       end
 
@@ -146,6 +155,42 @@ Consultants Ltd
 • FBC Media UK
 • Gate Gourmet Ltd London
 • GML Limited
+• G15 Housing Associations,
+comprising Genesis Housing
+Group, Family Mosaic, Hyde
+HA Ltd, London & Quadrant
+Housing Trust , Dominion
+Housing Group, Circle Anglia,
+East Thames, Notting Hill
+Housing Trust, Catalyst
+Housing Group, Affinity
+Homes Group, Network
+Housing Group, Peabody
+Trust, Southern
+Housing Group,
+Metropolitan Housing Trust &
+Amicus Horizon
+• Herba Sacra, a
+campaign to protect the
+market for herbal
+remedies, supported by
+a range of businesses in
+the sector including
+Solgar Vitamin and
+Herb, Pukka Herbs and
+others.
+Guildhouse Investment
+Management, Infracare
+Partnering/Babcock and
+Brown, Assura Group,
+Ryhurst, Sapphire Primary
+Care Developments, Sewell
+Group, Primary Plus, the
+Fulcrum Group, Land
+Securities Trillium, Equity
+Solutions and Galliford Try).
+Systems, CliniMed Ltd, and
+Hollister Ltd)
 • Housing Corporation/Tenant
 Services Authority
 • Hughes Hubbard & Reed
@@ -169,6 +214,21 @@ Organization
 • SABMiller Plc
 • Solvay Pharmaceuticals
 GMBH
+• The Communication Trust (in
+association with I CAN, Afasic, The
+Department for Children Schools
+and Families, British Telecom’s “BT
+Better World Campaign”, and the
+Council for Disabled Children).
+• The Urology Trade Association
+(including Jade-Euro Med,
+Coloplast Ltd, DBT Medical Ltd,
+Bard Ltd, Astra Tech Ltd, LJL
+Healthcare Ltd, Beambridge
+Medical, Rochester Medical Ltd,
+Manfred Sauer, Hunter Urology
+Ltd, Unomedical Ltd, Great Bear
+Healthcare Ltd, LINC Medical
 • Tyco Electronics
 • Virgin Healthcare
 • Wyeth Pharmaceuticals'
@@ -187,17 +247,19 @@ The Coca-Cola Company
 Creative Direction Consultants Ltd
 Denplan
 Duninga Developments
-Ebay Inc.
+Ebay Inc
 ESB International Ltd
 Ethicon Endo-Surgery (Europe) GmbH
 FBC Media UK
 Gate Gourmet Ltd London
 GML Limited
+G15 Housing Associations
+Herba Sacra
 Housing Corporation/Tenant Services Authority
 Hughes Hubbard & Reed LLP
 Humana Europe
 IMS Health
-Johnson Controls Inc.
+Johnson Controls Inc
 Johnson & Johnson
 Media Smart UK Ltd
 Merck Sharp & Dohme Ltd
@@ -211,6 +273,8 @@ Phadia UK
 Plastics Europe
 SABMiller Plc
 Solvay Pharmaceuticals GMBH
+The Communication Trust
+The Urology Trade Association
 Tyco Electronics
 Virgin Healthcare
 Wyeth Pharmaceuticals'

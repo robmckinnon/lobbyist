@@ -28,8 +28,22 @@ class RegisterEntry < ActiveRecord::Base
 
 
   class << self
-    def clean_name text
+    def clean_text text
       text.sub('•','').sub("􀂃",'').strip.squeeze(' ')
+    end
+
+    def clean_name text
+      text.strip.chomp(';').strip.chomp('.').strip.chomp(',').strip.chomp(':').strip.chomp(' (').strip
+    end
+
+    def clean_names client
+      a,b = RegisterEntry.get_names client.name
+      if b.blank?
+        client.name = RegisterEntry.clean_name(client.name)
+      else
+        client.name = RegisterEntry.clean_name(a)
+        client.name_in_parentheses = RegisterEntry.clean_name(b)
+      end
     end
 
     def valid_name? text
@@ -37,12 +51,23 @@ class RegisterEntry < ActiveRecord::Base
     end
 
     def get_names text
-      name = text[/^(.+)\s\(([^\(]+)\)$/,1]
-      if name
-        name_in_parentheses = text[/^(.+)\s\(([^\(]+)\)$/,2]
+      name = text[/^(.+)\s\(([^\(]+)\)\.?$/,1]
+      if name && name.size <= 256
+        name_in_parentheses = text[/^(.+)\s\(([^\(]+)\)\.?$/,2]
       else
-        name = text
-        name_in_parentheses = nil
+        name = text[/^(.+)\s(comprising.+)$/,1]
+        if name && name.size <= 256
+          name_in_parentheses = text[/^(.+)\s(comprising.+)$/,2]
+        elsif text.size > 256
+          length = text.size
+          index = [text.index(',') ? text.index(',') : length, text.index('(') ? text.index('(') : length].min
+
+          name = text[0..index]
+          name_in_parentheses = text[index..(text.length)].sub(/^, /,'')
+        else
+          name = text
+          name_in_parentheses = nil
+        end
       end
       return name, name_in_parentheses
     end

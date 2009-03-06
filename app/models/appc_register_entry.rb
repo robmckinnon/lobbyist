@@ -9,7 +9,7 @@ class AppcRegisterEntry
     state = nil
 
     data.each_line do |line|
-      text = RegisterEntry.clean_name(line)
+      text = RegisterEntry.clean_text(line)
       if RegisterEntry.valid_name?(text)
         if !entry.organisation_name?
           entry.organisation_name = text
@@ -71,21 +71,11 @@ class AppcRegisterEntry
     entry.office_contacts.first.details.strip! if entry.office_contacts.first
     entry.offices_outside_the_uk.strip! if entry.offices_outside_the_uk
 
-    entry.consultancy_clients.each do |c|
-      c.name = c.name.squeeze(' ')
-      a,b = RegisterEntry.get_names c.name
-      unless b.blank?
-        c.name = a
-        c.name_in_parentheses = b
-      end
+    entry.consultancy_clients.each do |client|
+      RegisterEntry.clean_names(client)
     end
-    entry.monitoring_clients.each do |c|
-      c.name = c.name.squeeze(' ')
-      a,b = RegisterEntry.get_names c.name
-      unless b.blank?
-        c.name = a
-        c.name_in_parentheses = b
-      end
+    entry.monitoring_clients.each do |client|
+      RegisterEntry.clean_names(client)
     end
 
     @register_entry = entry
