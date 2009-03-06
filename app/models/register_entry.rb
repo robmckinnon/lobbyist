@@ -5,8 +5,11 @@ class RegisterEntry < ActiveRecord::Base
 
   has_many :office_contacts
   has_many :consultancy_staff_members
-  has_many :consultancy_clients
+  has_many :consultancy_clients, :order=>'name'
   has_many :monitoring_clients
+
+  delegate :period_start, :to => :data_source
+  delegate :period_end, :to => :data_source
 
   validates_presence_of :data_source
   validates_presence_of :organisation_name
