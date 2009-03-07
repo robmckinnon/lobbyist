@@ -2,7 +2,7 @@ class CreateOrganisations < ActiveRecord::Migration
   def self.up
     create_table :organisations do |t|
       t.string :name
-      t.string :short_name
+      t.string :alternate_name
       t.string :url
       t.string :wikipedia_url
       t.string :spinwatch_url
