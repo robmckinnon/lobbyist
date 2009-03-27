@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
 
   create_table "organisations", :force => true do |t|
     t.string   "name"
+    t.string   "alternate_name"
     t.string   "url"
     t.string   "wikipedia_url"
     t.string   "spinwatch_url"

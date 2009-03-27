@@ -19,6 +19,17 @@
   %body
     #header
       %h1= @title || "WhosLobbying.com"
+    #menu
+      %p
+        = link_to 'People', people_path
+        |
+        = link_to 'Appointees', appointees_path
+        |
+        = link_to 'Data sources', data_sources_path
+        |
+        = link_to 'Organisations', organisations_path
+        |
+        = link_to 'Register entries', register_entries_path
     #content
       - if flash[:notice]
         %p
