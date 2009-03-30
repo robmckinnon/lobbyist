@@ -22,10 +22,11 @@
     %p
       = f.label :company_number
       = f.text_field :company_number, :size=>40
-      %span.note
-        if registered at
-        = link_to('companieshouse.gov.uk', "http://companieshouse.gov.uk/") + ','
-        optional
+      %span#company_number_note
+        %span.note
+          if registered at
+          = link_to('companieshouse.gov.uk', "http://companieshouse.gov.uk/") + ','
+          optional
     %p
       = f.submit "Submit"
 

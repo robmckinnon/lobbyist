@@ -5,3 +5,4 @@ config/database.yml
 config/auth.yml
 .DS_Store
 doc
+public/images/whoslobbying_header.png
