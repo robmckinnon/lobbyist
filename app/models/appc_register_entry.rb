@@ -3,68 +3,25 @@ class AppcRegisterEntry
   attr_reader :register_entry
   attr_accessor :data_source_id
 
+  class << self
+    def create_register_entry data_source_id, data
+      entry = AppcRegisterEntry.new
+      entry.data_source_id = data_source_id
+      entry.data = data
+      register_entry = entry.register_entry
+      register_entry.save!
+      entry
+    end
+  end
+
   def data= data
     entry = RegisterEntry.new
     entry.data_source_id = @data_source_id.to_i
     state = nil
-
     data.each_line do |line|
       text = RegisterEntry.clean_text(line)
       if RegisterEntry.valid_name?(text)
-        if !entry.organisation_name?
-          entry.organisation_name = text
-        else
-          case text
-            when /^APPC Register Entry/
-              # ignore
-            when /^Address\(es\) in UK/
-              state = :office_contact
-              entry.office_contacts.build
-              entry.office_contacts.first.details = ''
-            when /^Contact$/
-              # ignore
-            when /^Website:(.+)$/
-              state = nil
-              entry.organisation_url = $1.strip
-            when /^Offices outside UK/
-              state = :offices_outside_the_uk
-              entry.offices_outside_the_uk = ''
-            when /^Staff \(employed and sub-contracted\) providing PA consultancy services/
-              state = :consultancy_staff
-            when /^Fee-Paying clients for whom UK PA consultancy services/
-              state = :consultancy_clients
-            when /^Fee-Paying Clients for whom only UK monitoring services/
-              state = :monitoring_clients
-            else
-              case state
-                when :office_contact
-                  entry.office_contacts.first.details = entry.office_contacts.first.details + "\n" + text
-                when :offices_outside_the_uk
-                  entry.offices_outside_the_uk = entry.offices_outside_the_uk + "\n" + text
-                when :consultancy_staff
-                  staff = ConsultancyStaffMember.new :name => text
-                  entry.consultancy_staff_members << staff
-                when :consultancy_clients
-                  if line.strip[/^•/] || line.starts_with?("􀂃")
-                    client = ConsultancyClient.new :name => text
-                    entry.consultancy_clients << client
-                  else
-                    entry.consultancy_clients.last.name = entry.consultancy_clients.last.name + ' ' + text
-                  end
-                when :monitoring_clients
-                  if line.strip[/^•/] || line.starts_with?("􀂃")
-                    client = MonitoringClient.new :name => text
-                    entry.monitoring_clients << client
-                  else
-                    begin
-                      entry.monitoring_clients.last.name = entry.monitoring_clients.last.name + ' ' + text
-                    rescue
-                      raise state.to_s + ': ' + text
-                    end
-                  end
-                end
-          end
-        end
+        state = handle(entry, line, text, state)
       end
     end
 
@@ -81,4 +38,66 @@ class AppcRegisterEntry
     @register_entry = entry
   end
 
+  private
+    def handle(entry, line, text, state)
+      if entry.organisation_name?
+        handle_by_text(entry, line, text, state)
+      else
+        entry.organisation_name = text
+        return state
+      end
+    end
+
+    def handle_by_text(entry, line, text, state)
+      case text
+        when /^(APPC Register Entry|Contact)/ # ignore
+          state
+        when /^Address\(es\) in UK/
+          entry.office_contacts.build
+          entry.office_contacts.first.details = ''
+          :office_contact
+        when /^Website:(.+)$/
+          entry.organisation_url = $1.strip
+          nil
+        when /^Offices outside UK/
+          entry.offices_outside_the_uk = ''
+          :offices_outside_the_uk
+        when /^Staff \(employed and sub-contracted\) providing PA consultancy services/
+          :consultancy_staff
+        when /^Fee-Paying clients for whom UK PA consultancy services/
+          :consultancy_clients
+        when /^Fee-Paying Clients for whom only UK monitoring services/
+          :monitoring_clients
+        else
+          handle_by_state(entry, line, text, state)
+          state
+      end
+    end
+
+    def handle_by_state(entry, line, text, state)
+      case state
+        when :office_contact
+          entry.office_contacts.first.details = entry.office_contacts.first.details + "\n" + text
+        when :offices_outside_the_uk
+          entry.offices_outside_the_uk = entry.offices_outside_the_uk + "\n" + text
+        when :consultancy_staff
+          entry.consultancy_staff_members << ConsultancyStaffMember.new(:name => text)
+        when :consultancy_clients
+          add_client(entry, line, text, ConsultancyClient, :consultancy_clients)
+        when :monitoring_clients
+          add_client(entry, line, text, MonitoringClient, :monitoring_clients)
+      end
+    end
+
+    def add_client(entry, line, text, model, method)
+      if line.strip[/^•/] || line.starts_with?("􀂃")
+        entry.send(method) << model.new(:name => text)
+      else
+        begin
+          entry.send(method).last.name = entry.send(method).last.name + ' ' + text
+        rescue
+          raise state.to_s + ': ' + text
+        end
+      end
+    end
 end

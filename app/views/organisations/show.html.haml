@@ -1,22 +1,11 @@
 - @title = @organisation.name
-- unless @organisation.register_entries.empty?
+- unless @consultancy_clients.empty?
+  %h2 Lobbyist's Retained
+  = render :partial => 'lobbyist_client', :collection => @consultancy_clients
+
+- unless @register_entries.empty?
   %h2 Public Affairs Clients
-  - @organisation.register_entries.each do |register_entry|
-    %p
-      Provided public affairs consultancy services between
-      = register_entry.period_start.to_s(:month_year)
-      and
-      = register_entry.period_end.to_s(:month_year)
-      to:
-    %ul
-    - register_entry.consultancy_clients.each do |client|
-      %li
-        = client.name
-        - unless client.name_in_parentheses.blank?
-          %span.note= '(' + client.name_in_parentheses + ')'
-    %p
-      Data source:
-      = link_to register_entry.data_source.name, register_entry.data_source.url
+  = render :partial => 'register_entry', :collection => @register_entries
 
 - unless @organisation.data_sources.empty?
   %h2 Data sources

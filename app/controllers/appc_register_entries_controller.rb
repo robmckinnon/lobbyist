@@ -8,13 +8,8 @@ class AppcRegisterEntriesController < ApplicationController
   end
 
   def create
-    @appc_register_entry = AppcRegisterEntry.new
-    @appc_register_entry.data_source_id = params['appc_register_entry']['data_source_id']
-    @appc_register_entry.data = params['appc_register_entry']['data']
-
-    register_entry = @appc_register_entry.register_entry
-    register_entry.save!
-
+    entry = params['appc_register_entry']
+    @appc_register_entry = AppcRegisterEntry.create_register_entry(entry['data_source_id'], entry['data'])
     redirect_to :action=>'index', :controller=>'register_entries'
   end
 end

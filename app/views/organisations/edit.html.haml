@@ -1,4 +1,5 @@
 - @title = @organisation.name
 #org_name
 = render :partial => 'form', :object => @organisation
-= h(@organisation.register_entries.first.office_contacts.inspect)
+- if @organisation.register_entries.first
+  = h(@organisation.register_entries.first.office_contacts.inspect)

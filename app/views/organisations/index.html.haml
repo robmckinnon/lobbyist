@@ -1,4 +1,5 @@
 - @title = 'Organisations'
 = link_to "Add organisation", new_organisation_path
-= render :partial => 'organisation', :collection => @organisations
+%table
+  = render :partial => 'organisation', :collection => @organisations
 

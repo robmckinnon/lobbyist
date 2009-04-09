@@ -1,9 +1,10 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
+require 'zlib'
+require 'stringio'
 
 class ApplicationController < ActionController::Base
 
   before_filter :authenticate
+  after_filter :compress
 
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -36,6 +37,24 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+    def compress
+      accepts = request.env['HTTP_ACCEPT_ENCODING' ]
+      if accepts && accepts =~ /(x-gzip|gzip)/
+        encoding = $1
+        output = StringIO.new
+        def output.close # Zlib does a close. Bad Zlib...
+          rewind
+        end
+        gz = Zlib::GzipWriter.new(output)
+        gz.write(response.body)
+        gz.close
+        if output.length < response.body.length
+          response.body = output.string
+          response.headers['Content-encoding' ] = encoding
+        end
+      end
+    end
 
     def set_data_sources data_source_id=session[:data_source_id]
       @data_source = nil

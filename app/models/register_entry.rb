@@ -26,7 +26,6 @@ class RegisterEntry < ActiveRecord::Base
 
   after_update :save_consultancy_clients, :save_monitoring_clients, :save_consultancy_staff_members, :save_office_contacts
 
-
   class << self
     def clean_text text
       text.sub('•','').sub("􀂃",'').strip.squeeze(' ')
@@ -238,13 +237,8 @@ class RegisterEntry < ActiveRecord::Base
 
     def set_organisation
       if organisation_name && !organisation_url.blank?
-        url = organisation_url.chomp('/')
-        if Organisation.exists?(:url=>url)
-          organisation = Organisation.find_by_url(url)
-        else
-          organisation = Organisation.create(:url=>url,:name=>organisation_name)
-        end
-        self.organisation_id = organisation.id
+        org = Organisation.find_or_create_from_url_and_name(organisation_url, organisation_name)
+        self.organisation_id = org.id
       end
     end
 end

@@ -12,9 +12,12 @@ class OrganisationsController < ApplicationController
   end
 
   def show
+    @register_entries = @organisation.register_entries
+    @consultancy_clients = @organisation.consultancy_clients
   end
 
   def edit
+    @organisations = Organisation.all_with_matches_at_top(@organisation)
   end
 
   def create
@@ -30,7 +33,13 @@ class OrganisationsController < ApplicationController
   def update
     @organisation = Organisation.find(params[:id])
 
-    if @organisation.update_attributes(params[:organisation])
+    merge_with_id = params[:organisation][:merge_with_id]
+
+    if !merge_with_id.blank? && organisation = Organisation.find(merge_with_id)
+      @organisation.merge!(organisation)
+      flash[:notice] = "Successfully merged #{@organisation.name} into #{organisation.name}."
+      redirect_to organisation_path(organisation)
+    elsif @organisation.update_attributes(params[:organisation])
       flash[:notice] = "Successfully updated #{@organisation.name}."
       redirect_to organisations_path
     else
