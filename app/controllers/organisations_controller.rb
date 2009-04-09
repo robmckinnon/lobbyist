@@ -14,6 +14,10 @@ class OrganisationsController < ApplicationController
   def show
     @register_entries = @organisation.register_entries
     @consultancy_clients = @organisation.consultancy_clients
+    @monitoring_clients = @organisation.monitoring_clients
+    @consultancy_clients_by_source = @consultancy_clients.group_by{|x| x.register_entry.data_source}
+    @monitoring_clients_by_source = @monitoring_clients.group_by{|x| x.register_entry.data_source}
+    @client_data_sources = @consultancy_clients_by_source.keys | @monitoring_clients_by_source.keys
   end
 
   def edit
@@ -37,10 +41,10 @@ class OrganisationsController < ApplicationController
 
     if !merge_with_id.blank? && organisation = Organisation.find(merge_with_id)
       @organisation.merge!(organisation)
-      flash[:notice] = "Successfully merged #{@organisation.name} into #{organisation.name}."
+      flash[:notice] = "Successfully merged #{@organisation.name} into #{link_to_organisation organisation}."
       redirect_to organisation_path(organisation)
     elsif @organisation.update_attributes(params[:organisation])
-      flash[:notice] = "Successfully updated #{@organisation.name}."
+      flash[:notice] = "Successfully updated #{link_to_organisation @organisation}."
       redirect_to organisations_path
     else
       render :action => 'edit'
@@ -48,6 +52,10 @@ class OrganisationsController < ApplicationController
   end
 
   private
+
+    def link_to_organisation organisation
+      "<a href='#{organisation_path(organisation)}'>#{organisation.name}</a>"
+    end
 
     def find_organisation
       begin

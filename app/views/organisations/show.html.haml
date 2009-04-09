@@ -1,8 +1,11 @@
 - @title = @organisation.name
-- unless @consultancy_clients.empty?
-  %h2 Lobbyist's Retained
-  = render :partial => 'lobbyist_client', :collection => @consultancy_clients
-
+- if @organisation.company_number
+  .company_number
+    Company No.
+    = @organisation.company_number
+- unless @client_data_sources.empty?
+  %h2 Lobbyists Retained
+  = render :partial => 'client_data_source', :collection => @client_data_sources
 - unless @register_entries.empty?
   %h2 Public Affairs Clients
   = render :partial => 'register_entry', :collection => @register_entries

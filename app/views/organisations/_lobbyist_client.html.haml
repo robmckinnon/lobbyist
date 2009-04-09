@@ -1,0 +1,9 @@
+- register_entry = lobbyist_client.register_entry
+%li
+  - if register_entry.organisation
+    = link_to register_entry.organisation_name, organisation_path(register_entry.organisation)
+  - else
+    = register_entry.organisation_name
+  - if lobbyist_client.name.downcase != lobbyist_client.organisation.name.downcase
+    (as
+    = lobbyist_client.name + ')'

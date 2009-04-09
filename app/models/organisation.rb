@@ -35,13 +35,13 @@ class Organisation < ActiveRecord::Base
     def all_with_matches_at_top organisation
       first_name = organisation.name.split.first
       organisations = all.sort do |a, b|
-        if a.name.starts_with?(first_name)
-          if b.name.starts_with?(first_name)
+        if a.name[/^#{first_name}/i]
+          if b.name[/^#{first_name}/i]
             a.name <=> b.name
           else
             -1
           end
-        elsif b.name.starts_with?(first_name)
+        elsif b.name[/^#{first_name}/i]
           +1
         else
           a.name <=> b.name
