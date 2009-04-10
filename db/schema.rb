@@ -114,7 +114,7 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
     t.string   "url"
     t.string   "wikipedia_url"
     t.string   "spinwatch_url"
-    t.integer  "company_number"
+    t.string   "company_number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
