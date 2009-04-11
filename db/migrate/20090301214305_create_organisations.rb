@@ -7,9 +7,11 @@ class CreateOrganisations < ActiveRecord::Migration
       t.string :wikipedia_url
       t.string :spinwatch_url
       t.string :company_number
+      t.string :registered_name
 
       t.timestamps
     end
+
   end
 
   def self.down
