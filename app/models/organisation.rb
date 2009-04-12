@@ -52,14 +52,42 @@ class Organisation < ActiveRecord::Base
     end
   end
 
-  def similarly_named
-    first_name = name.split.first
-    first_name = name.split[1] if first_name == 'The'
-
-    organisations = Organisation.find(:all, :conditions => %Q|name like "#{first_name} %"|) +
-        Organisation.find(:all, :conditions => %Q|name like "#{first_name}-%"|) +
-        Organisation.find(:all, :conditions => %Q|name like "The #{first_name} %"|)
+  def find_similarly_named name_part
+    organisations = Organisation.find(:all, :conditions => %Q|name like "#{name_part} %"|) +
+        Organisation.find(:all, :conditions => %Q|name like "#{name_part}-%"|) +
+        Organisation.find(:all, :conditions => %Q|name like "The #{name_part} %"|) +
+        Organisation.find(:all, :conditions => %Q|name like "The #{name_part}-%"|) +
+        Organisation.find(:all, :conditions => %Q|name like "#{name_part}"|)
     organisations.delete(self)
+    organisations.sort_by{|x| x.name.gsub('-',' ')}
+  end
+
+  def name_part name, count=1
+    parts = name.split(/( |-)/)
+    first_name = parts.first
+    first_name = parts[2] if parts.first == 'The'
+    if count==1
+      first_name
+    else
+      (parts.first == 'The') ? "#{first_name}#{parts[3]}#{parts[4]}" : "#{first_name}#{parts[1]}#{parts[2]}"
+    end
+  end
+
+  def normalize_name_part part
+    puts part.gsub('-',' ').gsub('&','and')
+    part.gsub('-',' ').gsub('&','and')
+  end
+
+  def similarly_named
+    part = name_part(name)
+    organisations = find_similarly_named(part)
+
+    if organisations.size > 9
+      normalized = normalize_name_part(name_part(name,2))
+      name_parts = (organisations + [self]).collect{|x| name_part(x.name,2) }.uniq
+      name_parts.delete_if{|x| normalize_name_part(x) != normalized}
+      organisations = name_parts.collect {|name_part| find_similarly_named(name_part)}.flatten.uniq
+    end
     organisations
   end
 

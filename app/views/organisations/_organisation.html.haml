@@ -5,4 +5,5 @@
     = link_to 'Show', organisation_path(organisation)
   %td{:class => organisation.is_lobbyist_firm? ? 'lobbyist_firm' : 'organisation'}
     = link_to organisation.name, edit_organisation_path(organisation)
-
+    - if organisation.company_number
+      = organisation.registered_name
