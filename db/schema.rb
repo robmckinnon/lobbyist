@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090302162624) do
+ActiveRecord::Schema.define(:version => 20090411112213) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
     t.datetime "updated_at"
   end
 
+  add_index "consultancy_clients", ["name"], :name => "index_consultancy_clients_on_name"
   add_index "consultancy_clients", ["organisation_id"], :name => "index_consultancy_clients_on_organisation_id"
   add_index "consultancy_clients", ["register_entry_id"], :name => "index_consultancy_clients_on_register_entry_id"
 
@@ -96,6 +97,7 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
     t.datetime "updated_at"
   end
 
+  add_index "monitoring_clients", ["name"], :name => "index_monitoring_clients_on_name"
   add_index "monitoring_clients", ["organisation_id"], :name => "index_monitoring_clients_on_organisation_id"
   add_index "monitoring_clients", ["register_entry_id"], :name => "index_monitoring_clients_on_register_entry_id"
 
@@ -115,9 +117,12 @@ ActiveRecord::Schema.define(:version => 20090302162624) do
     t.string   "wikipedia_url"
     t.string   "spinwatch_url"
     t.string   "company_number"
+    t.string   "registered_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "organisations", ["name"], :name => "index_organisations_on_name"
 
   create_table "people", :force => true do |t|
     t.string   "name"

@@ -3,10 +3,10 @@ class RegisterEntry < ActiveRecord::Base
   belongs_to :data_source
   belongs_to :organisation
 
-  has_many :office_contacts
-  has_many :consultancy_staff_members
-  has_many :consultancy_clients, :order=>'name'
-  has_many :monitoring_clients
+  has_many :office_contacts, :dependent => :delete_all
+  has_many :consultancy_staff_members, :dependent => :delete_all
+  has_many :consultancy_clients, :order=>'name', :dependent => :delete_all
+  has_many :monitoring_clients, :order=>'name', :dependent => :delete_all
 
   delegate :period_start, :to => :data_source
   delegate :period_end, :to => :data_source

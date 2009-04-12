@@ -15,3 +15,7 @@
   - @organisation.data_sources.each do |data_source|
     %p= link_to h(data_source.name), data_source_path(data_source)
 
+- unless @similarly_named.empty?
+  %h2 Similarly Named Organisations
+  - @similarly_named.each do |organisation|
+    %p= link_to h(organisation.name), organisation_path(organisation)

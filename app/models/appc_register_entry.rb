@@ -18,6 +18,7 @@ class AppcRegisterEntry
     entry = RegisterEntry.new
     entry.data_source_id = @data_source_id.to_i
     state = nil
+    data.gsub!("\r\n","\n")
     data.each_line do |line|
       text = RegisterEntry.clean_text(line)
       if RegisterEntry.valid_name?(text)
@@ -62,12 +63,14 @@ class AppcRegisterEntry
         when /^Offices outside UK/
           entry.offices_outside_the_uk = ''
           :offices_outside_the_uk
-        when /^Staff \(employed and sub-contracted\) providing PA consultancy services/
+        when /^Staff \(employed and sub-contracted\) providing PA consultancy services/i
           :consultancy_staff
-        when /^Fee-Paying clients for whom UK PA consultancy services/
+        when /^Fee-Paying clients for whom UK PA consultancy services/i
           :consultancy_clients
-        when /^Fee-Paying Clients for whom only UK monitoring services/
+        when /^Fee-Paying Clients for whom only UK monitoring services/i
           :monitoring_clients
+        when /^Pro-Bono Clients for whom consultancy/i
+          :pro_bono_clients
         else
           handle_by_state(entry, line, text, state)
           state
@@ -86,6 +89,8 @@ class AppcRegisterEntry
           add_client(entry, line, text, ConsultancyClient, :consultancy_clients)
         when :monitoring_clients
           add_client(entry, line, text, MonitoringClient, :monitoring_clients)
+        when :pro_bono_clients
+          # ignore for now
       end
     end
 
@@ -96,7 +101,7 @@ class AppcRegisterEntry
         begin
           entry.send(method).last.name = entry.send(method).last.name + ' ' + text
         rescue
-          raise state.to_s + ': ' + text
+          raise method.to_s + ': ' + text
         end
       end
     end

@@ -52,6 +52,17 @@ class Organisation < ActiveRecord::Base
     end
   end
 
+  def similarly_named
+    first_name = name.split.first
+    first_name = name.split[1] if first_name == 'The'
+
+    organisations = Organisation.find(:all, :conditions => %Q|name like "#{first_name} %"|) +
+        Organisation.find(:all, :conditions => %Q|name like "#{first_name}-%"|) +
+        Organisation.find(:all, :conditions => %Q|name like "The #{first_name} %"|)
+    organisations.delete(self)
+    organisations
+  end
+
   def is_lobbyist_firm?
     !register_entries.empty?
   end
@@ -75,23 +86,43 @@ class Organisation < ActiveRecord::Base
   end
 
   private
+    def set_company company
+      puts "setting company to: #{company.name}"
+      self.company_number = company.company_number
+      self.registered_name = company.name
+    end
+
+    def company_is_a_match? company
+      puts company.name
+      upcase_name = name.upcase
+      company.name == upcase_name || company.name[/^(.+) (LIMITED|LTD)\.?$/,1] == upcase_name
+    end
+
+    def handle_company_results results
+      result_size = results.result_size.to_i
+      puts ""
+      puts "#{name}: #{result_size} matches"
+
+      if result_size == 1
+        set_company(results.company) if company_is_a_match?(results.company)
+      elsif result_size > 1
+        results.companies.each do |company|
+          set_company(company) if company_is_a_match?(company)
+        end
+      end
+    end
+
     def populate_company_number
       begin
-        encoded_name = URI.encode name.gsub('&','AND')
+        encoded_name = URI.encode(name)
         # url = "http://localhost:3001/search?q=#{encoded_name}&f=xml"
         url = "http://companiesrevealed.org/search?q=#{encoded_name}&f=xml"
         xml = open(url).read.gsub("id>","companies_revealed_id>")
         hash = Hash.from_xml(xml)
         results = Morph.from_hash(hash)
-        y results
-        if results.result_size.to_i == 0
-        elsif results.result_size.to_i == 1
-          self.company_number = results.company.company_number
-        elsif results.result_size.to_i > 1
-        end
-        puts results.result_size
+        handle_company_results(results)
       rescue Exception => e
-        puts e.to_s
+        puts "#{Exception.class.name} while populating company for '#{name}': #{e.to_s}"
       end
     end
 end

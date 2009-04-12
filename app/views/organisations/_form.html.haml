@@ -5,9 +5,10 @@
     %p
       = f.label :name
       = f.text_field :name, :size=>40
-    %p
-      = f.label :merge_with_id
-      = f.collection_select(:merge_with_id, @organisations, :id, :name, {:prompt => true}, { :index => nil }).gsub('[]','')
+    - if @organisation.id
+      %p
+        = f.label :merge_with_id
+        = f.collection_select(:merge_with_id, @organisations, :id, :name, {:prompt => true}, { :index => nil }).gsub('[]','')
     %p
       = f.label :alternate_name
       = f.text_field :alternate_name, :size=>40

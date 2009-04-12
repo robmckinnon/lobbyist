@@ -17,7 +17,7 @@ Staff (employed and sub-contracted) providing PA consultancy services this quart
 #{@consultancy_staff_text}
 Fee-Paying clients for whom UK PA consultancy services provided this quarter
 #{@consultancy_clients_text}
-Fee-Paying Clients for whom only UK monitoring services provided this quarter
+Fee-Paying clients for whom only UK monitoring services provided this quarter
 #{@monitoring_clients_text}"
     end
 

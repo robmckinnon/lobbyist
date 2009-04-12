@@ -18,6 +18,8 @@ class OrganisationsController < ApplicationController
     @consultancy_clients_by_source = @consultancy_clients.group_by{|x| x.register_entry.data_source}
     @monitoring_clients_by_source = @monitoring_clients.group_by{|x| x.register_entry.data_source}
     @client_data_sources = @consultancy_clients_by_source.keys | @monitoring_clients_by_source.keys
+
+    @similarly_named = @organisation.similarly_named
   end
 
   def edit
