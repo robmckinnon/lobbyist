@@ -3,7 +3,7 @@ require 'stringio'
 
 class ApplicationController < ActionController::Base
 
-  before_filter :authenticate
+  before_filter :authenticate, :except => :home
   after_filter :compress
 
   helper :all # include all helpers, all the time

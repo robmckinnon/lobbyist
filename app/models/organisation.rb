@@ -27,6 +27,8 @@ class Organisation < ActiveRecord::Base
       url = url.chomp('/')
       if exists?(:url => url)
         find_by_url(url)
+      elsif exists?(:name => name)
+        find_by_name(name)
       else
         create!(:url => url, :name => name)
       end
@@ -123,6 +125,9 @@ class Organisation < ActiveRecord::Base
     def company_is_a_match? company
       puts company.name
       upcase_name = name.upcase
+      if upcase_name[/^(.+) (LIMITED|LTD)\.?$/]
+        upcase_name = $1
+      end
       company.name == upcase_name || company.name[/^(.+) (LIMITED|LTD)\.?$/,1] == upcase_name
     end
 
@@ -142,7 +147,7 @@ class Organisation < ActiveRecord::Base
 
     def populate_company_number
       begin
-        encoded_name = URI.encode(name)
+        encoded_name = URI.encode(name.gsub('&','and'))
         # url = "http://localhost:3001/search?q=#{encoded_name}&f=xml"
         url = "http://companiesrevealed.org/search?q=#{encoded_name}&f=xml"
         xml = open(url).read.gsub("id>","companies_revealed_id>")

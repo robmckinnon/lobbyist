@@ -5,6 +5,7 @@ class DataSource < ActiveRecord::Base
   belongs_to :organisation
 
   has_many :appointees
+  has_many :register_entries
 
   validates_presence_of :organisation
   validates_presence_of :name
