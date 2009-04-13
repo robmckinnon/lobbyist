@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.root :controller => "application", :action => 'home'
+
   map.resources :people
   map.resources :appointees
   map.resources :data_sources

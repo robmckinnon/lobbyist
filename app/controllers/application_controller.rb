@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
+  def home
+    render :template => 'application/home', :layout => false
+  end
+
   def authenticate
     auth = YAML.load_file(RAILS_ROOT+'/config/auth.yml')
     auth.symbolize_keys!
