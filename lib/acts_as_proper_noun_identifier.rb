@@ -20,8 +20,10 @@ module Acts
 
       def add_word list, word
         noun = list.pop
-        noun << word
-        list << noun
+        if noun
+          noun << word
+          list << noun
+        end
       end
 
       def end_check list, word, state
@@ -82,7 +84,7 @@ module Acts
             state = :not_proper
           end
 
-          puts "#{state}: #{word}#{list.last ? ' -> '+list.last.join(' ') : ''}"
+          # puts "#{state}: #{word}#{list.last ? ' -> '+list.last.join(' ') : ''}"
         end
 
         clean_last_word list

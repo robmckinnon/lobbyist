@@ -5,6 +5,7 @@
     = @organisation.company_number
 - unless @client_data_sources.empty?
   %h2 Lobbyists Retained
+  = # render :partial => 'consultancy_client', :collection => @consultancy_clients
   = render :partial => 'client_data_source', :collection => @client_data_sources
 - unless @register_entries.empty?
   %h2 Public Affairs Clients

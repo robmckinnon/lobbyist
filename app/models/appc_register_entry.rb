@@ -95,13 +95,15 @@ class AppcRegisterEntry
     end
 
     def add_client(entry, line, text, model, method)
-      if line.strip[/^•/] || line.starts_with?("􀂃")
+      if text[/^None(\.)?$/i]
+        # ignore
+      elsif line.strip[/^•/] || line.starts_with?("􀂃") || line.strip[/^\* /]
         entry.send(method) << model.new(:name => text)
       else
         begin
           entry.send(method).last.name = entry.send(method).last.name + ' ' + text
-        rescue
-          raise method.to_s + ': ' + text
+        rescue Exception => e
+          raise method.to_s + ': ' + text + ' ' + e.to_s + ' ' + e.backtrace.join("\n").to_s
         end
       end
     end

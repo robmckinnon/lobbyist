@@ -45,3 +45,4 @@ require 'acts_as_wikipedia'
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(
   :month_year => "%B %Y"
 )
+
