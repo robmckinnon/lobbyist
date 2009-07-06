@@ -28,7 +28,7 @@ class RegisterEntry < ActiveRecord::Base
 
   class << self
     def clean_text text
-      text.sub('•','').sub("􀂃",'').strip.squeeze(' ')
+      text.sub('•','').sub("􀂃",'').sub(/^\*/,'').strip.squeeze(' ')
     end
 
     def clean_name text
