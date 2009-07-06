@@ -4,20 +4,22 @@
   and
   = client_data_source.period_end.to_s(:month_year)
   retained public affairs
-  - if @consultancy_clients.empty?
+  = consultancy_clients = @consultancy_clients_by_source[client_data_source]
+  = monitoring_clients = @monitoring_clients_by_source[client_data_source]
+  - if consultancy_clients.blank?
     monitoring services from:
-    = render :partial => 'lobbyist_clients', :object => @monitoring_clients
-  - elsif @monitoring_clients.empty?
+    = render :partial => 'lobbyist_clients', :object => monitoring_clients
+  - elsif monitoring_clients.blank?
     consultancy services from:
-    = render :partial => 'lobbyist_clients', :object => @consultancy_clients
+    = render :partial => 'lobbyist_clients', :object => consultancy_clients
   - else
     %ul
-      - unless @consultancy_clients.empty?
+      - unless consultancy_clients.blank?
         %li consultancy services from:
-        = render :partial => 'lobbyist_clients', :object => @consultancy_clients
-      - unless @monitoring_clients.empty?
+        = render :partial => 'lobbyist_clients', :object => consultancy_clients
+      - unless monitoring_clients.blank?
         %li monitoring services from:
-        = render :partial => 'lobbyist_clients', :object => @monitoring_clients
+        = render :partial => 'lobbyist_clients', :object => monitoring_clients
 %p
   Data source:
   = link_to(client_data_source.name, client_data_source.url)
