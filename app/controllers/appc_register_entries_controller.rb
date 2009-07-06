@@ -12,4 +12,5 @@ class AppcRegisterEntriesController < ApplicationController
     @appc_register_entry = AppcRegisterEntry.create_register_entry(entry['data_source_id'], entry['data'])
     redirect_to :action=>'index', :controller=>'register_entries'
   end
+
 end

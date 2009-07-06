@@ -5,7 +5,13 @@ class RegisterEntriesController < ApplicationController
   before_filter :store_location, :only => [:index, :new, :edit]
 
   def index
-    @register_entries = RegisterEntry.find(:all, :order => "organisation_name")
+    entries = RegisterEntry.find(:all, :order => "organisation_name")
+
+    @register_entries = []
+    entries.group_by(&:data_source).sort_by{|x| x[0].period_start}.reverse.each do |data_source, register_entries|
+      @register_entries << [data_source, register_entries]
+    end
+
   end
 
   def show

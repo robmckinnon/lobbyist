@@ -12,7 +12,7 @@ class CreateOrganisations < ActiveRecord::Migration
       t.timestamps
     end
 
-    Organisation.create :name => 'Association of Professional Political Constultants',
+    Organisation.create :name => 'Association of Professional Political Consultants',
         :alternate_name => 'APPC',
         :url => 'http://www.appc.org.uk/'
 

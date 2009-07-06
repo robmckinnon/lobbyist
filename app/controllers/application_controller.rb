@@ -82,6 +82,12 @@ class ApplicationController < ActionController::Base
         end
       end
       @organisations = Organisation.find(:all, :order => "name") || []
+      appc = Organisation.find_by_alternate_name('APPC')
+      acoba = Organisation.find_by_alternate_name('ACOBA')
+      @organisations.delete(appc)
+      @organisations.delete(acoba)
+      @organisations.insert(0,appc)
+      @organisations.insert(0,acoba)
       @organisations_list = @organisations.collect{|o| [o.name, o.id]}
     end
 

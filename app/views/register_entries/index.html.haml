@@ -9,5 +9,7 @@
   |
   = link_to "Add generic register entry", new_register_entry_path
 
-.register_entries
-  = render :partial => 'register_entry', :collection => @register_entries
+- @register_entries.each do |data_source, entries|
+  .register_entries
+    %h2= data_source.name
+    = render :partial => 'register_entry', :collection => entries
