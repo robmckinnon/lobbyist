@@ -5,6 +5,10 @@ class OrganisationsController < ApplicationController
 
   def index
     @organisations = Organisation.find(:all, :order => "name")
+    @lobbyists = @organisations.select {|x| x.is_lobbyist_firm? }
+    @lobbyist_count = @lobbyists.size
+    @others = @organisations - @lobbyists
+    @other_count = @others.size
   end
 
   def new
