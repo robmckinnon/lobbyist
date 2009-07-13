@@ -16,15 +16,19 @@ class OrganisationsController < ApplicationController
   end
 
   def show
+    # @consultancy_clients = @organisation.consultancy_clients
+    # @monitoring_clients = @organisation.monitoring_clients
+    # @consultancy_clients_by_source = @consultancy_clients.group_by{|x| x.register_entry.data_source}
+    # @monitoring_clients_by_source = @monitoring_clients.group_by{|x| x.register_entry.data_source}
+    # @client_data_sources = @consultancy_clients_by_source.keys | @monitoring_clients_by_source.keys # union
+
     @register_entries = @organisation.register_entries
-    @consultancy_clients = @organisation.consultancy_clients
-    @monitoring_clients = @organisation.monitoring_clients
-    @consultancy_clients_by_source = @consultancy_clients.group_by{|x| x.register_entry.data_source}
-    @monitoring_clients_by_source = @monitoring_clients.group_by{|x| x.register_entry.data_source}
-    @client_data_sources = @consultancy_clients_by_source.keys | @monitoring_clients_by_source.keys # union
 
     @consultancy_lobbyist_firms, @consultancy_entries_by_lobbyist_firm = @organisation.consultancy_entries_by_lobbyist_firm
     @monitoring_lobbyist_firms, @monitoring_entries_by_lobbyist_firm = @organisation.monitoring_entries_by_lobbyist_firm
+
+    @consultancy_client_organisations, @consultancy_entries_by_client_organisation = @organisation.consultancy_entries_by_client_organisation
+    @monitoring_client_organisations, @monitoring_entries_by_client_organisation = @organisation.monitoring_entries_by_client_organisation
 
     @similarly_named = @organisation.similarly_named
   end

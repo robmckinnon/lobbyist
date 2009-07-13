@@ -117,19 +117,45 @@ class Organisation < ActiveRecord::Base
 
   def consultancy_entries_by_lobbyist_firm
     entries = entries_by_lobbyist_firm consultancy_clients
-    return [entries.keys.sort_by(&:name), entries]
+    return [sort_by_name(entries.keys), entries]
   end
 
   def monitoring_entries_by_lobbyist_firm
     entries = entries_by_lobbyist_firm monitoring_clients
-    return [entries.keys.sort_by(&:name), entries]
+    return [sort_by_name(entries.keys), entries]
+  end
+
+  def consultancy_entries_by_client_organisation
+    entries = entries_by_client_organisation :consultancy_clients
+    return [sort_by_name(entries.keys), entries]
+  end
+
+  def monitoring_entries_by_client_organisation
+    entries = entries_by_client_organisation :monitoring_clients
+    return [sort_by_name(entries.keys), entries]
   end
 
   private
+  
+    def sort_by_name list
+      list.sort_by {|x| x.name.downcase}
+    end
+    
     def entries_by_lobbyist_firm clients
       entries_by_lobbyist_firm = clients.collect(&:register_entry).group_by(&:organisation)
       entries_by_lobbyist_firm.each {|k,v| entries_by_lobbyist_firm[k] = v.sort_by{|x| x.data_source.period_start} }
       entries_by_lobbyist_firm
+    end
+    
+    def entries_by_client_organisation client_type
+      entries_by_client = Hash.new {|h,k| h[k] = []}
+      register_entries.each do |entry|
+        entry.send(client_type).each do |client|
+          entries_by_client[client.organisation] << entry
+        end
+      end
+      entries_by_client.each {|k,v| entries_by_client[k] = v.sort_by{|x| x.data_source.period_start} }
+      entries_by_client
     end
 
     def set_company company

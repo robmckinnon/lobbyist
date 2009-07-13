@@ -8,17 +8,30 @@
   %h2 Lobbyist Retained
   - unless @consultancy_lobbyist_firms.empty?
     %p Retained public affairs consultancy services from:
-    = render :partial => 'lobbyist_firm_retained', :collection => @consultancy_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @consultancy_entries_by_lobbyist_firm}
+    %ul
+      = render :partial => 'lobbyist_firm_retained', :collection => @consultancy_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @consultancy_entries_by_lobbyist_firm}
   - unless @monitoring_lobbyist_firms.empty?
     %p Retained public affairs monitoring services from:
-    = render :partial => 'lobbyist_firm_retained', :collection => @monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}
+    %ul
+      = render :partial => 'lobbyist_firm_retained', :collection => @monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}
+
+- unless @consultancy_client_organisations.empty? && @monitoring_client_organisations.empty?
+  %h2 Public Affairs Clients
+  - unless @consultancy_client_organisations.empty?
+    %p Provided public affairs consultancy services to:
+    %ul
+      = render :partial => 'client_organisation', :collection => @consultancy_client_organisations, :locals => {:entries_by_client_organisation => @consultancy_entries_by_client_organisation}
+  - unless @monitoring_client_organisations.empty?
+    %p Provided public affairs monitoring services to:
+    %ul
+      = render :partial => 'client_organisation', :collection => @monitoring_client_organisations, :locals => {:entries_by_client_organisation => @monitoring_entries_by_client_organisation}
+
 
 - if false # unless @client_data_sources.empty?
   %h2 Lobbyists Retained
-  = # render :partial => 'consultancy_client', :collection => @consultancy_clients
   = render :partial => 'client_data_source', :collection => @client_data_sources
 
-- unless @register_entries.empty?
+- if false # unless @register_entries.empty?
   %h2 Public Affairs Clients
   = render :partial => 'register_entry', :collection => @register_entries
 
