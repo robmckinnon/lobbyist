@@ -3,10 +3,21 @@
   .company_number
     Company No.
     = @organisation.company_number
-- unless @client_data_sources.empty?
+
+- unless @consultancy_entries_by_lobbyist_firm.empty? && @monitoring_entries_by_lobbyist_firm.empty?
+  %h2 Lobbyist Retained
+  - unless @consultancy_entries_by_lobbyist_firm.empty?
+    %p Retained public affairs consultancy services from:
+    = render :partial => 'lobbyist_firm_retained', :collection => @consultancy_lobbyist_firm_keys, :locals => {:entries_by_lobbyist_firm => @consultancy_entries_by_lobbyist_firm}
+  - unless @monitoring_entries_by_lobbyist_firm.empty?
+    %p Retained public affairs monitoring services from:
+    = render :partial => 'lobbyist_firm_retained', :collection => @monitoring_lobbyist_firm_keys, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}
+
+- if false # unless @client_data_sources.empty?
   %h2 Lobbyists Retained
   = # render :partial => 'consultancy_client', :collection => @consultancy_clients
   = render :partial => 'client_data_source', :collection => @client_data_sources
+
 - unless @register_entries.empty?
   %h2 Public Affairs Clients
   = render :partial => 'register_entry', :collection => @register_entries

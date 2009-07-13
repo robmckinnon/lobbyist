@@ -4,8 +4,8 @@
   and
   = client_data_source.period_end.to_s(:month_year)
   retained public affairs
-  = consultancy_clients = @consultancy_clients_by_source[client_data_source]
-  = monitoring_clients = @monitoring_clients_by_source[client_data_source]
+  - consultancy_clients = @consultancy_clients_by_source[client_data_source]
+  - monitoring_clients = @monitoring_clients_by_source[client_data_source]
   - if consultancy_clients.blank?
     monitoring services from:
     = render :partial => 'lobbyist_clients', :object => monitoring_clients

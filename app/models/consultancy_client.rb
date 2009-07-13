@@ -7,6 +7,10 @@ class ConsultancyClient < ActiveRecord::Base
 
   before_validation :set_organisation
 
+  def lobbyist_firm_retained
+    register_entry.organisation
+  end
+  
   private
     def set_organisation
       if organisation_id.nil? && !name.blank?

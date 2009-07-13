@@ -21,7 +21,15 @@ class OrganisationsController < ApplicationController
     @monitoring_clients = @organisation.monitoring_clients
     @consultancy_clients_by_source = @consultancy_clients.group_by{|x| x.register_entry.data_source}
     @monitoring_clients_by_source = @monitoring_clients.group_by{|x| x.register_entry.data_source}
-    @client_data_sources = @consultancy_clients_by_source.keys | @monitoring_clients_by_source.keys
+    @client_data_sources = @consultancy_clients_by_source.keys | @monitoring_clients_by_source.keys # union
+
+    @consultancy_entries_by_lobbyist_firm = @consultancy_clients.collect(&:register_entry).group_by(&:organisation)
+    @consultancy_entries_by_lobbyist_firm.each {|k,v| @consultancy_entries_by_lobbyist_firm[k] = v.sort_by{|x| x.data_source.period_start} }
+    @consultancy_lobbyist_firm_keys = @consultancy_entries_by_lobbyist_firm.keys.sort_by(&:name)
+
+    @monitoring_entries_by_lobbyist_firm = @monitoring_clients.collect(&:register_entry).group_by(&:organisation)
+    @monitoring_entries_by_lobbyist_firm.each {|k,v| @monitoring_entries_by_lobbyist_firm[k] = v.sort_by{|x| x.data_source.period_start} }
+    @monitoring_lobbyist_firm_keys = @monitoring_entries_by_lobbyist_firm.keys.sort_by(&:name)
 
     @similarly_named = @organisation.similarly_named
   end

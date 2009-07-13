@@ -17,6 +17,35 @@ class DataSource < ActiveRecord::Base
   before_validation :set_period_start
   before_validation :set_period_end
 
+  class << self
+    
+    def merge_periods(data_sources)
+      sorted = data_sources.sort_by(&:period_start)
+      dates = [[sorted.first.period_start]]
+      if sorted.size > 1
+        sorted.each_with_index do |source, index|
+          next_index = index.next
+          unless (sorted.size - 1) < next_index
+            next_source = sorted[next_index]
+            unless adjacent?(source.period_end, next_source.period_start)
+              dates.last << source.period_end
+              dates << [next_source.period_start]
+            end
+          end
+          dates.last << sorted.last.period_end unless dates.last.size == 2
+        end
+      else
+        dates.last << sorted.first.period_end
+      end
+      dates
+    end
+    
+    def adjacent? date, other_date
+      date.next_month == other_date
+    end
+
+  end
+  
   def period_start_text
     if @period_start_text
       @period_start_text

@@ -46,3 +46,6 @@ ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(
   :month_year => "%B %Y"
 )
 
+ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(
+  :mmm_year => "%b %Y"
+)
