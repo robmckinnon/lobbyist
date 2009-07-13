@@ -115,7 +115,23 @@ class Organisation < ActiveRecord::Base
     end
   end
 
+  def consultancy_entries_by_lobbyist_firm
+    entries = entries_by_lobbyist_firm consultancy_clients
+    return [entries.keys.sort_by(&:name), entries]
+  end
+
+  def monitoring_entries_by_lobbyist_firm
+    entries = entries_by_lobbyist_firm monitoring_clients
+    return [entries.keys.sort_by(&:name), entries]
+  end
+
   private
+    def entries_by_lobbyist_firm clients
+      entries_by_lobbyist_firm = clients.collect(&:register_entry).group_by(&:organisation)
+      entries_by_lobbyist_firm.each {|k,v| entries_by_lobbyist_firm[k] = v.sort_by{|x| x.data_source.period_start} }
+      entries_by_lobbyist_firm
+    end
+
     def set_company company
       puts "setting company to: #{company.name}"
       self.company_number = company.company_number
