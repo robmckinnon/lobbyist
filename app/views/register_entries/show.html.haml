@@ -1,7 +1,38 @@
-- @title = @register_entry.organisation_name
-%p= h @register_entry.inspect
-%p= h @register_entry.office_contacts.inspect
-%p= h @register_entry.consultancy_staff_members.inspect
-%p= h @register_entry.consultancy_clients.inspect
-%p= h @register_entry.monitoring_clients.inspect
+- organisation_link = link_to h(@register_entry.organisation_name), organisation_path(@register_entry.organisation)
+- @title = h(@register_entry.data_source.name).sub('Register', "Register Entry for #{organisation_link}")
+%p
+  Office contacts:
+%ul
+  - @register_entry.office_contacts.each do |office_contact|
+    %li= h(office_contact.display_details).split("\n").join('<br />')
+- unless @register_entry.offices_outside_the_uk.blank?
+  %p
+    Offices outside the UK:
+    = h(@register_entry.offices_outside_the_uk)
+%p
+  Consultancy staff:
+%ul
+  - @register_entry.consultancy_staff_members.each do |staff_member|
+    %li= h(staff_member.name)
+- unless @register_entry.consultancy_clients.empty?
+  %p
+    Provided public affairs consultancy services to:
+  %ul
+    - @register_entry.consultancy_clients.each do |client|
+      %li
+        = link_to h(client.name), organisation_path(client.organisation)
+        - if client.name_in_parentheses
+          = "(#{client.name_in_parentheses})"
+- unless @register_entry.monitoring_clients.empty?
+  %p
+    Provided public affairs monitoring services to:
+  %ul
+    - @register_entry.monitoring_clients.each do |client|
+      %li
+        = link_to h(client.name), organisation_path(client.organisation)
+        - if client.name_in_parentheses
+          = "(#{client.name_in_parentheses})"
+%p
+  Data source:
+  = link_to h(@register_entry.data_source.name), @register_entry.data_source.url
 

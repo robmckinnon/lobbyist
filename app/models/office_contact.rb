@@ -4,4 +4,7 @@ class OfficeContact < ActiveRecord::Base
 
   validates_presence_of :details
 
+  def display_details
+    details.gsub(/(Name|Tel|Fax|Email):\n/,'')
+  end
 end

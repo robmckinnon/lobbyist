@@ -71,7 +71,7 @@ class RegisterEntry < ActiveRecord::Base
       return name, name_in_parentheses
     end
   end
-
+  
   def consultancy_staff_members_text
     if @consultancy_staff_members_text
       @consultancy_staff_members_text
