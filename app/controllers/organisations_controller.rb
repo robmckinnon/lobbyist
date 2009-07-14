@@ -24,6 +24,8 @@ class OrganisationsController < ApplicationController
 
     @register_entries = @organisation.register_entries
 
+    @consultancy_staff_members, @entries_by_consultancy_staff_member = @organisation.entries_by_consultancy_staff_member
+
     @consultancy_lobbyist_firms, @consultancy_entries_by_lobbyist_firm = @organisation.consultancy_entries_by_lobbyist_firm
     @monitoring_lobbyist_firms, @monitoring_entries_by_lobbyist_firm = @organisation.monitoring_entries_by_lobbyist_firm
 

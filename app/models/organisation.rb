@@ -125,6 +125,11 @@ class Organisation < ActiveRecord::Base
     return [sort_by_name(entries.keys), entries]
   end
 
+  def entries_by_consultancy_staff_member
+    entries = entries_by_client_organisation :consultancy_staff_members, :name
+    return [entries.keys.sort, entries]
+  end
+  
   def consultancy_entries_by_client_organisation
     entries = entries_by_client_organisation :consultancy_clients
     return [sort_by_name(entries.keys), entries]
@@ -147,11 +152,12 @@ class Organisation < ActiveRecord::Base
       entries_by_lobbyist_firm
     end
     
-    def entries_by_client_organisation client_type
+    def entries_by_client_organisation client_type, entity_type=:organisation
       entries_by_client = Hash.new {|h,k| h[k] = []}
       register_entries.each do |entry|
         entry.send(client_type).each do |client|
-          entries_by_client[client.organisation] << entry
+          key = entity_type ? client.send(entity_type) : client
+          entries_by_client[key] << entry
         end
       end
       entries_by_client.each {|k,v| entries_by_client[k] = v.sort_by{|x| x.data_source.period_start} }
