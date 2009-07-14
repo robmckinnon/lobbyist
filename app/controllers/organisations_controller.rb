@@ -31,6 +31,7 @@ class OrganisationsController < ApplicationController
     @monitoring_client_organisations, @monitoring_entries_by_client_organisation = @organisation.monitoring_entries_by_client_organisation
 
     @similarly_named = @organisation.similarly_named
+    render :template => 'organisations/show.html.haml'
   end
 
   def edit

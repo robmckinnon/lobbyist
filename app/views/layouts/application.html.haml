@@ -5,27 +5,33 @@
     %script{:type=>'javascript'}
     - if @organisation
       = search_script 'org_name', @organisation.name
-    %style{ :type=>"text/css" }
-      fieldset { margin: 1em; }
-      p.indent { margin-left: 2em; }
-      div.fieldWithErrors input,
-      div.fieldWithErrors textarea { border: solid 1px #cc0000; background-color: #ffcccc; }
-      span.note { font-size: 0.7em; }
-      label { width: 9em; float: left; text-align: right; margin-right: 0.5em; display: block; }
-      div.appointment,
-      div.former_role,
-      div.consultancy_client,
-      div.monitoring_client,
-      div.consultancy_staff_member { margin-bottom: 3em; }
-      li { padding-bottom: 0.2em; padding-top: 0.2em; }
-      td.lobbyist_firm { font-weight: bold; }
-      ul { list-style: none; }
-  %body
-    #header
-      = image_tag('whoslobbying_header_60.png')
-      %h1= @title || "WhosLobbying.com"
-    - if false
-      #menu
+    = stylesheet_link_tag 'screen.css', :media => 'screen, projection'
+    = stylesheet_link_tag 'partials/_base.css'
+    = stylesheet_link_tag 'print.css', :media => 'print'
+    = stylesheet_link_tag 'ie.css', :media => 'screen, projection'
+  %body.bp
+    #container
+      #header
+        = image_tag('whoslobbying_header_60.png')
+        %h1= @title || "WhosLobbying.com"
+      - if false
+        #menu
+          %p
+            = link_to 'People', people_path
+            |
+            = link_to 'Appointees', appointees_path
+            |
+            = link_to 'Data sources', data_sources_path
+            |
+            = link_to 'Organisations', organisations_path
+            |
+            = link_to 'Register entries', register_entries_path
+      #content
+        - if flash[:notice]
+          %p
+            %em= flash[:notice]
+        = yield
+      #footer
         %p
           = link_to 'People', people_path
           |
@@ -36,30 +42,14 @@
           = link_to 'Organisations', organisations_path
           |
           = link_to 'Register entries', register_entries_path
-    #content
-      - if flash[:notice]
-        %p
-          %em= flash[:notice]
-      = yield
-    #footer
-      %p
-        = link_to 'People', people_path
-        |
-        = link_to 'Appointees', appointees_path
-        |
-        = link_to 'Data sources', data_sources_path
-        |
-        = link_to 'Organisations', organisations_path
-        |
-        = link_to 'Register entries', register_entries_path
-    - if RAILS_ENV == 'production'
-      #analytics
-        = %Q[<script type="text/javascript">]
-        = %Q[var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");]
-        = %Q[document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));]
-        = %Q[</script>]
-        = %Q[<script type="text/javascript">]
-        = %Q[try {]
-        = %Q[var pageTracker = _gat._getTracker("UA-7723073-1");]
-        = %Q[pageTracker._trackPageview();]
-        = %Q[} catch(err) {}</script>]
+      - if RAILS_ENV == 'production'
+        #analytics
+          = %Q[<script type="text/javascript">]
+          = %Q[var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");]
+          = %Q[document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));]
+          = %Q[</script>]
+          = %Q[<script type="text/javascript">]
+          = %Q[try {]
+          = %Q[var pageTracker = _gat._getTracker("UA-7723073-1");]
+          = %Q[pageTracker._trackPageview();]
+          = %Q[} catch(err) {}</script>]
