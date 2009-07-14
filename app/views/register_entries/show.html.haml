@@ -1,5 +1,6 @@
 - organisation_link = link_to h(@register_entry.organisation_name), organisation_path(@register_entry.organisation)
-- @title = h(@register_entry.data_source.name).sub('Register', "Register Entry for #{organisation_link}")
+- @title = organisation_link 
+%h2= h(@register_entry.data_source.name).sub(/^(.+Register)(.+)$/, '\1 Entry for \2')
 #lobbying_clients
   - unless @register_entry.consultancy_clients.empty?
     %h3
