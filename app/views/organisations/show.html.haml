@@ -22,7 +22,7 @@
     %ul
       = render :partial => 'staff_member', :collection => @consultancy_staff_members, :locals => {:entries_by_staff_member => @entries_by_consultancy_staff_member}
 - unless @consultancy_lobbyist_firms.empty? && @monitoring_lobbyist_firms.empty?
-  %h2 Lobbyist Retained
+  %h2 Lobbyists Retained
   - unless @consultancy_lobbyist_firms.empty?
     %p Retained public affairs consultancy services from:
     %ul

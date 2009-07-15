@@ -1,0 +1,2 @@
+class MembersInterestsEntriesController < ApplicationController
+end

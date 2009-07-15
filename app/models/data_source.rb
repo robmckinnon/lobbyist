@@ -11,14 +11,33 @@ class DataSource < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  validates_presence_of :period_start
-  validates_presence_of :period_end
+  validates_presence_of :period_start, :unless => Proc.new { |source| source.as_at_date }
+  validates_presence_of :period_end, :unless => Proc.new { |source| source.as_at_date }
+
+  validates_presence_of :as_at_date, :unless => Proc.new { |source| source.period_start }
 
   before_validation :set_period_start
   before_validation :set_period_end
 
   class << self
     
+    def get_data_source file_name
+      if exists?(:file => file_name)
+        find_by_file(file_name)
+      else
+        date = Date.parse(file_name[/(\d\d\d\d-\d\d-\d\d)/, 1])
+        name = "Register of Members' Financial Interests #{date.to_s(:dd_month_year).reverse.chomp('0').reverse}"
+        yy = date.to_s[2..3]
+        mm = date.to_s[5..6]
+        dd = date.to_s[8..9]
+        url = "http://www.publications.parliament.uk/pa/cm/cmregmem/#{yy}#{mm}#{dd}/memi02.htm"
+        parliament = Organisation.find_by_name('Parliament')
+        create!({ :file => file_name,
+            :name => name, :long_name => name, :url => url,
+            :organisation_id => parliament.id, :as_at_date => date })
+      end
+    end
+
     def merge_periods(data_sources)
       sorted = data_sources.sort_by(&:period_start)
       dates = [[sorted.first.period_start]]

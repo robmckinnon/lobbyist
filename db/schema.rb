@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090411112213) do
+ActiveRecord::Schema.define(:version => 20090715144925) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -71,6 +71,8 @@ ActiveRecord::Schema.define(:version => 20090411112213) do
     t.date     "period_end"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "as_at_date"
+    t.string   "file"
   end
 
   add_index "data_sources", ["organisation_id"], :name => "index_data_sources_on_organisation_id"
@@ -87,6 +89,66 @@ ActiveRecord::Schema.define(:version => 20090411112213) do
 
   add_index "former_roles", ["appointee_id"], :name => "index_former_roles_on_appointee_id"
   add_index "former_roles", ["department_id"], :name => "index_former_roles_on_department_id"
+
+  create_table "members", :force => true do |t|
+    t.integer  "person_id"
+    t.string   "publicwhip_id"
+    t.string   "house"
+    t.string   "title"
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "constituency"
+    t.string   "party"
+    t.date     "from_date"
+    t.date     "to_date"
+    t.string   "from_why"
+    t.string   "to_why"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "members", ["party"], :name => "index_members_on_party"
+  add_index "members", ["person_id"], :name => "index_members_on_person_id"
+  add_index "members", ["publicwhip_id"], :name => "index_members_on_publicwhip_id"
+
+  create_table "members_interests_categories", :force => true do |t|
+    t.integer  "number"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "members_interests_entries", :force => true do |t|
+    t.integer  "member_id"
+    t.integer  "data_source_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "members_interests_entries", ["data_source_id"], :name => "index_members_interests_entries_on_data_source_id"
+  add_index "members_interests_entries", ["member_id"], :name => "index_members_interests_entries_on_member_id"
+
+  create_table "members_interests_items", :force => true do |t|
+    t.integer  "members_interests_category_id"
+    t.integer  "members_interests_entry_id"
+    t.string   "subcategory"
+    t.text     "description"
+    t.string   "range_amount_text"
+    t.string   "actual_amount_text"
+    t.string   "up_to_amount_text"
+    t.string   "from_amount_text"
+    t.integer  "actual_amount"
+    t.integer  "up_to_amount"
+    t.integer  "from_amount"
+    t.string   "currency_symbol"
+    t.string   "registered_date_text"
+    t.date     "registered_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "members_interests_items", ["members_interests_category_id"], :name => "index_members_interests_items_on_members_interests_category_id"
+  add_index "members_interests_items", ["members_interests_entry_id"], :name => "index_members_interests_items_on_members_interests_entry_id"
 
   create_table "monitoring_clients", :force => true do |t|
     t.string   "name"
@@ -130,7 +192,10 @@ ActiveRecord::Schema.define(:version => 20090411112213) do
     t.string   "spinwatch_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "publicwhip_id"
   end
+
+  add_index "people", ["publicwhip_id"], :name => "index_people_on_publicwhip_id"
 
   create_table "register_entries", :force => true do |t|
     t.string   "organisation_name"

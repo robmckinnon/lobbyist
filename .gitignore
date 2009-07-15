@@ -1,6 +1,7 @@
 log/*.log
 tmp/**/*
 test
+data
 config/database.yml
 config/auth.yml
 .DS_Store

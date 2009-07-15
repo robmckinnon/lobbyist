@@ -9,7 +9,9 @@ class Person < ActiveRecord::Base
   has_many :former_roles, :through => :appointees
   has_many :appointments, :through => :appointees
 
+  has_many :members
+
   validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :publicwhip_id, :allow_nil => true
 
 end

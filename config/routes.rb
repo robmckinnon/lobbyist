@@ -1,4 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :members_interests_entries
+
+  map.resources :members_interests_items
+
+  map.resources :members
+
 
   map.root :controller => "application", :action => 'home'
 
