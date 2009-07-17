@@ -1,3 +1,7 @@
-%p
-  = link_to person.name, edit_person_path(person)
-  = link_to 'Show', person_path(person)
+- unless (consulting = ConsultancyStaffMember.find_all_by_name(person.name)).empty?
+  %li
+    %b
+      = link_to person.name, person_path(person)
+    = consulting.collect {|x| x.register_entry.organisation_name}.uniq.join("\n")
+- else
+  = # link_to person.name, person_path(person)

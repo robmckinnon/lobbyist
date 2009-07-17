@@ -1,5 +1,18 @@
 - @title = @person.name
-%p= h @person.inspect
+- unless @person.members.empty?
+  %p= constituency_summary @person
+    
+  - if current_member = @person.current_member
+    = render :partial => 'members_interests_entry', :collection => current_member.members_interests_entries
+  - consultants = ConsultancyStaffMember.find_all_by_name(@person.name)
+  - unless consultants.empty?
+    %h2 Similarly named persons
+    %ul
+      - consultants.each do |consultant|
+        %li
+          = [consultant.name, consultant.consultancy, consultant.dates.collect{|x| date_to_s(x)}.join('-')].join(", ")
 - @person.appointees.each do |appointee|
   %p= h appointee.former_roles.inspect
   %p= h appointee.appointments.inspect
+  
+

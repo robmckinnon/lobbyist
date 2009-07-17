@@ -1,12 +1,16 @@
 - @title = 'Organisations'
+#organisations_lobbying
+  %h2= "Organisations lobbying (#{@organisations_lobbying_count})"
+  %table
+    = render :partial => 'organisation', :collection => @organisations_lobbying
 #lobbyist_firms
   %h2= "Lobbyist firms (#{@lobbyist_count})"
   %table
     = render :partial => 'organisation', :collection => @lobbyists
-#organisations_lobbying
-  %h2= "Organisations lobbying (#{@other_count})"
+#members_interests
+  %h2= "Organisations with member interests (#{@members_interests_count})"
   %table
-    = render :partial => 'organisation', :collection => @others
+    = render :partial => 'organisation', :collection => @members_interests
 = link_to "Add organisation", new_organisation_path
 - #%table
 - #  = render :partial => 'organisation', :collection => @organisations

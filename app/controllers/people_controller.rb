@@ -6,6 +6,8 @@ class PeopleController < ApplicationController
 
   def index
     @people = Person.find(:all, :order => "name")
+    @mps, @mp_details = Person.current_mps
+    @others = @people - @mps
   end
 
   def show
@@ -44,7 +46,7 @@ class PeopleController < ApplicationController
     def find_person
       begin
         appointees = {:appointees => [:former_roles, :appointments]}
-        @person = Person.find(params[:id], :include => appointees)
+        @person = Person.find(params[:id], :include => [:members, appointees])
         redirect_to @person, :status => :moved_permanently if @person.has_better_id?
       rescue
         render_not_found

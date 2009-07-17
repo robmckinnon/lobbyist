@@ -18,6 +18,18 @@ describe Acts::ProperNounIdentifier do
       nouns[2].should == 'NorthYorkshire'
     end
 
+    it 'should keep all-parliamentary groups intact' do
+      text = "6-11 September 2008, to Dharamsala, India, to visit the Tibetan Government-in-exile in my capacity as the Vice-Chair of the All-Party Parliamentary Group for Tibet and as President of the Tibet Society."
+      nouns = PNI.proper_nouns(text, :ignore=>@ignore)
+      nouns[0].should == 'September'
+      nouns[1].should == 'Dharamsala, India'
+      nouns[2].should == 'Tibetan Government-in-exile'
+      nouns[3].should == 'Vice-Chair'
+      nouns[4].should == 'All-Party Parliamentary Group for Tibet'
+      nouns[5].should == 'President'
+      nouns[6].should == 'Tibet Society'
+    end
+
     it 'should find all' do
       text = 'Director, International School for Security and Explosives Education (ISSEE) (non-executive).'
       nouns = PNI.proper_nouns(text, :ignore=>@ignore)

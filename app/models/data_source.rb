@@ -6,6 +6,8 @@ class DataSource < ActiveRecord::Base
 
   has_many :appointees
   has_many :register_entries
+  
+  has_many :members_interests_entries
 
   validates_presence_of :organisation
   validates_presence_of :name

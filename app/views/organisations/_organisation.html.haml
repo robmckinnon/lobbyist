@@ -1,6 +1,8 @@
 %tr
   %td{:class => organisation.is_lobbyist_firm? ? 'lobbyist_firm' : 'organisation'}
     = link_to organisation.name, organisation_path(organisation)
+    - if organisation.company_number
+      = "(#{organisation.company_number})"
   - #%td
   -   #= organisation.company_number
   - #%td

@@ -14,6 +14,9 @@ class Organisation < ActiveRecord::Base
   has_many :consultancy_clients
   has_many :monitoring_clients
 
+  has_many :members_organisation_interests
+  has_many :members_interests_items, :through => :members_organisation_interests
+
   validates_presence_of :name
   validates_uniqueness_of :name
 

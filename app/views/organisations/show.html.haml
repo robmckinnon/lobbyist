@@ -1,9 +1,18 @@
 - @title = @organisation.name
-- if @organisation.company_number
+- unless @organisation.company_number.blank?
   .company_number
     Company No.
     = @organisation.company_number
 
+#members_interests_items
+  - unless @members_interests_items.empty?
+    %h2 Members Financial Interests
+    %ul
+      - @members_interests_items.each do |interest|
+        %li
+          %strong= h interest.person_name
+          %em= h interest.category_name
+          = h interest.description
 #lobbying_clients
   - unless @consultancy_client_organisations.empty? && @monitoring_client_organisations.empty?
     %h2 Public Affairs Clients

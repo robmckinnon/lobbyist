@@ -36,7 +36,7 @@ module Acts
         state
       end
 
-      CONJUNCTIONS = ['for', 'and'].inject({}) {|h,x| h[x]=true; h }
+      CONJUNCTIONS = ['on', 'for', 'and'].inject({}) {|h,x| h[x]=true; h }
 
       def proper_nouns text, options={}
         ignore_list = options[:ignore] || []

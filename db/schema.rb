@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090715144925) do
+ActiveRecord::Schema.define(:version => 20090716003512) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -149,6 +149,16 @@ ActiveRecord::Schema.define(:version => 20090715144925) do
 
   add_index "members_interests_items", ["members_interests_category_id"], :name => "index_members_interests_items_on_members_interests_category_id"
   add_index "members_interests_items", ["members_interests_entry_id"], :name => "index_members_interests_items_on_members_interests_entry_id"
+
+  create_table "members_organisation_interests", :force => true do |t|
+    t.integer  "organisation_id"
+    t.integer  "members_interests_item_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "members_organisation_interests", ["members_interests_item_id"], :name => "index_organisation_interests_on_members_interests_item_id"
+  add_index "members_organisation_interests", ["organisation_id"], :name => "index_members_organisation_interests_on_organisation_id"
 
   create_table "monitoring_clients", :force => true do |t|
     t.string   "name"

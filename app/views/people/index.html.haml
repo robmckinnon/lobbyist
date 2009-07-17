@@ -1,4 +1,8 @@
 - @title = 'People'
-= link_to "Add person", new_person_path
-= render :partial => 'person', :collection => @people
+%h2 Current MPs
+%ul
+  = render :partial => 'mp', :collection => @mps, :locals => {:mp_details => @mp_details}
+%h2 Others
+%ul
+  = render :partial => 'person', :collection => @others
 

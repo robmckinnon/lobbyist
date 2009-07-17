@@ -41,6 +41,13 @@ describe MembersInterestsItem do
       @item.currency_symbol.should == "£"
     end
 
+    it 'should handle maximum annual value' do
+      set_text "S. J. Berwin LLP second trainee solicitors consecutively, up to four times a year, to carry out research for me (maximum annual value: &pound;41,500)."
+      @item.up_to_amount_text.should == '(maximum annual value: &pound;41,500)'
+      @item.up_to_amount.should == 41500
+      @item.currency_symbol.should == "£"
+    end
+
     it 'should handle annual fee' do
       set_text "Parliamentary Consultant to Scottish Coal, Bain Square, Livingston EH54 7DQ. (&pound;5,001-&pound;10,000)  I receive a retaining annual fee of &pound;7,500 as a Parliamentary Consultant to advise on parliamentary matters as they pertain to the coal industry, payable in equal monthly instalments."
       @item.actual_amount_text.should == 'receive a retaining annual fee of &pound;7,500'
@@ -69,6 +76,13 @@ describe MembersInterestsItem do
     it 'should handle just up to' do
       set_text "I was until 1 April 2009 the Chair of One Nottingham, which is Nottingham's regeneration board.  (Up to &pound;5,000)"
       @item.up_to_amount_text.should == "(Up to &pound;5,000)" 
+      @item.up_to_amount.should == 5000
+      @item.currency_symbol.should == "£"
+    end
+
+    it 'should handle just up to with £' do
+      set_text "I was until 1 April 2009 the Chair of One Nottingham, which is Nottingham's regeneration board.  (Up to £5,000)"
+      @item.up_to_amount_text.should == "(Up to £5,000)" 
       @item.up_to_amount.should == 5000
       @item.currency_symbol.should == "£"
     end

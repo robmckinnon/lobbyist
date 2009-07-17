@@ -9,6 +9,12 @@ class OrganisationsController < ApplicationController
     @lobbyist_count = @lobbyists.size
     @others = @organisations - @lobbyists
     @other_count = @others.size
+    
+    @organisations_lobbying = @others.select{|x| !x.consultancy_clients.empty? || !x.monitoring_clients.empty?}
+    @organisations_lobbying_count = @organisations_lobbying.size
+    
+    @members_interests = @others.select{|x| !x.members_organisation_interests.empty? }
+    @members_interests_count = @members_interests.size
   end
 
   def new
@@ -32,6 +38,8 @@ class OrganisationsController < ApplicationController
     @consultancy_client_organisations, @consultancy_entries_by_client_organisation = @organisation.consultancy_entries_by_client_organisation
     @monitoring_client_organisations, @monitoring_entries_by_client_organisation = @organisation.monitoring_entries_by_client_organisation
 
+    @members_interests_items = @organisation.members_interests_items
+    
     @similarly_named = @organisation.similarly_named
     render :template => 'organisations/show.html.haml'
   end
