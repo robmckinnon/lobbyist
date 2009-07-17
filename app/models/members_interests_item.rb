@@ -31,6 +31,10 @@ class MembersInterestsItem < ActiveRecord::Base
     members_interests_category.name
   end
   
+  def person
+    members_interests_entry.person
+  end
+  
   def person_name
     members_interests_entry.person_name
   end

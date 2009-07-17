@@ -8,4 +8,8 @@ class MembersInterestsEntry < ActiveRecord::Base
   def person_name
     member.person_name
   end
+
+  def person
+    member.person
+  end
 end

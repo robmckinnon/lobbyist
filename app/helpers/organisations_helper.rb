@@ -1,5 +1,12 @@
 module OrganisationsHelper
 
+  def link_to_staff register_entries
+    staff = register_entries.collect do |entry|
+      entry.consultancy_staff_members.collect(&:name)
+    end.flatten
+    staff.join(', ')
+  end
+
   def link_to_periods register_entries
     periods = register_entries.collect do |entry|
       period_start = entry.data_source.period_start
@@ -11,7 +18,7 @@ module OrganisationsHelper
     end
     "(#{periods.join(', ')})"
   end
-  
+
   def search_script element_id, name
 %Q|<script src="http://www.google.com/jsapi" type="text/javascript"></script>
   <script language="Javascript" type="text/javascript">
