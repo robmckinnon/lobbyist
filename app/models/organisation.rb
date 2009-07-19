@@ -17,6 +17,8 @@ class Organisation < ActiveRecord::Base
   has_many :members_organisation_interests
   has_many :members_interests_items, :through => :members_organisation_interests
 
+  has_one :quango
+
   validates_presence_of :name
   validates_uniqueness_of :name
 
@@ -26,9 +28,15 @@ class Organisation < ActiveRecord::Base
   before_validation :populate_company_number
 
   class << self
+    
+    def quangos
+      Quango.find(:all, :include => :organisation).collect(&:organisation)
+    end
+
     def find_or_create_from_url_and_name url, name
       url = url.chomp('/')
-      if exists?(:url => url)
+      url = nil if url.blank?
+      if !url.nil? && exists?(:url => url)
         find_by_url(url)
       elsif exists?(:name => name)
         find_by_name(name)

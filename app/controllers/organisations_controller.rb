@@ -7,12 +7,17 @@ class OrganisationsController < ApplicationController
     @organisations = Organisation.find(:all, :order => "name")
     @lobbyists = @organisations.select {|x| x.is_lobbyist_firm? }
     @lobbyist_count = @lobbyists.size
+    
     @others = @organisations - @lobbyists
     @other_count = @others.size
     
     @organisations_lobbying = @others.select{|x| !x.consultancy_clients.empty? || !x.monitoring_clients.empty?}
     @organisations_lobbying_count = @organisations_lobbying.size
     
+    @quangos = Organisation.quangos
+    @quangos_lobbying = (@organisations_lobbying & @quangos)
+    @quangos_lobbying_count = @quangos_lobbying.size
+
     @members_interests = @others.select{|x| !x.members_organisation_interests.empty? }
     @members_interests_count = @members_interests.size
   end

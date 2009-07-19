@@ -2,6 +2,19 @@ require 'fastercsv'
 
 namespace :wl do
 
+  desc 'load quangos'
+  task :load_quangos => :environment do
+    FasterCSV.foreach(RAILS_ROOT + "/data/uk_quangos_2007.csv", :headers=>true) do |q|
+      quango = Quango.create_if_new :department => q["Department"],
+        :name => q["Name"].strip,
+        :alternate_name => q["Name With Prefix At End"],
+        :quango_type => q["Type"],
+        :focus => q["Focus"],
+        :url => q["Website"],
+        :source => q["Source"]
+    end
+  end
+
   desc "load register"
   task :load_registers => :environment do
     file_names = [Dir.glob(RAILS_ROOT + '/data/regmem/reg*').last]

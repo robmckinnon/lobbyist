@@ -1,4 +1,8 @@
 - @title = 'Organisations'
+#quangos
+  %h2= "Quangos lobbying (#{@quangos_lobbying_count})"
+  %table
+    = render :partial => 'organisation', :collection => @quangos_lobbying
 #organisations_lobbying
   %h2= "Organisations lobbying (#{@organisations_lobbying_count})"
   %table

@@ -4,6 +4,14 @@
     Company No.
     = @organisation.company_number
 
+- if @organisation.quango
+  %p
+    = @organisation.name
+    is a UK quango or executive agency or agency or non-minsterial department or other public body.
+  %p
+    = @organisation.quango.government_department.name
+    is the government department governing
+    = @organisation.name + '.'
 #members_interests_items
   - unless @members_interests_items.empty?
     %h2 Members Financial Interests

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090716003512) do
+ActiveRecord::Schema.define(:version => 20090719135603) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -89,6 +89,13 @@ ActiveRecord::Schema.define(:version => 20090716003512) do
 
   add_index "former_roles", ["appointee_id"], :name => "index_former_roles_on_appointee_id"
   add_index "former_roles", ["department_id"], :name => "index_former_roles_on_department_id"
+
+  create_table "government_departments", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "members", :force => true do |t|
     t.integer  "person_id"
@@ -206,6 +213,27 @@ ActiveRecord::Schema.define(:version => 20090716003512) do
   end
 
   add_index "people", ["publicwhip_id"], :name => "index_people_on_publicwhip_id"
+
+  create_table "quangos", :force => true do |t|
+    t.string   "name"
+    t.string   "name_in_brackets"
+    t.string   "alternate_name"
+    t.string   "acronym"
+    t.string   "quango_type"
+    t.string   "focus"
+    t.string   "url"
+    t.string   "source"
+    t.boolean  "dormant"
+    t.integer  "organisation_id"
+    t.integer  "government_department_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "quangos", ["government_department_id"], :name => "index_quangos_on_government_department_id"
+  add_index "quangos", ["name"], :name => "index_quangos_on_name"
+  add_index "quangos", ["organisation_id"], :name => "index_quangos_on_organisation_id"
+  add_index "quangos", ["quango_type"], :name => "index_quangos_on_quango_type"
 
   create_table "register_entries", :force => true do |t|
     t.string   "organisation_name"
