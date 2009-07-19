@@ -7,9 +7,9 @@ module PeopleHelper
   end
   
   def show_interest item
-    companies = item.companies
+    organisations = item.organisations
     text = item.description
-    companies.each do |company|
+    organisations.each do |company|
       organisation = Organisation.find_by_name(company)
       if organisation
         text = text.sub(company, link_to(company, organisation_path(organisation) ) )

@@ -55,11 +55,11 @@
       = render :partial => 'retained_lobbyist_staff', :collection => @monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}
 
 - if false # unless @client_data_sources.empty?
-  %h2 Lobbyists Retained
+  %h2 Lobbyists retained
   = render :partial => 'client_data_source', :collection => @client_data_sources
 
 - if false # unless @register_entries.empty?
-  %h2 Public Affairs Clients
+  %h2 Public affairs clients
   = render :partial => 'register_entry', :collection => @register_entries
 
 - unless @organisation.data_sources.empty?
@@ -69,7 +69,7 @@
 
 #similarly_named
   - unless @similarly_named.empty?
-    %h2 Similarly Named Organisations
+    %h2 Similarly named organisations
     - @similarly_named.each do |organisation|
       %p
         = link_to h(organisation.name), organisation_path(organisation)

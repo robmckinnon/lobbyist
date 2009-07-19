@@ -41,7 +41,7 @@ class MembersInterestsItem < ActiveRecord::Base
   
   def set_members_organisation_interests
     puts members_interests_entry.member.person.name
-    companies.each do |name|
+    organisations.each do |name|
       organisation = Organisation.find_or_create_by_name name
       unless MembersOrganisationInterest.exists?(:organisation_id => organisation.id, :members_interests_item_id => self.id)
         puts name
@@ -50,14 +50,20 @@ class MembersInterestsItem < ActiveRecord::Base
     end
   end
 
-  def companies
-    indicators = %w[limited ltd plc group incorporated inc]
+  def organisations
+    indicators = %w[limited ltd plc group incorporated inc llp society]
     indicator_group = "( #{indicators.join('| ')})"
     regexp = Regexp.new(indicator_group, Regexp::IGNORECASE)
     text = indicators.inject(description) {|text, i| text.gsub!(" #{i}", " #{i.capitalize}"); text}
-    nouns = MembersInterestsItem.proper_nouns text
+    text = text.sub('Co. (UK) Ltd', 'Co (UK) Ltd')
+    nouns = MembersInterestsItem.proper_nouns(text)
 
-    nouns.flatten.uniq.sort.select {|x| x[regexp]}.select{|x| !x[/,/]}
+    orgs = nouns.flatten.uniq.sort
+    orgs = orgs.map{|x| x.chomp(',').chomp('.').chomp(':').chomp(')')}
+    orgs = orgs.select {|x| x[regexp]}
+
+    orgs = orgs.select{|x| !x[/,/]}.select{|x| !x[/No Income/i] }
+    orgs
   end
   
   def text= text

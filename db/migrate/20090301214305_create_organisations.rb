@@ -12,7 +12,7 @@ class CreateOrganisations < ActiveRecord::Migration
       t.timestamps
     end
 
-    Organisation.create :name => 'UK Parliament',
+    Organisation.create :name => 'Parliament',
         :alternate_name => 'House of Commons',
         :url => 'http://www.parliament.uk/'
 

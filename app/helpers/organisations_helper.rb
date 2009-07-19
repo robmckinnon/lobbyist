@@ -3,7 +3,7 @@ module OrganisationsHelper
   def link_to_staff register_entries
     staff = register_entries.collect do |entry|
       entry.consultancy_staff_members.collect(&:name)
-    end.flatten
+    end.flatten.sort
     staff.join(', ')
   end
 

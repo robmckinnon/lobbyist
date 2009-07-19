@@ -1,8 +1,10 @@
+require 'fastercsv'
+
 namespace :wl do
 
   desc "load register"
   task :load_registers => :environment do
-    file_names = [Dir.glob(RAILS_ROOT + '/data/members_register/reg*').last]
+    file_names = [Dir.glob(RAILS_ROOT + '/data/regmem/reg*').last]
 
     file_names.each do |file_name|
       doc = Hpricot open(file_name)
@@ -42,7 +44,7 @@ namespace :wl do
   
   desc "Load publicwhip person data"
   task :load_people => :environment do
-    doc = Hpricot open(RAILS_ROOT + '/data/members_register/people.xml')    
+    doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')    
     people = (doc/'/publicwhip/person')
     
     people.each do |data|
@@ -69,26 +71,34 @@ namespace :wl do
 
   desc "Load publicwhip members data"
   task :load_members => :environment do
-    file_name = Dir.glob(RAILS_ROOT + '/data/members_register/all-members.xml').last
+    file_name = Dir.glob(RAILS_ROOT + '/data/members/all-members.xml').last
     doc = Hpricot open(file_name)    
     members = (doc/'/publicwhip/member')
     
     members.each do |data|
       publicwhip_id = data['id']
       unless Member.exists?(:publicwhip_id => publicwhip_id)
-        member = Member.create!( { :publicwhip_id => publicwhip_id,
-            :person_id => nil,
-            :house => data['house'],
-            :title => data['title'],
-            :firstname => data['firstname'],
-            :lastname => data['lastname'],
-            :constituency => data['constituency'],
-            :party => data['party'],
-            :from_why => data['fromwhy'],
-            :to_why => data['towhy'],
-            :from_date => Date.parse(data['fromdate']),
-            :to_date => Date.parse(data['todate']) })
-        puts member.firstname.to_s + ' ' + member.lastname.to_s
+        begin
+          from_date = Date.parse(data['fromdate'])
+        rescue
+          puts 'problem parsing date: ' + from_date.to_s
+        end
+        if from_date && from_date.year >= 1980
+          puts data['firstname'].to_s + ' ' + data['lastname'].to_s
+
+          member = Member.create!( { :publicwhip_id => publicwhip_id,
+              :person_id => nil,
+              :house => data['house'],
+              :title => data['title'],
+              :firstname => data['firstname'],
+              :lastname => data['lastname'],
+              :constituency => data['constituency'],
+              :party => data['party'],
+              :from_why => data['fromwhy'],
+              :to_why => data['towhy'],
+              :from_date => from_date,
+              :to_date => Date.parse(data['todate']) })
+        end
       end
 
     end
