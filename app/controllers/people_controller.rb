@@ -11,6 +11,7 @@ class PeopleController < ApplicationController
   end
 
   def show
+    @consultants = ConsultancyStaffMember.find_all_by_name(@person.name)
   end
 
   def edit

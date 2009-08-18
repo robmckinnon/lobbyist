@@ -1,4 +1,18 @@
 - @title = 'Organisations'
+%h2= "What do we know?"
+%h3
+  At least
+  = link_to "#{@organisations_lobbying_count} organisations lobbying", "#organisations_lobbying"
+%h3
+  At least
+  = link_to "#{@quangos_lobbying_count} quangos lobbying", "#quangos"
+%h3
+  At least
+  = link_to "#{@lobbyist_count} lobbyist firms", "#lobbyist_firms"
+%h3
+  At least
+  = link_to "#{@members_interests_count} organisations with member interests", "#members_interests"
+
 #quangos
   %h2= "Quangos lobbying (#{@quangos_lobbying_count})"
   %table
@@ -16,6 +30,4 @@
   %table
     = render :partial => 'organisation', :collection => @members_interests
 = link_to "Add organisation", new_organisation_path
-- #%table
-- #  = render :partial => 'organisation', :collection => @organisations
 

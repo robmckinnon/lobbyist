@@ -2,6 +2,33 @@ require 'fastercsv'
 
 namespace :wl do
 
+  task :write_interests => :environment do
+    MembersInterestsItem.write_to_tsv
+  end
+
+  desc 'load acoba appointments'
+  task :load_acoba => :environment do
+    person = nil
+    previous_name = nil
+    FasterCSV.foreach(RAILS_ROOT + "/data/acoba/ministers_acobaninthreport2006_08.csv", :headers=>true) do |data|
+      data = data.to_hash
+      data.symbolize_keys!
+      if name = data[:name]
+        unless person = Member.from_name(name) || Lord.from_name(name)
+          print name + ': '
+          print 'not found'
+          puts ''
+        end
+      end
+      if person
+        previous_name = name if name
+        Appointee.create_from previous_name, person, data
+      else
+        puts "not creating: " + data.inspect
+      end
+    end
+  end
+  
   desc 'load quangos'
   task :load_quangos => :environment do
     FasterCSV.foreach(RAILS_ROOT + "/data/uk_quangos_2007.csv", :headers=>true) do |q|
@@ -55,6 +82,29 @@ namespace :wl do
     end
   end
   
+  task :load_offices => :environment do 
+    doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')    
+    people = (doc/'/publicwhip/person')
+    people.each do |data|
+      publicwhip_id = data['id']
+      if person = Person.find_by_publicwhip_id(publicwhip_id)
+        puts person.name
+        (data/'office').each do |office|
+          if office['id'].include?('uk.org.publicwhip/lord/')
+            if lord = Lord.find_by_publicwhip_id(office['id'])
+              lord.person_id = person.id
+              lord.save!
+            else
+              puts 'lord not found: ' + office['id']
+            end
+          end
+        end
+      else
+        puts "person not found: #{publicwhip_id}"
+      end
+    end
+  end
+  
   desc "Load publicwhip person data"
   task :load_people => :environment do
     doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')    
@@ -69,8 +119,7 @@ namespace :wl do
         offices = (data/'office')
         offices.each do |office|
           if office['id'].include?('uk.org.publicwhip/member/')
-            member = Member.find_by_publicwhip_id(office['id'])
-            if member
+            if member = Member.find_by_publicwhip_id(office['id'])
               member.person_id = person.id
               member.save!
             else
@@ -116,4 +165,51 @@ namespace :wl do
 
     end
   end
+
+  desc "Load publicwhip lords data"
+  task :load_lords => :environment do
+    file_name = Dir.glob(RAILS_ROOT + '/data/members/peers-ucl.xml').last
+    doc = Hpricot open(file_name)
+    lords = (doc/'/publicwhip/lord')
+    
+    lords.each do |data|
+      publicwhip_id = data['id']
+      unless Lord.exists?(:publicwhip_id => publicwhip_id)
+        begin
+          puts publicwhip_id
+          from = data['fromdate']
+          is_only_year = from[/^\d\d\d\d$/]
+          from_year = is_only_year ? from.to_i : nil
+          from_date = is_only_year ? nil : Date.parse(from)
+        rescue
+          puts 'problem parsing date: ' + from_date.to_s
+        end
+        if from_date || from_year
+          puts data['title'].to_s + ' ' + data['lordofname_full'].to_s
+
+          lord = Lord.create!( { :publicwhip_id => publicwhip_id,
+              :person_id => nil,
+              :house => data['house'],
+              :title => data['title'],
+              :forenames => data['forenames'],
+              :forenames_full => data['forenames_full'],
+              :surname => data['surname'],
+              :affiliation => data['affiliation'],
+              :lord_name => data['lordname'],
+              :lord_of_name => data['lordofname'],
+              :lord_of_name_full => data['lordofname_full'],
+              :county => data['county'],
+              :peerage_type => data['peeragetype'],
+              :ex_mp => (data['ex_MP'] == 'yes'),
+              :from_why => data['fromwhy'],
+              :to_why => data['towhy'],
+              :from_year => from_year,
+              :from_date => from_date,
+              :to_date => Date.parse(data['todate']) })
+        end
+      end
+
+    end
+  end
+
 end

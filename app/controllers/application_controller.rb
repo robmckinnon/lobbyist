@@ -88,6 +88,7 @@ class ApplicationController < ActionController::Base
       @organisations.delete(acoba)
       @organisations.insert(0,appc)
       @organisations.insert(0,acoba)
+      @organisations.compact!
       @organisations_list = @organisations.collect{|o| [o.name, o.id]}
     end
 

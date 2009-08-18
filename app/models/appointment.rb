@@ -1,6 +1,7 @@
 class Appointment < ActiveRecord::Base
 
   belongs_to :appointee
+  belongs_to :organisation
 
   validates_presence_of :title
   validates_presence_of :organisation_name
@@ -10,6 +11,14 @@ class Appointment < ActiveRecord::Base
 
   before_validation :set_date_tendered
   before_validation :set_date_taken_up
+
+  def person_name
+    appointee.name
+  end
+  
+  def person
+    appointee.person
+  end
 
   def date_tendered_text
     if @date_tendered_text
@@ -38,22 +47,10 @@ class Appointment < ActiveRecord::Base
   private
 
     def set_date_tendered
-      if @date_tendered_text
-        begin
-          self.date_tendered = Date.parse @date_tendered_text
-        rescue
-          self.date_tendered = nil
-        end
-      end
+      self.date_tendered = Appointee.parse_date @date_tendered_text if @date_tendered_text
     end
 
-    def set_date_taken_up
-      if @date_taken_up_text
-        begin
-          self.date_taken_up = Date.parse @date_taken_up_text
-        rescue
-          self.date_taken_up = nil
-        end
-      end
+    def set_date_taken_up      
+      self.date_taken_up = Appointee.parse_date @date_taken_up_text if @date_taken_up_text
     end
 end

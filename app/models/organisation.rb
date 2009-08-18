@@ -17,6 +17,8 @@ class Organisation < ActiveRecord::Base
   has_many :members_organisation_interests
   has_many :members_interests_items, :through => :members_organisation_interests
 
+  has_many :appointments
+
   has_one :quango
 
   validates_presence_of :name
@@ -34,7 +36,7 @@ class Organisation < ActiveRecord::Base
     end
 
     def find_or_create_from_url_and_name url, name
-      url = url.chomp('/')
+      url = url.chomp('/') unless url.blank?
       url = nil if url.blank?
       if !url.nil? && exists?(:url => url)
         find_by_url(url)
@@ -136,6 +138,11 @@ class Organisation < ActiveRecord::Base
     return [sort_by_name(entries.keys), entries]
   end
 
+  def entries_by_consultancy_staff_member2
+    entries = entries_by_client_organisation :consultancy_staff_members, nil
+    return [sort_by_name(entries.keys), entries]
+  end
+
   def entries_by_consultancy_staff_member
     entries = entries_by_client_organisation :consultancy_staff_members, :name
     return [entries.keys.sort, entries]
@@ -154,7 +161,7 @@ class Organisation < ActiveRecord::Base
   private
   
     def sort_by_name list
-      list.sort_by {|x| x.name.downcase}
+      list.sort_by {|x| x.name.to_s.downcase}
     end
     
     def entries_by_lobbyist_firm clients

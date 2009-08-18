@@ -2,8 +2,9 @@ module OrganisationsHelper
 
   def link_to_staff register_entries
     staff = register_entries.collect do |entry|
-      entry.consultancy_staff_members.collect(&:name)
-    end.flatten.sort
+      entry.consultancy_staff_members.collect{|x| link_to_consultant x.name, entry}
+      
+      end.flatten.uniq.sort
     staff.join(', ')
   end
 

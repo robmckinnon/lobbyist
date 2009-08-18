@@ -1,6 +1,6 @@
 class OrganisationsController < ApplicationController
 
-  before_filter :find_organisation, :only => [:show, :edit]
+  before_filter :find_organisation, :only => [:show, :edit, :show_staff_member]
   before_filter :store_location, :only => [:index]
 
   def index
@@ -26,6 +26,18 @@ class OrganisationsController < ApplicationController
     @organisation = Organisation.new
   end
 
+  def show_staff_member
+    person_id = params[:person_id]
+    @consultancy_staff_members, @entries_by_consultancy_staff_member = @organisation.entries_by_consultancy_staff_member2
+    
+    @matching_staff_members = @consultancy_staff_members.select{|x| x.friendly_id == person_id }
+    @consultancy_staff_member = @matching_staff_members.first
+    @register_entries = @matching_staff_members.collect(&:register_entry)
+
+    @consultants = ConsultancyStaffMember.find_all_by_name(@consultancy_staff_member.name) - @matching_staff_members
+    @people = Person.find_all_by_name(@consultancy_staff_member.name)
+  end
+
   def show
     # @consultancy_clients = @organisation.consultancy_clients
     # @monitoring_clients = @organisation.monitoring_clients
@@ -44,6 +56,7 @@ class OrganisationsController < ApplicationController
     @monitoring_client_organisations, @monitoring_entries_by_client_organisation = @organisation.monitoring_entries_by_client_organisation
 
     @members_interests_items = @organisation.members_interests_items
+    @appointments = @organisation.appointments
     
     @similarly_named = @organisation.similarly_named
     render :template => 'organisations/show.html.haml'

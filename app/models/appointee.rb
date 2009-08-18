@@ -14,6 +14,48 @@ class Appointee < ActiveRecord::Base
 
   after_update :save_former_roles, :save_appointments
 
+  class << self
+    def parse_date text
+      if text
+        begin
+          Date.parse text
+        rescue
+          nil
+        end
+      else
+        nil
+      end
+    end
+    
+    def create_from name, person, data
+      appointee = find_or_create_by_name_and_person_id :name => name, :person_id => person.id
+
+      if title = data[:former_role]
+        attributes = { :title => title,
+            :leaving_service_date => parse_date(data[:month_of_leaving_office]) }
+
+        unless appointee.former_roles.find(:first, :conditions => attributes)
+          appointee.former_roles.create attributes
+        end
+      end
+
+      if role = data[:appointment]
+        organisation_name = data[:organisation]
+        puts appointee.inspect unless organisation_name
+        organisation = Organisation.find_or_create_from_url_and_name nil, organisation_name.chomp('.')
+        attributes = { :title => role,
+            :organisation_name => organisation_name,
+            :organisation_id => organisation.id,
+            :acoba_advice => data[:advice],
+            :date_tendered => parse_date(data[:tendered]),
+            :date_taken_up => parse_date(data[:taken_up]) }
+        unless appointee.appointments.find(:first, :conditions => attributes)
+          appointee.appointments.create attributes
+        end
+      end
+    end
+  end
+  
   def new_former_role_attributes=(former_role_attributes)
     former_role_attributes.each do |attributes|
       former_roles.build(attributes)

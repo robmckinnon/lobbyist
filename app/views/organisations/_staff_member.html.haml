@@ -1,3 +1,5 @@
 %li
-  = h staff_member
-  %small= link_to_periods entries_by_staff_member[staff_member]
+  - entries = entries_by_staff_member[staff_member]
+  - entry = entries.first
+  = link_to_consultant staff_member, entry
+  %small= link_to_periods entries

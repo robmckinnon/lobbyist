@@ -2,17 +2,19 @@
 - unless @person.members.empty?
   %p= constituency_summary @person
     
+  - unless @person.appointees.empty?
+    %h2 Appointments reported by ACOBA
+    = render :partial => 'acoba_reported_appointee', :collection => @person.appointees
   - if current_member = @person.current_member
     = render :partial => 'members_interests_entry', :collection => current_member.members_interests_entries
-  - consultants = ConsultancyStaffMember.find_all_by_name(@person.name)
-  - unless consultants.empty?
+  - unless @consultants.empty?
     %h2 Similarly named persons
     %ul
-      - consultants.each do |consultant|
-        %li
-          = [consultant.name, consultant.consultancy, consultant.dates.collect{|x| date_to_s(x)}.join('-')].join(", ")
-- @person.appointees.each do |appointee|
-  %p= h appointee.former_roles.inspect
-  %p= h appointee.appointments.inspect
+      - @consultants.group_by(&:organisation).each do |organisation, consultants|
+        - consultant = consultants.first
+        = link_to_consultant consultant.name, consultant.register_entry
+        worked for
+        = link_to(h(consultant.consultancy), organisation_path(consultant.organisation))
+        %small= link_to_periods consultants.collect(&:register_entry)
   
 

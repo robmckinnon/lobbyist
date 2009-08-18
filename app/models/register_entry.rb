@@ -236,7 +236,7 @@ class RegisterEntry < ActiveRecord::Base
     end
 
     def set_organisation
-      if organisation_name && !organisation_url.blank?
+      if organisation_name
         org = Organisation.find_or_create_from_url_and_name(organisation_url, organisation_name)
         self.organisation_id = org.id
       end

@@ -16,11 +16,26 @@ class MembersInterestsItem < ActiveRecord::Base
     def overlap
       all.collect(&:organisations).flatten.compact.uniq.select{|x| !x.register_entries.empty?}
     end
+    
+    def write_to_tsv
+      tsv = []
+      all = find(:all, :include => {:members_interests_entry => {:member => :person} })
+      all.each {|i| tsv << i.to_tsv}
+      tsv = tsv.join("\n")
+      File.open(RAILS_ROOT+'/interest.tsv', 'w') {|f| f.write tsv }
+    end
   end
   
   def to_tsv
-    max = [from_amount, up_to_amount, actual_amount].compact.max
-    "#{person_name}\t#{registered_date ? registered_date.to_s(:dd_mmm_year) : ''}\t#{category_number}\t#{category_name}\t#{subcategory}\t#{max}\t#{from_amount}\t#{actual_amount}\t#{up_to_amount}\t#{description}"
+    "#{person_name}\t#{max_amount}\t#{paying_organisation}\t#{description}\t#{from_amount}\t#{actual_amount}\t#{up_to_amount}\t#{members_party}\t#{registered_date ? registered_date.to_s(:dd_mmm_year) : ''}\t#{category_number}\t#{category_name}\t#{subcategory}"
+  end
+
+  def max_amount
+    [from_amount, up_to_amount, actual_amount].compact.max
+  end
+  
+  def members_party
+    members_interests_entry.member.party
   end
   
   def category_number
@@ -50,18 +65,50 @@ class MembersInterestsItem < ActiveRecord::Base
     end
   end
 
+  def proper_nouns indicators=%w[limited ltd plc group incorporated inc llp society]
+    text = indicators.inject(description.sub('Parliamentary adviser ','')) {|text, i| text.gsub!(" #{i}", " #{i.capitalize}"); text}
+    text.sub!('Co. (UK) Ltd', 'Co (UK) Ltd')
+    text.sub!('Income','income')
+    text.sub!('Broadcasting fees','broadcasting fees')
+    ignore = %w[January Februrary March April May June July August September October November December]
+    text.sub!(/\d\d? (#{ignore.join('|')}) \d\d\d\d/, '')
+    ignore += %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
+    ignore += %w[Up Currently Christianity Editor Article Articles Columnist
+        Advisory Committee Board Senior Adviser Consultant Contributor
+        Auditorium Speaking Lecturer Lectures
+        Contract Remuneration Fee Fees Payment 
+        Deputy Managing Director Chairman Director Registered]
+    nouns = MembersInterestsItem.proper_nouns(text, :ignore => ignore, :ignore_in_quotes=>true)
+    nouns = nouns.flatten.uniq.sort
+    nouns.map{|x| x.chomp(',').chomp('.').chomp(':').chomp(')')}
+  end
+  
+  def paying_organisation
+    orgs = organisations
+    if orgs.empty? && max_amount
+      orgs = proper_nouns
+      if orgs.include?('Mail on Sunday')
+        likely_org = 'Mail on Sunday'
+      else
+        likely_org = orgs.max {|a,b| a.length <=> b.length }
+      end
+      if likely_org
+        likely_org
+      else
+        ''
+      end
+    else
+      orgs.max {|a,b| a.length <=> b.length }
+    end
+  end
+
   def organisations
     indicators = %w[limited ltd plc group incorporated inc llp society]
     indicator_group = "( #{indicators.join('| ')})"
     regexp = Regexp.new(indicator_group, Regexp::IGNORECASE)
-    text = indicators.inject(description) {|text, i| text.gsub!(" #{i}", " #{i.capitalize}"); text}
-    text = text.sub('Co. (UK) Ltd', 'Co (UK) Ltd')
-    nouns = MembersInterestsItem.proper_nouns(text)
 
-    orgs = nouns.flatten.uniq.sort
-    orgs = orgs.map{|x| x.chomp(',').chomp('.').chomp(':').chomp(')')}
+    orgs = proper_nouns indicators
     orgs = orgs.select {|x| x[regexp]}
-
     orgs = orgs.select{|x| !x[/,/]}.select{|x| !x[/No Income/i] }
     orgs
   end

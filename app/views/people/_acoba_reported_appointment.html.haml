@@ -1,0 +1,13 @@
+- appointment = acoba_reported_appointment
+%p
+  = h appointment.title
+  ='-'
+  = link_to h(appointment.organisation_name), organisation_path(appointment.organisation) 
+  %br
+  = h appointment.acoba_advice
+  %br
+  tendered:
+  = appointment.date_tendered.to_s(:month_year)
+  | taken up:
+  = appointment.date_taken_up.to_s(:month_year)
+

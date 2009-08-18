@@ -23,11 +23,7 @@ class FormerRole < ActiveRecord::Base
 
   def set_leaving_service_date
     if @leaving_service_date_text
-      begin
-        self.leaving_service_date = Date.parse @leaving_service_date_text
-      rescue
-        self.leaving_service_date = nil
-      end
+      self.leaving_service_date = Appointee.parse_date @leaving_service_date_text
     end
   end
 end

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090719135603) do
+ActiveRecord::Schema.define(:version => 20090725143700) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -96,6 +96,38 @@ ActiveRecord::Schema.define(:version => 20090719135603) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "lords", :force => true do |t|
+    t.integer  "person_id"
+    t.string   "publicwhip_id"
+    t.string   "house"
+    t.string   "forenames"
+    t.string   "forenames_full"
+    t.string   "surname"
+    t.string   "title"
+    t.string   "lord_name"
+    t.string   "lord_of_name"
+    t.string   "lord_of_name_full"
+    t.string   "county"
+    t.string   "peerage_type"
+    t.string   "affiliation"
+    t.boolean  "ex_mp"
+    t.string   "from_why"
+    t.string   "to_why"
+    t.integer  "from_year"
+    t.date     "from_date"
+    t.date     "to_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "lords", ["affiliation"], :name => "index_lords_on_affiliation"
+  add_index "lords", ["lord_name"], :name => "index_lords_on_lord_name"
+  add_index "lords", ["lord_of_name"], :name => "index_lords_on_lord_of_name"
+  add_index "lords", ["lord_of_name_full"], :name => "index_lords_on_lord_of_name_full"
+  add_index "lords", ["person_id"], :name => "index_lords_on_person_id"
+  add_index "lords", ["publicwhip_id"], :name => "index_lords_on_publicwhip_id"
+  add_index "lords", ["title"], :name => "index_lords_on_title"
 
   create_table "members", :force => true do |t|
     t.integer  "person_id"

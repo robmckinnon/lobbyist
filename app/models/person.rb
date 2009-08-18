@@ -18,7 +18,7 @@ class Person < ActiveRecord::Base
     
     def current_mps
       members = Member.current_members
-      people = members.collect(&:person).sort_by(&:name)
+      people = members.collect(&:person).compact.sort_by(&:name)
       details = members.group_by(&:person)
       details.each {|k,v| details[k] = v.last}
       return [people, details]

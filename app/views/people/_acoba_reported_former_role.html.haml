@@ -1,0 +1,6 @@
+- role = acoba_reported_former_role
+%p
+  Former: 
+  = h role.title
+  (left service
+  = role.leaving_service_date.to_s(:month_year) + ')'

@@ -19,8 +19,19 @@
       - @members_interests_items.each do |interest|
         %li
           %strong= link_to h(interest.person_name), interest.person
-          %em= h interest.category_name
           = h interest.description
+          %em= h interest.category_name
+#appointments
+  - unless @appointments.empty?
+    %h2 Appointments reported by ACOBA
+    %ul
+      - @appointments.each do |appointment|
+        %li
+          %strong= link_to h(appointment.person_name), appointment.person
+          = "#{h(appointment.title)}, #{h(appointment.organisation_name)}"
+          %span
+            = "(tendered #{ h appointment.date_tendered.to_s(:mmm_year) },"
+            = "taken up #{ h appointment.date_taken_up.to_s(:mmm_year) })"
 #lobbying_clients
   - unless @consultancy_client_organisations.empty? && @monitoring_client_organisations.empty?
     %h2 Public Affairs Clients

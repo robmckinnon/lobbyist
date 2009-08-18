@@ -5,12 +5,13 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :members
 
-
   map.root :controller => "application", :action => 'home'
 
   map.resources :people
   map.resources :appointees
   map.resources :data_sources
+
+  map.show_staff_member 'organisations/:id/:person_id', :controller => 'organisations', :action => 'show_staff_member'
   map.resources :organisations
 
   map.resources :register_entries
