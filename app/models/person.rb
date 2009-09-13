@@ -17,6 +17,14 @@ class Person < ActiveRecord::Base
 
   class << self
 
+    def all_lords
+      lords = Lord.all
+      people = lords.collect(&:person).compact.sort_by(&:name)
+      details = lords.group_by(&:person)
+      details.each {|k,v| details[k] = v.last}
+      return [people, details]
+    end
+
     def current_lords
       lords = Lord.current_lords
       people = lords.collect(&:person).compact.sort_by(&:name)

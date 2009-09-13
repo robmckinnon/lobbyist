@@ -1,8 +1,8 @@
 - appointment = acoba_reported_appointment
 %p
-  = h appointment.title
+  = link_to h(appointment.organisation_name), organisation_path(appointment.organisation)
   ='-'
-  = link_to h(appointment.organisation_name), organisation_path(appointment.organisation) 
+  = h appointment.title
   %br
   = h appointment.acoba_advice
   %br

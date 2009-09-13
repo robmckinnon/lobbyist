@@ -28,7 +28,7 @@
       - @appointments.each do |appointment|
         %li
           %strong= link_to h(appointment.person_name), appointment.person
-          = "#{h(appointment.title)}, #{h(appointment.organisation_name)}"
+          = " - #{h(appointment.title)}, #{h(appointment.organisation_name)}"
           %span
             = "(tendered #{ h appointment.date_tendered.to_s(:mmm_year) },"
             = "taken up #{ h appointment.date_taken_up.to_s(:mmm_year) })"

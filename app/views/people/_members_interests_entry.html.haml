@@ -1,7 +1,8 @@
-%h2 Register of Financial Interests Entry
-- members_interests_entry.members_interests_items.group_by(&:members_interests_category).each do |category, items|
-  %p
-    = category.name
-  %ul
-    - items.each do |item|
-      %li= show_interest item
+- unless members_interests_entry.members_interests_items.blank?
+  %h2 Register of Financial Interests Entry
+  - members_interests_entry.members_interests_items.group_by(&:members_interests_category).each do |category, items|
+    %p
+      = category.name
+    %ul
+      - items.each do |item|
+        %li= show_interest item
