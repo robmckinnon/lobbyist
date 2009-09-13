@@ -7,7 +7,8 @@ class PeopleController < ApplicationController
   def index
     @people = Person.find(:all, :order => "name")
     @mps, @mp_details = Person.current_mps
-    @others = @people - @mps
+    @lords, @lord_details = Person.current_lords
+    @others = @people - @mps - @lords
   end
 
   def show

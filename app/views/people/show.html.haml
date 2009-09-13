@@ -1,20 +1,18 @@
 - @title = @person.name
 - unless @person.members.empty?
   %p= constituency_summary @person
-    
-  - unless @person.appointees.empty?
-    %h2 Appointments reported by ACOBA
-    = render :partial => 'acoba_reported_appointee', :collection => @person.appointees
-  - if current_member = @person.current_member
-    = render :partial => 'members_interests_entry', :collection => current_member.members_interests_entries
-  - unless @consultants.empty?
-    %h2 Similarly named persons
-    %ul
-      - @consultants.group_by(&:organisation).each do |organisation, consultants|
-        - consultant = consultants.first
-        = link_to_consultant consultant.name, consultant.register_entry
-        worked for
-        = link_to(h(consultant.consultancy), organisation_path(consultant.organisation))
-        %small= link_to_periods consultants.collect(&:register_entry)
-  
 
+- unless @person.appointees.empty?
+  %h2 Appointments reported by ACOBA
+  = render :partial => 'acoba_reported_appointee', :collection => @person.appointees
+- if current_member = @person.current_member
+  = render :partial => 'members_interests_entry', :collection => current_member.members_interests_entries
+- unless @consultants.empty?
+  %h2 Similarly named persons
+  %ul
+    - @consultants.group_by(&:organisation).each do |organisation, consultants|
+      - consultant = consultants.first
+      = link_to_consultant consultant.name, consultant.register_entry
+      worked for
+      = link_to(h(consultant.consultancy), organisation_path(consultant.organisation))
+      %small= link_to_periods consultants.collect(&:register_entry)

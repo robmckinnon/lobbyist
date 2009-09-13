@@ -3,6 +3,11 @@ class Lord < ActiveRecord::Base
   belongs_to :person
 
   class << self
+    def current_lords
+      today = Date.today.to_s
+      find(:all, :conditions => '"'+today+'" < to_date', :include => :person)
+    end
+
     def from_name name
       name = Member.clean_name name
       parts = name.split

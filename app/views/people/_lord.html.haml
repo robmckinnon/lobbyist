@@ -1,0 +1,4 @@
+%li
+  = link_to lord.name, person_path(lord)
+  - if details && (detail = details[lord]) && detail.affiliation
+    = "(#{detail.affiliation})"

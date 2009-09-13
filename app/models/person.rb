@@ -9,13 +9,22 @@ class Person < ActiveRecord::Base
   has_many :former_roles, :through => :appointees
   has_many :appointments, :through => :appointees
 
+  has_many :lords
   has_many :members
 
   validates_presence_of :name
   validates_uniqueness_of :publicwhip_id, :allow_nil => true
 
   class << self
-    
+
+    def current_lords
+      lords = Lord.current_lords
+      people = lords.collect(&:person).compact.sort_by(&:name)
+      details = lords.group_by(&:person)
+      details.each {|k,v| details[k] = v.last}
+      return [people, details]
+    end
+
     def current_mps
       members = Member.current_members
       people = members.collect(&:person).compact.sort_by(&:name)
@@ -24,7 +33,7 @@ class Person < ActiveRecord::Base
       return [people, details]
     end
   end
-  
+
   def current_member
     members.size > 0 ? members.select(&:current?).first : nil
   end

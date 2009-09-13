@@ -1,7 +1,10 @@
 - @title = 'People'
+%h2 Current Lords
+%ul
+  = render :partial => 'lord', :collection => @lords.select {|l| !l.appointments.empty?}, :locals => {:details => @lord_details}
 %h2 Current MPs
 %ul
-  = render :partial => 'mp', :collection => @mps, :locals => {:mp_details => @mp_details}
+  = render :partial => 'mp', :collection => @mps, :locals => {:details => @mp_details}
 %h2 Others
 %ul
   = render :partial => 'person', :collection => @others

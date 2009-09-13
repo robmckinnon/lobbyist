@@ -1,4 +1,4 @@
 %li
   = link_to mp.name, person_path(mp)
-  - if mp_details && (details = mp_details[mp])
-    = "(#{details.constituency})"
+  - if details && (detail = details[mp])
+    = "(#{detail.constituency})"
