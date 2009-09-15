@@ -6,23 +6,25 @@ describe Acts::ProperNounIdentifier do
   before(:all) do
     eval('class PNI; end')
     PNI.send(:include, Acts::ProperNounIdentifier)
-    ignore = %w[January Februrary March April May June July August September October November December]
-    ignore += ['Senior','Adviser','Consultant','Contract','Fees','Deputy','Managing','Director','Chairman','Director','Registered']
+    ignore = ['Senior','Adviser','Consultant','Contract','Fees','Deputy','Managing','Director','Chairman','Director','Registered','Author','Registered','Up','Currently']
     @ignore = ignore
   end
 
   describe 'when asked to identify proper nouns' do
-    
+
     def proper_nouns text, matches, ignore_in_quotes=false, size=nil
-      @nouns = PNI.proper_nouns(text, :ignore=>@ignore, :ignore_in_quotes=>ignore_in_quotes)
+      @nouns = PNI.proper_nouns(text, :ignore=>@ignore, :ignore_in_quotes=>ignore_in_quotes, :ignore_dates => true)
       matches.each_with_index do |match, index|
         @nouns[index].should == match
+      end
+      @nouns.each_with_index do |noun, index|
+        matches[index].should == noun
       end
       if size
         @nouns.size.should == size
       end
     end
-    
+
     it 'should find em' do
       proper_nouns 'Managing Director and controlling interest in Mowthorpe (UK) Ltd; the company operates a green/woodland cemetery on land which was previously part of Southwood Farm, Terrington, in NorthYorkshire.',
           ['Mowthorpe (UK) Ltd',
@@ -64,7 +66,7 @@ describe Acts::ProperNounIdentifier do
           'Policy and Research',
           'Policy Review']
     end
-    
+
     it 'should ignore chair of advisory committee' do
       proper_nouns 'Chair of Advisory Committee Entrust Inc.',
         ['Chair of Advisory Committee Entrust Inc']
@@ -81,7 +83,7 @@ describe Acts::ProperNounIdentifier do
           'Silverstone Circuits Limited',
           'Formula 1 British Grand Prix']
     end
-    
+
     it 'should ignore :.' do
       proper_nouns 'Categories of business underwritten until resignation - CBS Private Capital Ltd.:  All categories.',
           ['Categories',
@@ -94,9 +96,9 @@ describe Acts::ProperNounIdentifier do
           ['Fluor Corporation',
           'London',
           'See Category 1']
-          
+
       proper_nouns 'Senior Adviser, Cinven. (£55,001-£60,000)',
-          ['Cinven']    
+          ['Cinven']
     end
 
     it 'should join HADAW Productions and Investments Ltd' do
@@ -111,24 +113,22 @@ describe Acts::ProperNounIdentifier do
           'IT',
           'UK']
     end
-    
+
     it 'should handle &' do
       proper_nouns 'Advance under contract with Hodder & Stoughton for autobiographical book.  (£35,001-£40,000)',
           ['Advance',
           'Hodder & Stoughton']
     end
-    
+
     it 'should not add (Up' do
       proper_nouns 'Training for the National School of Government. (Up to £5,000)',
           ['Training',
-          'National School of Government',
-          'Up']
-          
+          'National School of Government']
+
           proper_nouns 'Washington Post (Up to £5,000)',
-          ['Washington Post',
-          'Up']
+          ['Washington Post']
     end
-    
+
     it 'should split on commas' do
       proper_nouns 'Articles in:  Catholic Herald, Country Life, Estates Gazette, Planning, Evening Standard.  I also chair conferences.  The subjects in both cases are usually property, sustainable development and religious issues.  The commitments arise largely from my previous profession of journalism and all payments go to Sancroft which provides research staff, information services, and all other facilities.  Currently Sancroft would expect about £100,000 in payments, in respect of which I would receive some £30,000 in fees and dividends.',
         ['Articles',
@@ -139,7 +139,7 @@ describe Acts::ProperNounIdentifier do
         'Evening Standard',
         'Sancroft']
     end
-    
+
     it 'should strip conferences and dinners' do
       proper_nouns '8 October 2008, speech at the Mortgage Intelligence Annual Conference dinner in Newport. (£10,001-£15,000)',
         ['Mortgage Intelligence',
@@ -148,7 +148,7 @@ describe Acts::ProperNounIdentifier do
       proper_nouns "1 December 2008, hosted the Institute of Turnaround Professionals' Awards Dinner in London. (£15,001-£20,000)",
         ['Institute of Turnaround Professionals',
         'London']
-        
+
       proper_nouns "19 September 2008, speech at the Azur Business Networking Lunch in London. (£10,001-£15,000)",
         ['Azur Business',
         'London']
@@ -160,7 +160,7 @@ describe Acts::ProperNounIdentifier do
           'This Week',
           'Actual']
     end
-    
+
     it 'should ignore in quotes when asked to' do
       proper_nouns("Advance on contract with Orion Books for a book on 'Globalising Hatred'. (£10,001-£15,000)",
         ['Advance',
@@ -175,10 +175,25 @@ describe Acts::ProperNounIdentifier do
         'Globalising Hatred'],
         false)
     end
-    
+
     it 'should ignore Parliamentary Adviser' do
       proper_nouns('Parliamentary Adviser to the Caravan Club. (£5,001-£10,000)',
         ['Caravan Club'])
     end
+
+    it 'should ignore Author.' do
+      proper_nouns("Author.",
+        [])
+    end
+
+    it 'should split on full-stop' do
+      proper_nouns("20-22 May 2008, to Australia, to address a conference on domestic violence in Canberra.  Return flights to Australia and accommodation in Canberra paid for by the ACT Government.",
+        ['Australia','Canberra','Return','ACT Government'])
+    end
+
+    it 'should handle organisations starting with digit' do
+      proper_nouns('3DM PLC', ['3DM PLC'])
+    end
+
   end
 end

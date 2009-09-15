@@ -5,7 +5,7 @@ module PeopleHelper
       page.insert_html :bottom, :appointees, :partial => 'appointee' , :object => Appointee.new
     end
   end
-  
+
   def show_interest item
     organisations = item.organisations
     text = item.description
@@ -15,13 +15,13 @@ module PeopleHelper
         text = text.sub(company, link_to(company, organisation_path(organisation) ) )
       end
     end
-    text
+    text + " (#{item.paying_organisation})"
   end
-  
+
   def date_to_s date
     date.to_s(:dd_mmm_year).reverse.chomp('0').reverse
   end
-  
+
   def constituency_summary person
     members = person.members
     members = members.group_by {|m| "#{m.party} MP for #{m.constituency}"}
