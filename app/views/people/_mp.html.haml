@@ -1,4 +1,6 @@
 %li
   = link_to mp.name, person_path(mp)
   - if details && (detail = details[mp])
-    = "(#{detail.constituency})"
+    %br
+    %small{:style => 'color:grey;'}
+      = "#{detail.constituency}"

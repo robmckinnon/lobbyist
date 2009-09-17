@@ -6,7 +6,9 @@ describe Acts::ProperNounIdentifier do
   before(:all) do
     eval('class PNI; end')
     PNI.send(:include, Acts::ProperNounIdentifier)
-    ignore = ['Senior','Adviser','Consultant','Contract','Fees','Deputy','Managing','Director','Chairman','Director','Registered','Author','Registered','Up','Currently']
+    ignore = ['Senior','Adviser','Consultant','Contract','Fees','Deputy',
+        'Managing','Director','Chairman','Director','Registered','Author',
+        'Secretary','Registered','Up','Currently']
     @ignore = ignore
   end
 
@@ -193,6 +195,11 @@ describe Acts::ProperNounIdentifier do
 
     it 'should handle organisations starting with digit' do
       proper_nouns('3DM PLC', ['3DM PLC'])
+    end
+
+    it 'should behave this way' do
+      proper_nouns('19-22 September 2008, attendance at the Ryder Cup in the USA in my capacity as Secretary of the Parliamentary Golf Society. Travel and accommodation paid by Humana Europe, a healthcare services company.',
+        ['Ryder Cup','USA','Parliamentary Golf Society','Travel','Humana Europe'])
     end
 
   end

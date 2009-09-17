@@ -1,3 +1,21 @@
 %p
-  = link_to data_source.name, edit_data_source_path(data_source)
-  = link_to 'Show', data_source_path(data_source)
+  = #link_to data_source.name, data_source_path(data_source)
+  = data_source.name
+  %small{:style=>"color:grey;"}
+    = link_to 'Edit', edit_data_source_path(data_source)
+  - unless data_source.appointees.empty?
+    %br
+    %small{:style=>"color:grey;"}
+      = "#{data_source.appointees.size} appointees, "
+      = "#{number_with_delimiter (data_source.appointees.collect(&:appointments).flatten.size) } appointments"
+  - unless data_source.register_entries.empty?
+    %br
+    %small{:style=>"color:grey;"}
+      = "#{data_source.register_entries.size} register entries, "
+      = "#{number_with_delimiter (data_source.register_entries.collect(&:consultancy_clients).flatten.size) } consultancy clients"
+  - unless data_source.members_interests_entries.empty?
+    %br
+    %small{:style=>"color:grey;"}
+      = "#{data_source.members_interests_entries.size} register entries, "
+      = "#{number_with_delimiter (data_source.members_interests_entries.collect(&:members_interests_items).flatten.size) } items"
+

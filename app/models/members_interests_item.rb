@@ -71,10 +71,22 @@ class MembersInterestsItem < ActiveRecord::Base
     text.sub!('a Group','a group')
     text.sub!('Income','income')
     text.sub!("Lloyd's",'Lloyds')
+    text.sub!("ITV1's",'ITV1 s')
     text.sub!('Helsingborg','')
     text.sub!('Christian charity, CARE','CARE')
+    text.sub!('Conference Dinner','')
+    text.sub!('Annual Awards Dinner','')
+    text.sub!('Annual Management Dinner','')
+    text.sub!('Surveyors Dinner','Surveyors')
     text.sub!('CARE (Christian Action, Research and Education)','CARE')
-    text.sub!(/^(Ongoing|Practising|Stewardship|Weekly|Categories|Article|Printing|Programmes|Date)\s/,'')
+    text.sub!('CARE (Christian Action Research and Education)', 'CARE')
+    text.sub!('Christian Action, Research and Education (CARE)','CARE')
+    text.sub!('Gordon Poole Agency for ','')
+    text.sub!('Forum for the ','Forumforthe ')
+    text.sub!('Institute of Directors','InstituteofDirectors')
+    text.sub!('Parliamentary Advisory Committee','ParliamentaryAdvisoryCommittee')
+    text.sub!('Management consultant','')
+    text.sub!(/^(Reception|Amount|Ongoing|Support|Practising|Stewardship|Weekly|Categories|Article|Printing|Programmes|Date|Provision|)\s/,'')
     text.sub!('Broadcasting fees','broadcasting fees')
 
     ignore = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
@@ -82,37 +94,68 @@ class MembersInterestsItem < ActiveRecord::Base
         Advisory Committee Board Senior Adviser Consultant Contributor Chair
         Auditorium Speaking Lecturer Lectures Author Member Solicitor Barrister
         Contract Remuneration Fee Fees Payment Non-practising Resigned Presenter
-        Donations
+        Donations Surgeon Commander Secretary
         Deputy Managing Director Chairman Director Directors Registered]
     text.sub!('Sunday Times', 'SundayTimes')
     nouns = MembersInterestsItem.proper_nouns(text, :ignore => ignore, :ignore_in_quotes=>true, :ignore_dates => true)
     nouns = nouns.flatten.sort
-    nouns.map{|x| x.chomp(',').chomp('.').chomp(':').chomp(')')}
+    nouns.map{|x| x.chomp(',').chomp('.').chomp(':').chomp(')').
+      sub('Forumforthe ','Forum for the ').
+      sub('InstituteofDirectors','Institute of Directors').
+      sub('ParliamentaryAdvisoryCommittee','Parliamentary Advisory Committee') }
   end
 
   def paying_organisation
-    orgs = organisations
-    if orgs.empty? && category_name != 'Land and Property' # && max_amount
-      orgs = proper_nouns
-      if orgs.include?('Mail on Sunday')
-        likely_org = 'Mail on Sunday'
-      elsif orgs.include?('SundayTimes')
-        likely_org = 'Sunday Times'
-      else
-        likely_org = orgs.max {|a,b| a.length <=> b.length }
+    likely_org = nil
+    if description[/(paid for|paid|met|funded|provided) by/]
+      proper_nouns.each do |org|
+        if description[/(paid for|paid|funded|met|provided) by (the )?(#{org})/]
+          likely_org = org
+        end
       end
-      if likely_org
-        likely_org
-      else
+    end
+
+    if likely_org
+      # raise likely_org
+      if likely_org && likely_org[/^(Mr|Mrs|Miss) /]
         ''
+      else
+        likely_org
       end
     else
-      orgs.max {|a,b| a.length <=> b.length }
+      orgs = organisations
+      if orgs.empty? && category_name != 'Land and Property' # && max_amount
+        if description[/(personal donation|Address of donor)/i]
+          ''
+        else
+          orgs = proper_nouns
+          if orgs.include?('Mail on Sunday')
+            likely_org = 'Mail on Sunday'
+          elsif orgs.include?('SundayTimes')
+            likely_org = 'Sunday Times'
+          else
+            ['British Overseas Territory of Gibraltar',
+            'United Arab Emirates', "Gibraltar's National Day",
+            'The One Show','Daily Cooks Challenge','Research Assistant'
+            ].each {|x| orgs.delete(x)}
+            likely_org = orgs.max {|a,b| a.length <=> b.length } unless likely_org
+          end
+          if likely_org && likely_org[/^(Mr|Mrs|Miss) /]
+            ''
+          elsif likely_org
+            likely_org
+          else
+            ''
+          end
+        end
+      else
+        orgs.max {|a,b| a.length <=> b.length }
+      end
     end
   end
 
   def organisations
-    indicators = %w[limited ltd plc group incorporated inc llp society]
+    indicators = %w[limited ltd plc group incorporated inc llp society lp]
     indicator_group = "( #{indicators.join('| ')})"
     regexp = Regexp.new(indicator_group, Regexp::IGNORECASE)
 

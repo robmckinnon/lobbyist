@@ -9,13 +9,22 @@ module PeopleHelper
   def show_interest item
     organisations = item.organisations
     text = item.description
-    organisations.each do |company|
-      organisation = Organisation.find_by_name(company)
-      if organisation
-        text = text.sub(company, link_to(company, organisation_path(organisation) ) )
+    unless item.paying_organisation.blank?
+      if text[/(paid for|paid|funded|met|provided) by (the )?(#{item.paying_organisation})/]
+        text.sub!(/((paid for|paid|funded|met|provided) by (the )?)(#{item.paying_organisation})/, '\1' + "<a href=''>#{item.paying_organisation}</a>")
+      else
+        text.sub!(item.paying_organisation, "<a href=''>#{item.paying_organisation}</a>")
+      end
+    else
+      organisations.each do |company|
+        organisation = Organisation.find_by_name(company)
+        if organisation
+          text = text.sub(company, link_to(company, organisation_path(organisation) ) )
+        end
       end
     end
-    text + " (#{item.paying_organisation})"
+
+    text
   end
 
   def date_to_s date

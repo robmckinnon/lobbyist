@@ -1,4 +1,7 @@
 - @title = 'Data sources'
-= link_to "Add data source", new_data_source_path
-= render :partial => 'data_source', :collection => @data_sources
+- @data_sources.group_by(&:organisation).each do |org, sources|
+  %h2= org ? org.name : 'nil'
+  = render :partial => 'data_source', :collection => sources
+%p
+  = link_to "Add data source", new_data_source_path
 
