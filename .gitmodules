@@ -25,3 +25,6 @@
 [submodule "vendor/plugins/compass"]
 	path = vendor/plugins/compass
 	url = git://github.com/chriseppstein/compass.git
+[submodule "vendor/plugins/auto_complete"]
+	path = vendor/plugins/auto_complete
+	url = git://github.com/rails/auto_complete.git
