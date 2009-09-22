@@ -3,17 +3,43 @@ require 'stringio'
 
 class ApplicationController < ActionController::Base
 
-  before_filter :authenticate, :except => :home
+  before_filter :authenticate, :except => [:home]
   after_filter :compress
 
-  helper :all # include all helpers, all the time
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  auto_complete_for :person, :name
+  auto_complete_for :organisation, :name
 
-  # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
+  helper :all # include all helpers, all the time
+  # protect_from_forgery # See ActionController::RequestForgeryProtection for details
+
+  filter_parameter_logging :password
 
   def home
     render :template => 'application/home', :layout => false
+  end
+
+  def search
+    if request.post?
+      if params['person']
+        name = params['person']['name']
+        person = Person.find_by_name(name)
+        if person
+          redirect_to person_path(person)
+        else
+          flash['person_not_found'] = "#{name} not found"
+        end
+      elsif params['organisation']
+        name = params['organisation']['name']
+        organisation = Organisation.find_by_name(name)
+        if organisation
+          redirect_to organisation_path(organisation)
+        else
+          flash['organisation_not_found'] = "#{name} not found"
+        end
+      end
+    else
+      render :template => 'application/search'
+    end
   end
 
   def authenticate

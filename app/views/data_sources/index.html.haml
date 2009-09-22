@@ -1,4 +1,5 @@
 - @title = 'Data sources'
+
 - @data_sources.group_by(&:organisation).each do |org, sources|
   %h2= org ? org.name : 'nil'
   = render :partial => 'data_source', :collection => sources

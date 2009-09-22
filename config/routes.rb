@@ -7,6 +7,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.root :controller => "application", :action => 'home'
 
+  map.search 'search', :controller => 'application', :action => 'search'
+
   map.resources :people
   map.resources :appointees
   map.resources :data_sources

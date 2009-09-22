@@ -7,13 +7,13 @@ class OrganisationsController < ApplicationController
     @organisations = Organisation.find(:all, :order => "name")
     @lobbyists = @organisations.select {|x| x.is_lobbyist_firm? }
     @lobbyist_count = @lobbyists.size
-    
+
     @others = @organisations - @lobbyists
     @other_count = @others.size
-    
+
     @organisations_lobbying = @others.select{|x| !x.consultancy_clients.empty? || !x.monitoring_clients.empty?}
     @organisations_lobbying_count = @organisations_lobbying.size
-    
+
     @quangos = Organisation.quangos
     @quangos_lobbying = (@organisations_lobbying & @quangos)
     @quangos_lobbying_count = @quangos_lobbying.size
@@ -29,7 +29,7 @@ class OrganisationsController < ApplicationController
   def show_staff_member
     person_id = params[:person_id]
     @consultancy_staff_members, @entries_by_consultancy_staff_member = @organisation.entries_by_consultancy_staff_member2
-    
+
     @matching_staff_members = @consultancy_staff_members.select{|x| x.friendly_id == person_id }
     @consultancy_staff_member = @matching_staff_members.first
     @register_entries = @matching_staff_members.collect(&:register_entry)
@@ -57,7 +57,7 @@ class OrganisationsController < ApplicationController
 
     @members_interests_items = @organisation.members_interests_items
     @appointments = @organisation.appointments
-    
+
     @similarly_named = @organisation.similarly_named
     render :template => 'organisations/show.html.haml'
   end

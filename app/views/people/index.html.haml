@@ -1,4 +1,5 @@
 - @title = 'People'
+= text_field_with_auto_complete :person, :name
 %h2 Current Lords
 %ul
   = render :partial => 'lord', :collection => @lords.select {|l| !l.appointments.empty?}, :locals => {:details => @lord_details}
