@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090725143700) do
+ActiveRecord::Schema.define(:version => 20090922103040) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -244,6 +244,7 @@ ActiveRecord::Schema.define(:version => 20090725143700) do
     t.string   "publicwhip_id"
   end
 
+  add_index "people", ["name"], :name => "index_people_on_name"
   add_index "people", ["publicwhip_id"], :name => "index_people_on_publicwhip_id"
 
   create_table "quangos", :force => true do |t|
