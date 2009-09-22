@@ -1,4 +1,12 @@
 - @title = 'Organisations'
+
+.organisation_search
+  - form_tag(search_url, :method => :post) do
+    = text_field_with_auto_complete :organisation, :name
+    = submit_tag 'Find organisation'
+- if flash['organisation_not_found']
+  %p= flash['organisation_not_found']
+
 %h2= "What do we know?"
 %h3
   At least
@@ -13,10 +21,6 @@
   At least
   = link_to "#{@members_interests_count} organisations with member interests", "#members_interests"
 
-#quangos
-  %h2= "Quangos lobbying (#{@quangos_lobbying_count})"
-  %table
-    = render :partial => 'organisation', :collection => @quangos_lobbying
 #organisations_lobbying
   %h2= "Organisations lobbying (#{@organisations_lobbying_count})"
   %table
@@ -25,6 +29,10 @@
   %h2= "Lobbyist firms (#{@lobbyist_count})"
   %table
     = render :partial => 'organisation', :collection => @lobbyists
+#quangos
+  %h2= "Quangos lobbying (#{@quangos_lobbying_count})"
+  %table
+    = render :partial => 'organisation', :collection => @quangos_lobbying
 #members_interests
   %h2= "Organisations with member interests (#{@members_interests_count})"
   %table
