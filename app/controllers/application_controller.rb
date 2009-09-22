@@ -3,6 +3,8 @@ require 'stringio'
 
 class ApplicationController < ActionController::Base
 
+  caches_action :home
+
   before_filter :authenticate, :except => [:home]
   after_filter :compress
 

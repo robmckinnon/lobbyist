@@ -1,5 +1,7 @@
 class OrganisationsController < ApplicationController
 
+  caches_action :index, :show
+
   before_filter :find_organisation, :only => [:show, :edit, :show_staff_member]
   before_filter :store_location, :only => [:index]
 

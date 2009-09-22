@@ -1,5 +1,7 @@
 class PeopleController < ApplicationController
 
+  caches_action :index, :show
+
   before_filter :find_person, :only => [:show, :edit]
   before_filter :ensure_current_person_url, :only => :show
   before_filter :store_location, :only => [:index]
