@@ -28,7 +28,7 @@ namespace :wl do
       end
     end
   end
-  
+
   desc 'load quangos'
   task :load_quangos => :environment do
     FasterCSV.foreach(RAILS_ROOT + "/data/uk_quangos_2007.csv", :headers=>true) do |q|
@@ -49,25 +49,29 @@ namespace :wl do
     file_names.each do |file_name|
       doc = Hpricot open(file_name)
       entries = (doc/'/publicwhip/regmem')
-      
+
       data_source = DataSource.get_data_source(file_name)
       puts data_source.name
-      
+
       entries.each do |data|
         person = Person.find_by_publicwhip_id(data['personid'])
         member = Member.find_by_publicwhip_id(data['memberid'])
-        
+
         puts "person not found: #{data['personid']}" unless person
         puts "member not found: #{data['memberid']}" unless member
-        
+
         unless !person || !member || MembersInterestsEntry.exists?(:member_id => member.id, :data_source_id => data_source.id)
+          unless member.person
+            member.person_id = person.id
+            member.save
+          end
           puts member.firstname.to_s + ' ' + member.lastname.to_s
           entry = MembersInterestsEntry.create!({ :member_id => member.id, :data_source_id => data_source.id })
           categories = (data/'category')
           categories.each do |category_data|
             category = MembersInterestsCategory.find_or_create_by_number_and_name(category_data['type'], category_data['name'])
             items = (category_data/'item')
-            
+
             items.each do |item_data|
               subcategory = item_data['subcategory']
               item = MembersInterestsItem.new :members_interests_category_id => category.id,
@@ -81,9 +85,9 @@ namespace :wl do
       end
     end
   end
-  
-  task :load_offices => :environment do 
-    doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')    
+
+  task :load_offices => :environment do
+    doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')
     people = (doc/'/publicwhip/person')
     people.each do |data|
       publicwhip_id = data['id']
@@ -104,28 +108,45 @@ namespace :wl do
       end
     end
   end
-  
+
   desc "Load publicwhip person data"
   task :load_people => :environment do
-    doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')    
+    doc = Hpricot open(RAILS_ROOT + '/data/members/people.xml')
     people = (doc/'/publicwhip/person')
-    
+
     people.each do |data|
       publicwhip_id = data['id']
-      unless Person.exists?(:publicwhip_id => publicwhip_id)
+      offices = (data/'office')
+      members = []
+      offices.each do |office|
+        member_publicwhip_id = office['id']
+        if member_publicwhip_id.include?('uk.org.publicwhip/member/')
+          if member = Member.find_by_publicwhip_id(member_publicwhip_id)
+            members << member
+          else
+            puts 'member not found: ' + office['id']
+          end
+        end
+      end
+
+      if Person.exists?(:publicwhip_id => publicwhip_id)
+        person = Person.find_by_publicwhip_id(publicwhip_id)
+        if members.size == 0
+          puts 'removing: ' + person.inspect
+          person.destroy
+        else
+          members.select{|m| !m.person_id }.each do |member|
+            member.person_id = person.id
+            member.save!
+          end
+        end
+      elsif members.size > 0
         person = Person.create!({ :publicwhip_id => publicwhip_id,
             :name => data['latestname']})
         puts person.name
-        offices = (data/'office')
-        offices.each do |office|
-          if office['id'].include?('uk.org.publicwhip/member/')
-            if member = Member.find_by_publicwhip_id(office['id'])
-              member.person_id = person.id
-              member.save!
-            else
-              puts 'member not found: ' + office['id']
-            end
-          end
+        members.each do |member|
+          member.person_id = person.id
+          member.save!
         end
       end
     end
@@ -134,9 +155,9 @@ namespace :wl do
   desc "Load publicwhip members data"
   task :load_members => :environment do
     file_name = Dir.glob(RAILS_ROOT + '/data/members/all-members.xml').last
-    doc = Hpricot open(file_name)    
+    doc = Hpricot open(file_name)
     members = (doc/'/publicwhip/member')
-    
+
     members.each do |data|
       publicwhip_id = data['id']
       unless Member.exists?(:publicwhip_id => publicwhip_id)
@@ -171,7 +192,7 @@ namespace :wl do
     file_name = Dir.glob(RAILS_ROOT + '/data/members/peers-ucl.xml').last
     doc = Hpricot open(file_name)
     lords = (doc/'/publicwhip/lord')
-    
+
     lords.each do |data|
       publicwhip_id = data['id']
       unless Lord.exists?(:publicwhip_id => publicwhip_id)
