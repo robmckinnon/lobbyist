@@ -43,10 +43,12 @@ ActiveRecord::Schema.define(:version => 20091013182456) do
     t.integer  "sic_uk_class_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sic_uk_class_code"
     t.string   "sic_uk_section_code"
   end
 
   add_index "company_classifications", ["organisation_id"], :name => "index_company_classifications_on_organisation_id"
+  add_index "company_classifications", ["sic_uk_class_code"], :name => "index_company_classifications_on_sic_uk_class_code"
   add_index "company_classifications", ["sic_uk_class_id"], :name => "index_company_classifications_on_sic_uk_class_id"
   add_index "company_classifications", ["sic_uk_section_code"], :name => "index_company_classifications_on_sic_uk_section_code"
 
