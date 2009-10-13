@@ -19,6 +19,9 @@ class Organisation < ActiveRecord::Base
 
   has_many :appointments
 
+  has_many :company_classifications, :dependent => :delete_all
+  has_many :sic_uk_classes, :through => :company_classifications
+
   has_one :quango
 
   validates_presence_of :name
@@ -30,7 +33,7 @@ class Organisation < ActiveRecord::Base
   before_validation :populate_company_number
 
   class << self
-    
+
     def quangos
       Quango.find(:all, :include => :organisation).collect(&:organisation)
     end
@@ -147,7 +150,7 @@ class Organisation < ActiveRecord::Base
     entries = entries_by_client_organisation :consultancy_staff_members, :name
     return [entries.keys.sort, entries]
   end
-  
+
   def consultancy_entries_by_client_organisation
     entries = entries_by_client_organisation :consultancy_clients
     return [sort_by_name(entries.keys), entries]
@@ -159,17 +162,17 @@ class Organisation < ActiveRecord::Base
   end
 
   private
-  
+
     def sort_by_name list
       list.sort_by {|x| x.name.to_s.downcase}
     end
-    
+
     def entries_by_lobbyist_firm clients
       entries_by_lobbyist_firm = clients.collect(&:register_entry).group_by(&:organisation)
       entries_by_lobbyist_firm.each {|k,v| entries_by_lobbyist_firm[k] = v.sort_by{|x| x.data_source.period_start} }
       entries_by_lobbyist_firm
     end
-    
+
     def entries_by_client_organisation client_type, entity_type=:organisation
       entries_by_client = Hash.new {|h,k| h[k] = []}
       register_entries.each do |entry|
@@ -186,6 +189,16 @@ class Organisation < ActiveRecord::Base
       puts "setting company to: #{company.name}"
       self.company_number = company.company_number
       self.registered_name = company.name
+
+      sic_codes = []
+      sic_codes.each do |sic_code|
+        sic_class = SicUkClass.find_by_sic_uk_code_and_year(sic_code, 2003)
+        if sic_class
+          company_classification.build :sic_uk_class_id => sic_class.id
+        else
+          warn "cannot find sic class for code: #{sic_code}"
+        end
+      end
     end
 
     def company_is_a_match? company

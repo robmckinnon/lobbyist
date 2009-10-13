@@ -1,0 +1,6 @@
+%li
+  = section.code
+  = link_to section.description, industry_url(:sic_section_code => section.code.downcase)
+  - if @organisations_by_section[section] > 0
+    = "(#{pluralize(@organisations_by_section[section], 'company')})"
+

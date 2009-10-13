@@ -21,6 +21,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :appc_register_reports
   map.resources :prca_register_entries
 
+  map.industries 'industries', :controller => 'industries', :action => 'index'
+  map.industry 'industries/:sic_section_code', :controller => 'industries', :action => 'show'
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

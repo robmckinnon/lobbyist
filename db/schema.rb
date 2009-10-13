@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090922103040) do
+ActiveRecord::Schema.define(:version => 20091013182456) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -37,6 +37,18 @@ ActiveRecord::Schema.define(:version => 20090922103040) do
 
   add_index "appointments", ["appointee_id"], :name => "index_appointments_on_appointee_id"
   add_index "appointments", ["organisation_id"], :name => "index_appointments_on_organisation_id"
+
+  create_table "company_classifications", :force => true do |t|
+    t.integer  "organisation_id"
+    t.integer  "sic_uk_class_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "sic_uk_section_code"
+  end
+
+  add_index "company_classifications", ["organisation_id"], :name => "index_company_classifications_on_organisation_id"
+  add_index "company_classifications", ["sic_uk_class_id"], :name => "index_company_classifications_on_sic_uk_class_id"
+  add_index "company_classifications", ["sic_uk_section_code"], :name => "index_company_classifications_on_sic_uk_section_code"
 
   create_table "consultancy_clients", :force => true do |t|
     t.string   "name"
@@ -281,6 +293,81 @@ ActiveRecord::Schema.define(:version => 20090922103040) do
 
   add_index "register_entries", ["data_source_id"], :name => "index_register_entries_on_data_source_id"
   add_index "register_entries", ["organisation_id"], :name => "index_register_entries_on_organisation_id"
+
+  create_table "sic_uk_classes", :force => true do |t|
+    t.integer "year"
+    t.string  "code"
+    t.string  "description"
+    t.integer "sic_uk_group_id"
+    t.integer "sic_uk_division_id"
+    t.integer "sic_uk_subsection_id"
+    t.integer "sic_uk_section_id"
+    t.integer "sic_uk_code"
+  end
+
+  add_index "sic_uk_classes", ["sic_uk_code"], :name => "index_sic_uk_classes_on_sic_uk_code"
+  add_index "sic_uk_classes", ["sic_uk_division_id"], :name => "index_sic_uk_classes_on_sic_uk_division_id"
+  add_index "sic_uk_classes", ["sic_uk_group_id"], :name => "index_sic_uk_classes_on_sic_uk_group_id"
+  add_index "sic_uk_classes", ["sic_uk_section_id"], :name => "index_sic_uk_classes_on_sic_uk_section_id"
+  add_index "sic_uk_classes", ["sic_uk_subsection_id"], :name => "index_sic_uk_classes_on_sic_uk_subsection_id"
+
+  create_table "sic_uk_divisions", :force => true do |t|
+    t.integer "year"
+    t.string  "code"
+    t.string  "description"
+    t.integer "sic_uk_subsection_id"
+    t.integer "sic_uk_section_id"
+  end
+
+  add_index "sic_uk_divisions", ["sic_uk_section_id"], :name => "index_sic_uk_divisions_on_sic_uk_section_id"
+  add_index "sic_uk_divisions", ["sic_uk_subsection_id"], :name => "index_sic_uk_divisions_on_sic_uk_subsection_id"
+
+  create_table "sic_uk_groups", :force => true do |t|
+    t.integer "year"
+    t.string  "code"
+    t.string  "description"
+    t.integer "sic_uk_division_id"
+    t.integer "sic_uk_subsection_id"
+    t.integer "sic_uk_section_id"
+  end
+
+  add_index "sic_uk_groups", ["sic_uk_division_id"], :name => "index_sic_uk_groups_on_sic_uk_division_id"
+  add_index "sic_uk_groups", ["sic_uk_section_id"], :name => "index_sic_uk_groups_on_sic_uk_section_id"
+  add_index "sic_uk_groups", ["sic_uk_subsection_id"], :name => "index_sic_uk_groups_on_sic_uk_subsection_id"
+
+  create_table "sic_uk_sections", :force => true do |t|
+    t.integer "year"
+    t.string  "code"
+    t.string  "description"
+  end
+
+  create_table "sic_uk_subclasses", :force => true do |t|
+    t.integer "year"
+    t.string  "code"
+    t.string  "description"
+    t.integer "sic_uk_class_id"
+    t.integer "sic_uk_group_id"
+    t.integer "sic_uk_division_id"
+    t.integer "sic_uk_subsection_id"
+    t.integer "sic_uk_section_id"
+    t.integer "sic_uk_code"
+  end
+
+  add_index "sic_uk_subclasses", ["sic_uk_class_id"], :name => "index_sic_uk_subclasses_on_sic_uk_class_id"
+  add_index "sic_uk_subclasses", ["sic_uk_code"], :name => "index_sic_uk_subclasses_on_sic_uk_code"
+  add_index "sic_uk_subclasses", ["sic_uk_division_id"], :name => "index_sic_uk_subclasses_on_sic_uk_division_id"
+  add_index "sic_uk_subclasses", ["sic_uk_group_id"], :name => "index_sic_uk_subclasses_on_sic_uk_group_id"
+  add_index "sic_uk_subclasses", ["sic_uk_section_id"], :name => "index_sic_uk_subclasses_on_sic_uk_section_id"
+  add_index "sic_uk_subclasses", ["sic_uk_subsection_id"], :name => "index_sic_uk_subclasses_on_sic_uk_subsection_id"
+
+  create_table "sic_uk_subsections", :force => true do |t|
+    t.integer "year"
+    t.string  "code"
+    t.string  "description"
+    t.integer "sic_uk_section_id"
+  end
+
+  add_index "sic_uk_subsections", ["sic_uk_section_id"], :name => "index_sic_uk_subsections_on_sic_uk_section_id"
 
   create_table "slugs", :force => true do |t|
     t.string   "name"
