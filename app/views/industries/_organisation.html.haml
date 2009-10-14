@@ -1,2 +1,5 @@
 %li
   = link_to organisation.name, organisation_path(organisation)
+  \-
+  - organisation.company_classifications.each do |classification|
+    = classification.sic_uk_class.description

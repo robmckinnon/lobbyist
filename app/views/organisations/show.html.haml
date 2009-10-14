@@ -1,6 +1,8 @@
 - @title = @organisation.name
 - unless @organisation.company_number.blank?
   .company_number
+    We think this is the registered company:
+    = Company.find_by_company_number(@organisation.company_number).name
     Company No.
     = @organisation.company_number
 

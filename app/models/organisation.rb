@@ -31,6 +31,7 @@ class Organisation < ActiveRecord::Base
   validates_uniqueness_of :url, :allow_nil => true
 
   before_validation :populate_company_number
+  after_save :save_classifications
 
   class << self
 
@@ -190,13 +191,19 @@ class Organisation < ActiveRecord::Base
       self.company_number = company.company_number
       self.registered_name = company.name
 
-      sic_codes = []
-      sic_codes.each do |sic_code|
-        sic_class = SicUkClass.find_by_sic_uk_code_and_year(sic_code, 2003)
-        if sic_class
-          company_classification.build :sic_uk_class_id => sic_class.id
-        else
-          warn "cannot find sic class for code: #{sic_code}"
+      company.company_classifications.each do |classification|
+        self.company_classifications << classification
+      end
+    end
+
+    def save_classifications
+      if company_number
+        company = Company.find_by_company_number(company_number)
+        if company
+          company.company_classifications.each do |classification|
+            classification.organisation_id = self.id
+            classification.save!
+          end
         end
       end
     end
@@ -210,15 +217,14 @@ class Organisation < ActiveRecord::Base
       company.name == upcase_name || company.name[/^(.+) (LIMITED|LTD)\.?$/,1] == upcase_name
     end
 
-    def handle_company_results results
-      result_size = results.result_size.to_i
+    def handle_company_results companies
       puts ""
-      puts "#{name}: #{result_size} matches"
+      puts "#{name}: #{companies.size} matches"
 
-      if result_size == 1
-        set_company(results.company) if company_is_a_match?(results.company)
-      elsif result_size > 1
-        results.companies.each do |company|
+      if companies.size == 1
+        set_company(companies.first) if company_is_a_match?(companies.first)
+      elsif companies.size > 1
+        companies.each do |company|
           set_company(company) if company_is_a_match?(company)
         end
       end
@@ -226,13 +232,8 @@ class Organisation < ActiveRecord::Base
 
     def populate_company_number
       begin
-        encoded_name = URI.encode(name.gsub('&','and'))
-        # url = "http://localhost:3001/search?q=#{encoded_name}&f=xml"
-        url = "http://companiesrevealed.org/search?q=#{encoded_name}&f=xml"
-        xml = open(url).read.gsub("id>","companies_revealed_id>")
-        hash = Hash.from_xml(xml)
-        results = Morph.from_hash(hash)
-        handle_company_results(results)
+        companies = Company.retrieve_by_name name.gsub('&','and')
+        handle_company_results companies
       rescue Exception => e
         puts "#{Exception.class.name} while populating company for '#{name}': #{e.to_s}"
       end

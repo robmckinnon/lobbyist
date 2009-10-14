@@ -2,8 +2,9 @@ log/*.log
 tmp/**/*
 test
 data
-config/database.yml
 config/auth.yml
+config/database.yml
+config/companies-house.yml
 .DS_Store
 doc
 public/stylesheets

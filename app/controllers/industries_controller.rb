@@ -5,7 +5,7 @@ class IndustriesController < ApplicationController
     @organisations_by_section = {}
 
     @sections.each do |section|
-      @organisations_by_section[section] = CompanyClassification.count(:conditions => {:sic_uk_section_code => section.code})
+      @organisations_by_section[section] = CompanyClassification.count(:conditions => {:sic_uk_section_code => section.code}) - CompanyClassification.count(:conditions => {:sic_uk_section_code => section.code, :organisation_id => nil})
     end
   end
 

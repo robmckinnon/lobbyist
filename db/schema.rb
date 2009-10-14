@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091013182456) do
+ActiveRecord::Schema.define(:version => 20091013222706) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -38,6 +38,27 @@ ActiveRecord::Schema.define(:version => 20091013182456) do
   add_index "appointments", ["appointee_id"], :name => "index_appointments_on_appointee_id"
   add_index "appointments", ["organisation_id"], :name => "index_appointments_on_organisation_id"
 
+  create_table "companies", :force => true do |t|
+    t.string   "name"
+    t.string   "company_number"
+    t.text     "address"
+    t.string   "url"
+    t.string   "wikipedia_url"
+    t.string   "company_category"
+    t.string   "company_status"
+    t.date     "incorporation_date"
+    t.string   "country_code",       :limit => 2
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "companies", ["company_category"], :name => "index_companies_on_company_category"
+  add_index "companies", ["company_number"], :name => "index_companies_on_company_number"
+  add_index "companies", ["company_status"], :name => "index_companies_on_company_status"
+  add_index "companies", ["country_code"], :name => "index_companies_on_country_code"
+  add_index "companies", ["name"], :name => "index_companies_on_name"
+  add_index "companies", ["url"], :name => "index_companies_on_url"
+
   create_table "company_classifications", :force => true do |t|
     t.integer  "organisation_id"
     t.integer  "sic_uk_class_id"
@@ -45,12 +66,32 @@ ActiveRecord::Schema.define(:version => 20091013182456) do
     t.datetime "updated_at"
     t.integer  "sic_uk_class_code"
     t.string   "sic_uk_section_code"
+    t.integer  "company_id"
   end
 
+  add_index "company_classifications", ["company_id"], :name => "index_company_classifications_on_company_id"
   add_index "company_classifications", ["organisation_id"], :name => "index_company_classifications_on_organisation_id"
   add_index "company_classifications", ["sic_uk_class_code"], :name => "index_company_classifications_on_sic_uk_class_code"
   add_index "company_classifications", ["sic_uk_class_id"], :name => "index_company_classifications_on_sic_uk_class_id"
   add_index "company_classifications", ["sic_uk_section_code"], :name => "index_company_classifications_on_sic_uk_section_code"
+
+  create_table "company_search_results", :force => true do |t|
+    t.integer  "company_search_id"
+    t.integer  "company_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "company_search_results", ["company_id"], :name => "index_company_search_results_on_company_id"
+  add_index "company_search_results", ["company_search_id"], :name => "index_company_search_results_on_company_search_id"
+
+  create_table "company_searches", :force => true do |t|
+    t.string   "term"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "company_searches", ["term"], :name => "index_company_searches_on_term"
 
   create_table "consultancy_clients", :force => true do |t|
     t.string   "name"
