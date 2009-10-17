@@ -8,7 +8,7 @@ class ConsultancyStaffMember < ActiveRecord::Base
   has_friendly_id :name, :use_slug => true, :scope => :register_entry
 
   class << self
-    
+
     def dupes
       c = ConsultancyStaffMember.all.group_by(&:name)
       c.each {|k,v| c[k] = v.group_by(&:organisation) }
@@ -24,15 +24,14 @@ class ConsultancyStaffMember < ActiveRecord::Base
         puts member.name
         member.save!
       end
-      
     end
-    
+
   end
 
   def consultancy
     register_entry.organisation_name
   end
-  
+
   def dates
     [register_entry.data_source.period_start, register_entry.data_source.period_end]
   end

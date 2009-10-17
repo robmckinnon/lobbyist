@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091013222706) do
+ActiveRecord::Schema.define(:version => 20091017160643) do
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
@@ -423,5 +423,35 @@ ActiveRecord::Schema.define(:version => 20091013222706) do
 
   add_index "slugs", ["name", "sluggable_type", "scope", "sequence"], :name => "index_slugs_on_name_and_sluggable_type_and_scope_and_sequence", :unique => true
   add_index "slugs", ["sluggable_id"], :name => "index_slugs_on_sluggable_id"
+
+  create_table "special_advisor_appointing_ministers", :force => true do |t|
+    t.string   "title"
+    t.integer  "special_advisor_list_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "special_advisor_appointing_ministers", ["special_advisor_list_id"], :name => "index_appointing_ministers_on_special_advisor_list_id"
+
+  create_table "special_advisor_lists", :force => true do |t|
+    t.date     "at_date"
+    t.integer  "data_source_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "special_advisor_lists", ["data_source_id"], :name => "index_special_advisor_lists_on_data_source_id"
+
+  create_table "special_advisors", :force => true do |t|
+    t.string   "name"
+    t.string   "qualification"
+    t.integer  "special_advisor_list_id"
+    t.integer  "special_advisor_appointing_minister_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "special_advisors", ["special_advisor_appointing_minister_id"], :name => "index_special_advisors_on_special_advisor_appointing_minister_id"
+  add_index "special_advisors", ["special_advisor_list_id"], :name => "index_special_advisors_on_special_advisor_list_id"
 
 end

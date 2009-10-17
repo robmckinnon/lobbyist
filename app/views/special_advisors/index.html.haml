@@ -1,0 +1,5 @@
+- @title = "Special Advisors"
+
+%ul
+  - @lists.each do |list|
+    %li= link_to "Special Advisors at #{list.at_date}", special_advisors_list_url(:date => list.at_date)

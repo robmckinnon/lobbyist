@@ -6,6 +6,10 @@ namespace :wl do
     MembersInterestsItem.write_to_tsv
   end
 
+  task :load_spads => :environment do
+    SpecialAdvisorList.load_file '/Users/x/apps/lobbying/lobbyist/data/special_advisors/90716m0008.htm.html'
+  end
+
   desc 'load acoba appointments'
   task :load_acoba => :environment do
     person = nil

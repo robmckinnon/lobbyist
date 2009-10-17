@@ -1,0 +1,5 @@
+%li
+  = h appointing_minister.title
+  %ul
+    - appointing_minister.special_advisors.sort_by(&:name).each do |advisor|
+      %li= link_to h(advisor.name), special_advisor_url(:date=> @at_date, :person_id=>advisor.friendly_id)

@@ -23,6 +23,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.industries 'industries', :controller => 'industries', :action => 'index'
   map.industry 'industries/:sic_section_code', :controller => 'industries', :action => 'show'
+  map.industry_class 'industries/:sic_section_code/:sic_class_code', :controller => 'industries', :action => 'show_class'
+
+  map.special_advisors 'special_advisors', :controller => 'special_advisors', :action => 'index'
+  map.special_advisors_list 'special_advisors/:date', :controller => 'special_advisors', :action => 'show'
+  map.special_advisor 'special_advisors/:date/:person_id', :controller => 'special_advisors', :action => 'show_advisor'
 
   # The priority is based upon order of creation: first created -> highest priority.
 
