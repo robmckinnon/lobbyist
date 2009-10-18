@@ -5,17 +5,43 @@ class SpecialAdvisorList < ActiveRecord::Base
   has_many :special_advisor_appointing_ministers, :through => :special_advisors
 
   class << self
-    def load_file file
+    def normalize text
+      text.strip.gsub("\n",' ').gsub('\s',' ').squeeze(' ')
+    end
+
+    def get_heading doc, h
+      headings = (doc/h)
+      heading = headings.find {|h| normalize(h.inner_text)[/Special Advisers/]}
+    end
+
+    def load_file file, ignore_third_column=false
+      @ignore_third_column = ignore_third_column
       doc = Hpricot open(file)
-      headings = (doc/'h4')
-      heading = headings.find {|h| h.inner_text.strip[/Special Advisers/]}
+      heading = get_heading(doc, 'h4')
+      if heading.nil? || heading.empty?
+        heading = get_heading(doc, 'h3')
+      end
+
       heading.next_sibling.inner_text[/post at (\d+\s\S+\s+\d\d\d\d)/]
+
       date = Date.parse($1)
       puts date
       advisor_list = find_or_create_by_at_date(date)
+
+      last_minister = nil
       find_depts(heading).each do |dept|
-        load_dept dept, advisor_list
+        minister_name = get_minister_name(dept, last_minister)
+        unless minister_name[/Appointing Minister/i] || minister_name[/\(1/] || minister_name[/Advisers/i]
+          load_dept dept, minister_name, advisor_list
+          last_minister = minister_name
+        end
       end
+    end
+
+    def get_minister_name dept, last_minister
+      minister = dept.inner_text.strip.chomp('1').chomp('2').chomp('3').chomp('(2)').strip.chomp(',').chomp('(1)').chomp('3, 4','').strip
+      name = normalize(minister)
+      name.blank? ? last_minister : name
     end
 
     def find_depts heading
@@ -26,31 +52,47 @@ class SpecialAdvisorList < ActiveRecord::Base
       depts = (table/'tr/td[1]')
     end
 
-    def load_dept dept, advisor_list
-      dept_name = dept.inner_text.strip.chomp('1').chomp('2').chomp('3')
+    def each_spad dept
+      advisors = dept.next_sibling
+      return if advisors.nil?
+      texts = (advisors/'p')
+      texts = [advisors] if texts.empty?
+      texts.collect do |item|
+        value = item.inner_text.sub('(p/t)','(pt)')
+        values = value.split('/')
+        values.each do |v|
+          parts = v.split('(')
+          name = parts.first.strip
+          qualification = parts.size == 2 ? parts.last.strip.chomp(')') : nil
+          if !@ignore_third_column && advisors.next_sibling && advisors.next_sibling.name == 'td'
+            texts = (advisors.next_sibling/'p')
+            texts = [advisors.next_sibling] if texts.empty?
+            texts.each do |q|
+              text = normalize(q.inner_text)
+              qualification = text unless text.blank?
+            end
+          end
+          yield name, qualification
+        end
+      end
+    end
 
-      unless dept_name[/Appointing Minister/i] || dept_name[/\(1\)/]
-        minister = SpecialAdvisorAppointingMinister.find_or_create_by_title(dept_name)
+    def load_dept dept, minister, advisor_list
+      minister = SpecialAdvisorAppointingMinister.find_or_create_by_title(minister)
 
-        list = dept.next_sibling
-        spads = (list/'p').collect do |item|
-          value = item.inner_text
-          value.split('/')
-        end.flatten
-
-        names = spads.collect {|s| s.split('(').first.strip }
-        qualifications = spads.collect {|s| x = s.split('(') ; x.size == 2 ? x.last.strip.chomp(')') : nil }
-
-        names.each_with_index do |name, index|
-          qualification = qualifications[index]
+      each_spad(dept) do |name, qualification|
+        unless name[/Policy|Strategic|Events|Research/]
           attributes = {:name => name, :qualification => qualification,
               :special_advisor_appointing_minister_id => minister.id}
-          unless SpecialAdvisor.exists?(attributes.merge(:special_advisor_list_id => advisor_list.id))
+          advisor_attributes = attributes.merge(:special_advisor_list_id => advisor_list.id)
+
+          unless SpecialAdvisor.exists?(advisor_attributes)
             advisor_list.special_advisors.create attributes
           end
         end
-        y advisor_list.special_advisors
       end
+      y advisor_list.special_advisors
+      $stdout.flush
     end
   end
 

@@ -3,11 +3,13 @@ class SpecialAdvisorsController < ApplicationController
   before_filter :find_special_advisor_list, :only => [:show_advisor, :show]
 
   def index
-    @lists = SpecialAdvisorList.all.sort_by(&:at_date)
+    @lists = SpecialAdvisorList.all.sort_by(&:at_date).reverse
   end
 
   def show
-    @appointing_ministers = @advisor_list.special_advisors.group_by(&:special_advisor_appointing_minister).keys
+    advisors = @advisor_list.special_advisors
+    @advisors_by_minister = advisors.group_by(&:special_advisor_appointing_minister)
+    @appointing_ministers = @advisors_by_minister.keys
   end
 
   def show_advisor

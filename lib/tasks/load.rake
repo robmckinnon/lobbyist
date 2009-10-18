@@ -7,7 +7,15 @@ namespace :wl do
   end
 
   task :load_spads => :environment do
-    SpecialAdvisorList.load_file '/Users/x/apps/lobbying/lobbyist/data/special_advisors/90716m0008.htm.html'
+    Dir.glob('/Users/x/apps/lobbying/lobbyist/data/special_advisors/*.html') do |file|
+      puts "loading #{file}"
+      ignore_third_column = file[/50721m12/]
+      # unless ignore_third_column
+        if file[/40722-24/]
+          SpecialAdvisorList.load_file file, ignore_third_column
+        end
+      # end
+    end
   end
 
   desc 'load acoba appointments'
