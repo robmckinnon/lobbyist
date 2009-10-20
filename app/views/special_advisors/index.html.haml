@@ -3,3 +3,10 @@
 %ul
   - @lists.each do |list|
     %li= link_to "Special Advisors at #{list.at_date}", special_advisors_list_url(:date => list.at_date)
+
+- all = AdvisorLobbyist.all.collect do |lobbyist|
+  - #lobbyist.special_advisor.name + ' (' + lobbyist.special_advisor.special_advisor_appointing_minister.title.to_s + ') ' + lobbyist.consultancy_staff_member.consultancy
+  - link_to_consultant(lobbyist.consultancy_staff_member.name, lobbyist.consultancy_staff_member.register_entry) + ' ' + lobbyist.special_advisor.special_advisor_list.at_date.to_s
+%ul
+  - all.uniq.each do |lobbyist|
+    %li= lobbyist

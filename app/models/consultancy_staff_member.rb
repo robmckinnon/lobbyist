@@ -4,6 +4,8 @@ class ConsultancyStaffMember < ActiveRecord::Base
   belongs_to :register_entry
   has_one :organisation, :through => :register_entry
 
+  has_many :advisor_lobbyists, :dependent => :destroy
+
   validates_presence_of :name
   has_friendly_id :name, :use_slug => true, :scope => :register_entry
 

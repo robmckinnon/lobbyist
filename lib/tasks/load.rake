@@ -10,11 +10,7 @@ namespace :wl do
     Dir.glob('/Users/x/apps/lobbying/lobbyist/data/special_advisors/*.html') do |file|
       puts "loading #{file}"
       ignore_third_column = file[/50721m12/]
-      # unless ignore_third_column
-        if file[/40722-24/]
-          SpecialAdvisorList.load_file file, ignore_third_column
-        end
-      # end
+      SpecialAdvisorList.load_file file, ignore_third_column
     end
   end
 

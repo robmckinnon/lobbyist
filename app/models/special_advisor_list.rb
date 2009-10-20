@@ -39,7 +39,7 @@ class SpecialAdvisorList < ActiveRecord::Base
     end
 
     def get_minister_name dept, last_minister
-      minister = dept.inner_text.strip.chomp('1').chomp('2').chomp('3').chomp('(2)').strip.chomp(',').chomp('(1)').chomp('3, 4','').strip
+      minister = dept.inner_text.strip.chomp('1').chomp('2').chomp('3').chomp('(2)').strip.chomp(',').chomp('(1)').strip.chomp('3, 4').strip.chomp('2 , 4')
       name = normalize(minister)
       name.blank? ? last_minister : name
     end
@@ -81,13 +81,18 @@ class SpecialAdvisorList < ActiveRecord::Base
       minister = SpecialAdvisorAppointingMinister.find_or_create_by_title(minister)
 
       each_spad(dept) do |name, qualification|
-        unless name[/Policy|Strategic|Events|Research/]
+        unless name.blank? || name[/Policy|Strategic|Events|Research/]
           attributes = {:name => name, :qualification => qualification,
               :special_advisor_appointing_minister_id => minister.id}
           advisor_attributes = attributes.merge(:special_advisor_list_id => advisor_list.id)
 
           unless SpecialAdvisor.exists?(advisor_attributes)
-            advisor_list.special_advisors.create attributes
+            begin
+              advisor_list.special_advisors.create attributes
+            rescue Exception => e
+              puts attributes.inspect
+              raise e
+            end
           end
         end
       end

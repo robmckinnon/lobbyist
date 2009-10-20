@@ -9,7 +9,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091017160643) do
+ActiveRecord::Schema.define(:version => 20091019181509) do
+
+  create_table "advisor_lobbyists", :force => true do |t|
+    t.integer  "special_advisor_id"
+    t.integer  "consultancy_staff_member_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "advisor_lobbyists", ["consultancy_staff_member_id"], :name => "index_advisor_lobbyists_on_consultancy_staff_member_id"
+  add_index "advisor_lobbyists", ["special_advisor_id"], :name => "index_advisor_lobbyists_on_special_advisor_id"
 
   create_table "appointees", :force => true do |t|
     t.integer  "person_id"
