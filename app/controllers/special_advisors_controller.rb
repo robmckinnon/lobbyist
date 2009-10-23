@@ -15,6 +15,7 @@ class SpecialAdvisorsController < ApplicationController
   def show_advisor
     person_id = params[:person_id]
     @advisor = @advisor_list.special_advisors.detect{|x| x.friendly_id == person_id }
+    @consultancy_staff_members = @advisor.consultancy_staff_members
   end
 
   private

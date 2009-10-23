@@ -1,14 +1,19 @@
 - if @organisations_by_section[section] > 0
   %li
-    = section.code
-    = link_to section.description, industry_url(:sic_section_code => section.code.downcase)
+    = # section.code
+    - if @organisations_by_section[section] > 10
+      = section.description
+    - else
+      = link_to section.description, industry_url(:sic_section_code => section.code.downcase)
     - if @organisations_by_section[section] > 0
-      = "(#{pluralize(@organisations_by_section[section], 'company')})"
+      %span{ :style => 'color: grey' }
+        = "#{pluralize(@organisations_by_section[section], 'company')}"
     - if @organisations_by_section[section] > 10
       %ul
         - @organisations_by_sic_class[section].keys.each do |sic_class|
           - count = @organisations_by_sic_class[section][sic_class]
-          - if count > 5
+          - if count > 2
             %li
               = link_to sic_class.description, industry_class_url(:sic_section_code => section.code.downcase, :sic_class_code => sic_class.sic_uk_code)
-              = count
+              %span{ :style => 'color: grey' }
+                = "#{pluralize(count, 'company')}"

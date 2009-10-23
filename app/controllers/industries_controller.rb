@@ -16,6 +16,7 @@ class IndustriesController < ApplicationController
   def show
     code = params[:sic_section_code]
     @section, @organisations = CompanyClassification.find_section_and_organisations code
+    @lobbyists = @organisations.collect(&:consultancy_clients).flatten.collect(&:lobbyist_firm_retained).uniq
   end
 
   def show_class
@@ -23,6 +24,7 @@ class IndustriesController < ApplicationController
     class_code = params[:sic_class_code].to_i
     @section, @organisations = CompanyClassification.find_section_and_organisations section_code
     @organisations = @organisations.select{|o| o.company_classifications.collect(&:sic_uk_class_code).include?(class_code) }
+    @lobbyists = @organisations.collect(&:consultancy_clients).flatten.collect(&:lobbyist_firm_retained).uniq
     @title = @organisations.first.company_classifications.first.sic_uk_class.description
     render :template => 'industries/show'
   end

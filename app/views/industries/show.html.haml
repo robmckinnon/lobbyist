@@ -1,5 +1,12 @@
 - @title = @title || @section.description
 
+%h2 Companies in this sector known to be lobbying
+
 %ul
   = render :partial => 'organisation', :collection => @organisations
+
+%h2 Lobbyist firms retained by companies listed above
+
+%ul
+  = render :partial => 'lobbyist_firm', :collection => @lobbyists
 

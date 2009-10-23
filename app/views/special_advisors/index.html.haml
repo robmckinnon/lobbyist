@@ -6,7 +6,8 @@
 
 - all = AdvisorLobbyist.all.collect do |lobbyist|
   - #lobbyist.special_advisor.name + ' (' + lobbyist.special_advisor.special_advisor_appointing_minister.title.to_s + ') ' + lobbyist.consultancy_staff_member.consultancy
-  - link_to_consultant(lobbyist.consultancy_staff_member.name, lobbyist.consultancy_staff_member.register_entry) + ' ' + lobbyist.special_advisor.special_advisor_list.at_date.to_s
+  - #link_to_consultant(lobbyist.consultancy_staff_member.name, lobbyist.consultancy_staff_member.register_entry) + ' <span' + lobbyist.special_advisor.special_advisor_appointing_minister.title + ' ' + lobbyist.special_advisor.special_advisor_list.at_date.to_s
+  - lobbyist.consultancy_staff_member.name + ' <br/><span style="color: grey">' + lobbyist.special_advisor.special_advisor_list.at_date.to_s + ' '  + lobbyist.special_advisor.special_advisor_appointing_minister.title + '</span>'+ ' <br/><span style="color: grey">' + lobbyist.consultancy_staff_member.consultancy + '</span>'
 %ul
-  - all.uniq.each do |lobbyist|
+  - all.uniq.sort.each do |lobbyist|
     %li= lobbyist

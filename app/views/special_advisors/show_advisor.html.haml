@@ -1,9 +1,14 @@
 - @title = h @advisor.name
 
+%h2 Special Advisor
 %p
-  Special Advisor of
-  =h @advisor.special_advisor_appointing_minister.title
-  at
-  =h @advisor.special_advisor_list.at_date
+  On
+  = @advisor.special_advisor_list.at_date.to_s(:dd_month_year)
+  = h @advisor.name
+  was a special advisor appointed by the
+  = h @advisor.special_advisor_appointing_minister.title + '.'
 
-
+- unless @consultancy_staff_members.empty?
+  %h3 Similiarly named people
+  %ul
+    = render :partial => 'organisations/staff_member_by_organisation', :object => @consultancy_staff_members

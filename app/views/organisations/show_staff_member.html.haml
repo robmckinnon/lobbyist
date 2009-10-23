@@ -13,12 +13,4 @@
         = link_to person.name, person_path(person)
         - unless person.members.empty?
           %span= constituency_summary person
-    - @consultants.group_by(&:organisation).each do |organisation, consultants|
-      %li
-        - consultant = consultants.first
-        - entries = consultants.collect(&:register_entry)
-        = link_to_consultant consultant.name, entries.first
-        worked with
-        = link_to h(consultant.consultancy), organisation_path(consultant.organisation)
-        %small
-          = link_to_periods entries
+    = render :partial => 'staff_member_by_organisation', :object => @consultants

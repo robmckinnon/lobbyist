@@ -25,4 +25,8 @@ class SpecialAdvisor < ActiveRecord::Base
       end
     end
   end
+
+  def consultancy_staff_members
+    advisor_lobbyists.collect(&:consultancy_staff_member)
+  end
 end
