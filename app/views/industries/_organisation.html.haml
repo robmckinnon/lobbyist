@@ -1,6 +1,6 @@
 %li
   = link_to organisation.name, organisation_path(organisation)
-  - unless organisation.company_classifications.empty?
+  - if show_classification && !organisation.company_classifications.empty?
     \-
     - organisation.company_classifications.each do |classification|
       = classification.sic_uk_class.description

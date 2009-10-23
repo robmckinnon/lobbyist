@@ -26,15 +26,20 @@ class CompanyClassification < ActiveRecord::Base
       end
     end
 
-    def find_section_and_organisations section_code
+    def find_section_and_organisations_and_lobbyists section_code, class_code=nil
       all = find(:all, :conditions => {:sic_uk_section_code => section_code}, :include => :organisation)
 
       if all.empty?
         return [SicUkSection.find_by_code(section_code), []]
       else
-        organisations = all.collect(&:organisation).compact
+        organisations = all.collect(&:organisation).compact.sort_by(&:name)
+        if class_code
+          organisations = organisations.select{|o| o.company_classifications.collect(&:sic_uk_class_code).include?(class_code) }
+        end
+        lobbyists = organisations.collect(&:consultancy_clients).flatten.collect(&:lobbyist_firm_retained).uniq.sort_by(&:name)
+
         section = all.first.sic_uk_class.sic_uk_section
-        return [section, organisations]
+        return [section, organisations, lobbyists]
       end
     end
   end

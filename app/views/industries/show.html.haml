@@ -3,7 +3,7 @@
 %h2 Companies in this sector known to be lobbying
 
 %ul
-  = render :partial => 'organisation', :collection => @organisations
+  = render :partial => 'organisation', :collection => @organisations, :locals => {:show_classification => @show_classifications}
 
 %h2 Lobbyist firms retained by companies listed above
 
