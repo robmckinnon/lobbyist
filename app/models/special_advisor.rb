@@ -29,4 +29,8 @@ class SpecialAdvisor < ActiveRecord::Base
   def consultancy_staff_members
     advisor_lobbyists.collect(&:consultancy_staff_member)
   end
+
+  def member_office
+    MemberOffice.from_date_and_description special_advisor_list.at_date, special_advisor_appointing_minister.title
+  end
 end
