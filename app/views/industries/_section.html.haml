@@ -1,7 +1,7 @@
 - if @organisations_by_section[section] > 0
   %li
     = # section.code
-    - if @organisations_by_section[section] > 10
+    - if @organisations_by_section[section] > 12
       = section.description
     - else
       = link_to section.description, industry_url(:sic_section_code => section.code.downcase)

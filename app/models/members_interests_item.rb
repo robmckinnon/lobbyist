@@ -8,7 +8,7 @@ class MembersInterestsItem < ActiveRecord::Base
   belongs_to :members_interests_category
 
   has_many :members_organisation_interests, :dependent => :delete_all
-  has_many :organisations, :through => :members_organisation_interests
+  has_many :interest_organisations, :through => :members_organisation_interests, :source => :organisation
 
   after_save :set_members_organisation_interests
 
@@ -54,13 +54,28 @@ class MembersInterestsItem < ActiveRecord::Base
     members_interests_entry.person_name
   end
 
+  def create_members_organisation_interests name
+    organisation = Organisation.find_or_create_by_name name
+    unless MembersOrganisationInterest.exists?(:organisation_id => organisation.id, :members_interests_item_id => self.id)
+      puts name
+      MembersOrganisationInterest.create! :organisation_id => organisation.id, :members_interests_item_id => self.id
+    end
+  end
+
   def set_members_organisation_interests
     puts members_interests_entry.member.person.name
-    organisations.each do |name|
-      organisation = Organisation.find_or_create_by_name name
-      unless MembersOrganisationInterest.exists?(:organisation_id => organisation.id, :members_interests_item_id => self.id)
-        puts name
-        MembersOrganisationInterest.create! :organisation_id => organisation.id, :members_interests_item_id => self.id
+
+    if organisations.empty?
+      if name = paying_organisation
+        if name.split.size > 1
+          if company = Company.find_match(name)
+            create_members_organisation_interests name
+          end
+        end
+      end
+    else
+      organisations.each do |name|
+        create_members_organisation_interests name
       end
     end
   end
@@ -109,7 +124,8 @@ class MembersInterestsItem < ActiveRecord::Base
     likely_org = nil
     if description[/(paid for|paid|met|funded|provided) by/]
       proper_nouns.each do |org|
-        if description[/(paid for|paid|funded|met|provided) by (the )?(#{org})/]
+        name = org.gsub('(','\(').gsub(')','\)')
+        if description[/(paid for|paid|funded|met|provided) by (the )?(#{name})/]
           likely_org = org
         end
       end

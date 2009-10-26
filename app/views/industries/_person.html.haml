@@ -1,0 +1,11 @@
+%li
+  = link_to h(person.name), person_path(person)
+  - if member = person.current_member
+    %span{:style => 'color: grey'}
+      = "#{member.party} MP for #{member.constituency}"
+  %ul
+    - person.interests_in_organisations(@organisations).each do |interest|
+      %li
+        = show_interest interest
+        %i
+          = h interest.members_interests_category.name

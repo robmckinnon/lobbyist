@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091019181509) do
+ActiveRecord::Schema.define(:version => 20091026095506) do
 
   create_table "advisor_lobbyists", :force => true do |t|
     t.integer  "special_advisor_id"
@@ -193,6 +193,25 @@ ActiveRecord::Schema.define(:version => 20091019181509) do
   add_index "lords", ["person_id"], :name => "index_lords_on_person_id"
   add_index "lords", ["publicwhip_id"], :name => "index_lords_on_publicwhip_id"
   add_index "lords", ["title"], :name => "index_lords_on_title"
+
+  create_table "member_offices", :force => true do |t|
+    t.string   "name"
+    t.string   "department"
+    t.string   "position"
+    t.string   "publicwhip_id"
+    t.string   "publicwhip_member_id"
+    t.integer  "member_id"
+    t.date     "from_date"
+    t.date     "to_date"
+    t.string   "source"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_offices", ["department"], :name => "index_member_offices_on_department"
+  add_index "member_offices", ["member_id"], :name => "index_member_offices_on_member_id"
+  add_index "member_offices", ["publicwhip_id"], :name => "index_member_offices_on_publicwhip_id"
+  add_index "member_offices", ["publicwhip_member_id"], :name => "index_member_offices_on_publicwhip_member_id"
 
   create_table "members", :force => true do |t|
     t.integer  "person_id"

@@ -16,6 +16,41 @@ class Company < ActiveRecord::Base
 
   class << self
 
+    def company_is_a_match? company, name
+      upcase_name = name.upcase
+      if upcase_name[/^(.+) (LIMITED|LTD)\.?$/]
+        upcase_name = $1
+      end
+      company.name == upcase_name || company.name[/^(.+) (LIMITED|LTD)\.?$/,1] == upcase_name
+    end
+
+    def find_match name
+      begin
+        companies = retrieve_by_name name.gsub('&','and')
+        puts ""
+        puts "#{name}: #{companies.size} matches"
+
+        if companies.size == 1
+          if company_is_a_match?(companies.first, name)
+            company = companies.first
+            puts company.name
+            return company
+          end
+        elsif companies.size > 1
+          companies.each do |company|
+            if company_is_a_match?(company, name)
+              puts company.name
+              return company
+            end
+          end
+        end
+
+        return nil
+      rescue Exception => e
+        puts "#{Exception.class.name} while populating company for '#{name.inspect}': #{e.to_s}"
+      end
+    end
+
     def find_all_by_slug(slug)
       Slug.find(:all, :conditions => {:name => slug}).collect(&:sluggable)
     end

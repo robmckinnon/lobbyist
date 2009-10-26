@@ -45,4 +45,10 @@ class Person < ActiveRecord::Base
   def current_member
     members.size > 0 ? members.select(&:current?).first : nil
   end
+
+  def interests_in_organisations(organisations)
+    items = members.collect(&:members_interests_items).flatten
+    items = items.select {|item| (item.interest_organisations & organisations).size >= 1}.group_by(&:description)
+    items.keys.collect {|k| items[k].first}
+  end
 end

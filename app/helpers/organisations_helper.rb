@@ -3,7 +3,7 @@ module OrganisationsHelper
   def link_to_staff register_entries
     staff = register_entries.collect do |entry|
       entry.consultancy_staff_members.collect{|x| link_to_consultant x.name, entry}
-      
+
       end.flatten.uniq.sort
     staff.join(', ')
   end
@@ -15,9 +15,9 @@ module OrganisationsHelper
       same_year = period_start.year == period_end.year
       label = same_year ? period_start.to_s(:mmm_year)[0..2] : period_start.to_s(:mmm_year)
       label += "-#{period_end.to_s(:mmm_year)}"
-      link_to label, register_entry_url(entry)
+      link_to label, register_entry_url(entry), :title => entry.data_source.name
     end
-    "(#{periods.join(', ')})"
+    "<small>#{periods.join(', ')}</small>"
   end
 
   def search_script element_id, name

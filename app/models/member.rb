@@ -1,8 +1,9 @@
 class Member < ActiveRecord::Base
-  
+
   belongs_to :person
-  
+
   has_many :members_interests_entries
+  has_many :members_interests_items, :through => :members_interests_entries
 
   validates_uniqueness_of :publicwhip_id, :allow_nil => true
 
@@ -18,12 +19,12 @@ class Member < ActiveRecord::Base
       name.sub!(' CBE', '')
       name
     end
-    
+
     def current_members
       today = Date.today.to_s
       find(:all, :conditions => '"'+today+'" < to_date', :include => :person)
     end
-    
+
     def from_name name
       name = clean_name name
       parts = name.split
@@ -44,14 +45,14 @@ class Member < ActiveRecord::Base
       end
     end
   end
-  
+
   def current?
-    Date.today < to_date    
+    Date.today < to_date
   end
-  
+
   def person_name
     person.name
   end
-  
-  
+
+
 end

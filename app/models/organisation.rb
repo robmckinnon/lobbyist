@@ -208,34 +208,8 @@ class Organisation < ActiveRecord::Base
       end
     end
 
-    def company_is_a_match? company
-      puts company.name
-      upcase_name = name.upcase
-      if upcase_name[/^(.+) (LIMITED|LTD)\.?$/]
-        upcase_name = $1
-      end
-      company.name == upcase_name || company.name[/^(.+) (LIMITED|LTD)\.?$/,1] == upcase_name
-    end
-
-    def handle_company_results companies
-      puts ""
-      puts "#{name}: #{companies.size} matches"
-
-      if companies.size == 1
-        set_company(companies.first) if company_is_a_match?(companies.first)
-      elsif companies.size > 1
-        companies.each do |company|
-          set_company(company) if company_is_a_match?(company)
-        end
-      end
-    end
-
     def populate_company_number
-      begin
-        companies = Company.retrieve_by_name name.gsub('&','and')
-        handle_company_results companies
-      rescue Exception => e
-        puts "#{Exception.class.name} while populating company for '#{name}': #{e.to_s}"
-      end
+      company = Company.find_match(name)
+      set_company(company) if company
     end
 end
