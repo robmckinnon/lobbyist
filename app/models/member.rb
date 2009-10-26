@@ -2,6 +2,8 @@ class Member < ActiveRecord::Base
 
   belongs_to :person
 
+  has_many :member_offices
+
   has_many :members_interests_entries
   has_many :members_interests_items, :through => :members_interests_entries
 
@@ -50,9 +52,19 @@ class Member < ActiveRecord::Base
     Date.today < to_date
   end
 
+  def former?
+    !current?
+  end
+
   def person_name
     person.name
   end
 
+  def current_offices
+    member_offices.select(&:current?)
+  end
 
+  def former_offices
+    member_offices.select(&:former?).sort_by(&:to_date)
+  end
 end

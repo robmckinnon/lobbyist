@@ -1,6 +1,7 @@
 - @title = @person.name
 - unless @person.members.empty?
   %p= constituency_summary @person
+  %p= roles_summary @person
 
 - unless @person.appointees.empty?
   %h2 Appointments reported by ACOBA

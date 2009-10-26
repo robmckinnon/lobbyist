@@ -41,4 +41,26 @@ class MemberOffice < ActiveRecord::Base
       end
     end
   end
+
+  def position_and_department
+    if position && department
+      "#{position} - #{department}"
+    elsif position
+      position
+    elsif department
+      department
+    end
+  end
+
+  def current?
+    if to_date
+      Date.today < to_date
+    else
+      true
+    end
+  end
+
+  def former?
+    !current?
+  end
 end
