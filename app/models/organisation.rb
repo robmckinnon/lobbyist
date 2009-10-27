@@ -85,7 +85,9 @@ class Organisation < ActiveRecord::Base
     parts = name.split(/( |-)/)
     first_name = parts.first
     first_name = parts[2] if parts.first == 'The'
-    if count==1
+    if first_name == 'Association'
+      name[/Association\s(of|for)\s\w+/]
+    elsif count == 1
       first_name
     else
       (parts.first == 'The') ? "#{first_name}#{parts[3]}#{parts[4]}" : "#{first_name}#{parts[1]}#{parts[2]}"

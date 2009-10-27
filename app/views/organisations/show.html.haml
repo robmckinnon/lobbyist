@@ -1,10 +1,11 @@
 - @title = @organisation.name
 - if @company
   .company_number
-    We think this is the registered company:
-    = @company.name
-    Company No.
-    = @organisation.company_number
+    %p
+      We think this is the registered company:
+      = @company.name
+      Company No.
+      = @organisation.company_number
 
 - if @organisation.quango
   %p
@@ -18,7 +19,9 @@
   - unless @members_interests_items.empty?
     %h2 Members Financial Interests
     %ul
-      - @members_interests_items.each do |interest|
+      - items = @members_interests_items.group_by{|x| x.person_name+x.description}.values
+      - items.each do |interests|
+        - interest = interests.first
         %li
           %strong= link_to h(interest.person_name), interest.person
           = h interest.description
