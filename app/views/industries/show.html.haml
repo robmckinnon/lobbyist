@@ -1,6 +1,6 @@
 - @title = @title || @section.description
 
-%h2 Companies in this sector known to be lobbying
+%h2 Companies in this sector
 %ul
   = render :partial => 'organisation', :collection => @organisations, :locals => {:show_classification => @show_classifications}
 

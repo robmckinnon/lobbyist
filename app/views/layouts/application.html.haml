@@ -11,7 +11,7 @@
   %body.bp
     #container
       #header
-        = image_tag('whoslobbying_header_60.png')
+        = link_to image_tag('whoslobbying_header_60.png'), search_path
         %h1= @title || "WhosLobbying.com"
       - if false
         #menu

@@ -21,7 +21,7 @@ module ApplicationHelper
         if organisation
           text.sub!(item.paying_organisation, link_to(item.paying_organisation, organisation_path(organisation) ) )
         else
-          text.sub!(item.paying_organisation, "<a href=''>#{item.paying_organisation}</a>")
+          # text.sub!(item.paying_organisation, "<a href=''>#{item.paying_organisation}</a>")
         end
       end
     else
