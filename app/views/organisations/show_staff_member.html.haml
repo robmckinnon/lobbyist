@@ -1,16 +1,17 @@
-- @title = h @consultancy_staff_member.name
+- if @consultancy_staff_member
+  - @title = h @consultancy_staff_member.name
 
-%h2 Staff member of
-%p
-  = link_to h(@consultancy_staff_member.consultancy), organisation_path(@consultancy_staff_member.organisation)
-  = link_to_periods @register_entries
+  %h2 Staff member of
+  %p
+    = link_to h(@consultancy_staff_member.consultancy), organisation_path(@consultancy_staff_member.organisation)
+    = link_to_periods @register_entries
 
-- unless @consultants.empty? && @people.empty?
-  %h2 Similarly named persons
-  %ul
-    - @people.each do |person|
-      %li
-        = link_to person.name, person_path(person)
-        - unless person.members.empty?
-          %span= constituency_summary person
-    = render :partial => 'staff_member_by_organisation', :object => @consultants
+  - unless @consultants.empty? && @people.empty?
+    %h2 Similarly named persons
+    %ul
+      - @people.each do |person|
+        %li
+          = link_to person.name, person_path(person)
+          - unless person.members.empty?
+            %span= constituency_summary person
+      = render :partial => 'staff_member_by_organisation', :object => @consultants
