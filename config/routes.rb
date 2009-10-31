@@ -25,6 +25,8 @@ ActionController::Routing::Routes.draw do |map|
   map.industry 'industries/:sic_section_code', :controller => 'industries', :action => 'show'
   map.industry_class 'industries/:sic_section_code/:sic_class_code', :controller => 'industries', :action => 'show_class'
 
+  map.groups 'groups', :controller => 'organisation_groups', :action => 'index'
+
   map.special_advisors 'special_advisors', :controller => 'special_advisors', :action => 'index'
   map.special_advisors_list 'special_advisors/:date', :controller => 'special_advisors', :action => 'show'
   map.special_advisor 'special_advisors/:date/:person_id', :controller => 'special_advisors', :action => 'show_advisor'

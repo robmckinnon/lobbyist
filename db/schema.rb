@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091026095506) do
+ActiveRecord::Schema.define(:version => 20091030175124) do
 
   create_table "advisor_lobbyists", :force => true do |t|
     t.integer  "special_advisor_id"
@@ -304,6 +304,32 @@ ActiveRecord::Schema.define(:version => 20091026095506) do
   end
 
   add_index "office_contacts", ["register_entry_id"], :name => "index_office_contacts_on_register_entry_id"
+
+  create_table "organisation_group_members", :force => true do |t|
+    t.integer  "organisation_group_id"
+    t.integer  "organisation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "organisation_group_members", ["organisation_group_id"], :name => "index_organisation_group_members_on_organisation_group_id"
+  add_index "organisation_group_members", ["organisation_id"], :name => "index_organisation_group_members_on_organisation_id"
+
+  create_table "organisation_groups", :force => true do |t|
+    t.string   "name"
+    t.integer  "sic_uk_class_id"
+    t.integer  "sic_uk_class_code"
+    t.string   "sic_uk_section_code"
+    t.string   "url"
+    t.string   "wikipedia_url"
+    t.string   "spinprofiles_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "organisation_groups", ["sic_uk_class_code"], :name => "index_organisation_groups_on_sic_uk_class_code"
+  add_index "organisation_groups", ["sic_uk_class_id"], :name => "index_organisation_groups_on_sic_uk_class_id"
+  add_index "organisation_groups", ["sic_uk_section_code"], :name => "index_organisation_groups_on_sic_uk_section_code"
 
   create_table "organisations", :force => true do |t|
     t.string   "name"

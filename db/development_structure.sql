@@ -315,6 +315,31 @@ CREATE TABLE `office_contacts` (
   KEY `index_office_contacts_on_register_entry_id` (`register_entry_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `organisation_group_members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `organisation_group_id` int(11) DEFAULT NULL,
+  `organisation_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_organisation_group_members_on_organisation_id` (`organisation_id`),
+  KEY `index_organisation_group_members_on_organisation_group_id` (`organisation_group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `organisation_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `sic_uk_class_id` int(11) DEFAULT NULL,
+  `sic_uk_class_code` int(11) DEFAULT NULL,
+  `sic_uk_section_code` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_organisation_groups_on_sic_uk_class_id` (`sic_uk_class_id`),
+  KEY `index_organisation_groups_on_sic_uk_class_code` (`sic_uk_class_code`),
+  KEY `index_organisation_groups_on_sic_uk_section_code` (`sic_uk_section_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `organisations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -586,3 +611,7 @@ INSERT INTO schema_migrations (version) VALUES ('20091017160643');
 INSERT INTO schema_migrations (version) VALUES ('20091019181509');
 
 INSERT INTO schema_migrations (version) VALUES ('20091026095506');
+
+INSERT INTO schema_migrations (version) VALUES ('20091030175019');
+
+INSERT INTO schema_migrations (version) VALUES ('20091030175124');
