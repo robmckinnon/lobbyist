@@ -5,6 +5,13 @@
     %p
       = f.label :name
       = f.text_field :name, :size=>40
+    - if classification = @organisation.company_classifications.first
+      %p
+        %label
+          Likely Company
+        %span
+          = classification.company.name
+
     - if @organisation.id
       %p
         = f.label :merge_with_id

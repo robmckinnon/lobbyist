@@ -94,8 +94,9 @@
 #similarly_named
   - unless @similarly_named.empty?
     %h2 Similarly named organisations
-    - @similarly_named.each do |organisation|
-      %p
-        = link_to h(organisation.name), organisation_path(organisation)
-        - if organisation.company_number
-          = "(#{organisation.company_number})"
+    %ul
+      - @similarly_named.each do |organisation|
+        %li
+          = link_to h(organisation.name), organisation
+          - if organisation.company_number
+            %span.company_number= organisation.company_number
