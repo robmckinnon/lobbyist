@@ -30,19 +30,14 @@ class OrganisationsController < ApplicationController
 
   def show_staff_member
     person_id = params[:person_id]
-    if person_id == 'edit'
-      @organisations = Organisation.all_with_matches_at_top(@organisation)
-      render :action => :edit
-    else
-      @consultancy_staff_members, @entries_by_consultancy_staff_member = @organisation.entries_by_consultancy_staff_member2
+    @consultancy_staff_members, @entries_by_consultancy_staff_member = @organisation.entries_by_consultancy_staff_member2
 
-      @matching_staff_members = @consultancy_staff_members.select{|x| x.friendly_id == person_id }
-      @consultancy_staff_member = @matching_staff_members.first
-      @register_entries = @matching_staff_members.collect(&:register_entry)
+    @matching_staff_members = @consultancy_staff_members.select{|x| x.friendly_id == person_id }
+    @consultancy_staff_member = @matching_staff_members.first
+    @register_entries = @matching_staff_members.collect(&:register_entry)
 
-      @consultants = @consultancy_staff_member ? (ConsultancyStaffMember.find_all_by_name(@consultancy_staff_member.name) - @matching_staff_members) : []
-      @people = @consultancy_staff_member ? Person.find_all_by_name(@consultancy_staff_member.name) : []
-    end
+    @consultants = @consultancy_staff_member ? (ConsultancyStaffMember.find_all_by_name(@consultancy_staff_member.name) - @matching_staff_members) : []
+    @people = @consultancy_staff_member ? Person.find_all_by_name(@consultancy_staff_member.name) : []
   end
 
   def show
@@ -72,6 +67,7 @@ class OrganisationsController < ApplicationController
   end
 
   def edit
+    @similarly_named = @organisation.similarly_named
     @organisations = Organisation.all_with_matches_at_top(@organisation)
   end
 

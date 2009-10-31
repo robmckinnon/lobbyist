@@ -13,6 +13,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :appointees
   map.resources :data_sources
 
+  map.edit_organisation 'organisations/:id/edit', :controller => 'organisations', :action => 'edit'
   map.show_staff_member 'organisations/:id/:person_id', :controller => 'organisations', :action => 'show_staff_member'
   map.resources :organisations
 

@@ -164,6 +164,14 @@ class Organisation < ActiveRecord::Base
     return [sort_by_name(entries.keys), entries]
   end
 
+  def company
+    if company_number
+      Company.find_by_company_number(company_number)
+    else
+      nil
+    end
+  end
+
   private
 
     def sort_by_name list
