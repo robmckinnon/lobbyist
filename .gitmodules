@@ -34,3 +34,6 @@
 [submodule "vendor/plugins/sic_uk"]
 	path = vendor/plugins/sic_uk
 	url = git://github.com/robmckinnon/sic_uk.git
+[submodule "vendor/plugins/authlogic"]
+	path = vendor/plugins/authlogic
+	url = git://github.com/binarylogic/authlogic.git
