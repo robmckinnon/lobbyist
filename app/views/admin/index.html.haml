@@ -16,3 +16,8 @@
     |
     = link_to 'Edit users', users_path
 
+- if is_admin?
+  %p.text
+    = link_to "Logout", user_session_path, :method => :delete
+    |
+    = link_to 'Admin home', admin_path

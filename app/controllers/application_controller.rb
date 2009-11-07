@@ -161,7 +161,9 @@ class ApplicationController < ActionController::Base
     end
 
     def current_user
-      return @current_user if defined?(@current_user)
+      if defined?(@current_user)
+        return @current_user
+      end
       @current_user = current_user_session && current_user_session.user
     end
 
