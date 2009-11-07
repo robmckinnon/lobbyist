@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
   caches_action :home
 
   before_filter :authenticate, :except => [:home]
+
+  before_filter :require_user, :only => [:edit, :new, :create, :update, :delete]
+
   after_filter :compress
 
   auto_complete_for :person, :name
