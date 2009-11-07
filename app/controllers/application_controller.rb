@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   auto_complete_for :organisation, :name
 
   helper :all # include all helpers, all the time
+  helper_method :current_user_session, :is_admin?
+
   # protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   filter_parameter_logging :password
@@ -131,4 +133,67 @@ class ApplicationController < ActionController::Base
       end
       @people = Person.find(:all, :order => "name") || []
     end
+
+  private
+
+    def render_unauthorized
+      render :text => 'Unauthorized', :status => 401
+    end
+
+    def respond_unauthorized_if_not_admin
+      render_unauthorized unless is_admin?
+    end
+
+    def redirect_to_root_if_not_admin
+      redirect_to '/', :status => 303 unless is_admin?
+    end
+
+    def is_admin?
+      current_user ? true : false
+    end
+
+    def current_user_session
+      return @current_user_session if defined?(@current_user_session)
+      @current_user_session = UserSession.find
+    end
+
+    def current_user
+      return @current_user if defined?(@current_user)
+      @current_user = current_user_session && current_user_session.user
+    end
+
+    def require_user
+      unless current_user
+        store_location
+        flash[:notice] = "You must be logged in to access this page"
+        redirect_to new_user_session_url
+        return false
+      end
+    end
+
+    def require_admin_user
+      require_user
+      unless current_user.admin?
+        redirect_to admin_path
+        return false
+      end
+    end
+
+    def require_no_user
+      if current_user
+        store_location
+        redirect_to admin_path
+        return false
+      end
+    end
+
+    def store_location
+      session[:return_to] = request.request_uri
+    end
+
+    def redirect_back_or_default(default)
+      redirect_to(session[:return_to] || default)
+      session[:return_to] = nil
+    end
+
 end

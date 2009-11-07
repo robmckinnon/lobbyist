@@ -1,0 +1,12 @@
+- @title = 'Register user'
+
+- form_for @user, :url => account_path do |f|
+  = f.error_messages
+  = render :partial => "form", :object => f
+  %p
+    = f.submit "Create user"
+
+%p.text
+  = link_to 'Edit users', users_path
+%p.text
+  = link_to 'Admin home', admin_path

@@ -1,13 +1,18 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :members_interests_entries
-
-  map.resources :members_interests_items
-
-  map.resources :members
 
   map.root :controller => "application", :action => 'home'
 
   map.search 'search', :controller => 'application', :action => 'search'
+
+  map.resource  :account, :controller => "users"
+  map.resources :users
+  map.resource  :user_session
+  map.resources :password_resets
+  map.admin '/admin', :controller => 'admin', :action => 'index'
+
+  map.resources :members_interests_entries
+  map.resources :members_interests_items
+  map.resources :members
 
   map.resources :people
   map.resources :appointees

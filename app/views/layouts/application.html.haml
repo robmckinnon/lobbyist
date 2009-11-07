@@ -45,6 +45,11 @@
           = link_to 'Industries', industries_path
           - # |
           - # = link_to 'Register entries', register_entries_path
+          - if is_admin?
+            |
+            = link_to "Logout", user_session_path, :method => :delete
+            |
+            = link_to 'Admin home', admin_path
       - if RAILS_ENV == 'production'
         #analytics
           = %Q[<script type="text/javascript">]

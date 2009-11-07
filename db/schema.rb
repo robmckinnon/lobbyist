@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091030175124) do
+ActiveRecord::Schema.define(:version => 20091106214154) do
 
   create_table "advisor_lobbyists", :force => true do |t|
     t.integer  "special_advisor_id"
@@ -508,5 +508,26 @@ ActiveRecord::Schema.define(:version => 20091030175124) do
 
   add_index "special_advisors", ["special_advisor_appointing_minister_id"], :name => "index_special_advisors_on_special_advisor_appointing_minister_id"
   add_index "special_advisors", ["special_advisor_list_id"], :name => "index_special_advisors_on_special_advisor_list_id"
+
+  create_table "users", :force => true do |t|
+    t.string   "login"
+    t.string   "crypted_password"
+    t.string   "password_salt"
+    t.string   "persistence_token"
+    t.integer  "login_count"
+    t.datetime "last_request_at"
+    t.datetime "last_login_at"
+    t.datetime "current_login_at"
+    t.string   "last_login_ip"
+    t.string   "current_login_ip"
+    t.string   "perishable_token",  :default => "",    :null => false
+    t.string   "email",             :default => "",    :null => false
+    t.boolean  "admin",             :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["email"], :name => "index_users_on_email"
+  add_index "users", ["perishable_token"], :name => "index_users_on_perishable_token"
 
 end
