@@ -1,4 +1,6 @@
 - @title = @organisation.name
+- if @next_organisation_with_similarly_named
+  = link_to 'next organisation with similarly named', edit_organisation_path(@next_organisation_with_similarly_named)
 #org_name
 = render :partial => 'form', :object => @organisation
 - if @organisation.register_entries.first

@@ -4,7 +4,13 @@
   %h3 Recommended Merges
 
   - @recommended_merges.each do |to_merge|
-    %p= to_merge.collect(&:registered_name).compact.uniq.join(', ') + ' -> ' + to_merge.collect(&:name).join(', ')
+    - if to_merge.first.registered_name
+      %p
+        merge
+        = link_to to_merge.first.name, edit_organisation_path(to_merge.first)
+        into
+        = to_merge.last.name
+        = #to_merge.collect(&:registered_name).compact.uniq.join(', ') + ' -> ' + to_merge.collect(&:name).join(', ')
 
 %h3 Users
 

@@ -9,20 +9,19 @@ class Organisation < ActiveRecord::Base
 
   has_friendly_id :name, :use_slug => true, :strip_diacritics => true
 
+  has_one :quango
+
   has_many :data_sources
   has_many :register_entries
   has_many :consultancy_clients
   has_many :monitoring_clients
+  has_many :appointments
 
   has_many :members_organisation_interests
   has_many :members_interests_items, :through => :members_organisation_interests
 
-  has_many :appointments
-
   has_many :company_classifications, :dependent => :delete_all
   has_many :sic_uk_classes, :through => :company_classifications
-
-  has_one :quango
 
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -41,6 +40,10 @@ class Organisation < ActiveRecord::Base
       limiteds = organisations.select{|x| x.name[/limited$/i]} ; nil
       grouped = (ltds + limiteds).group_by {|x| x.name.sub(/ltd$/i,'').sub(/limited$/i,'').strip }
       duplicates = grouped.values.select {|x| x.size > 1}.sort_by{|x| x.first.name}
+      duplicates = duplicates.collect do |companies|
+        companies.sort_by {|x| x.name[/#{x.registered_name}/i] ? 1 : 0}
+      end
+      duplicates
     end
 
     def quangos
@@ -76,6 +79,27 @@ class Organisation < ActiveRecord::Base
       end
       organisations.delete(organisation)
       organisations
+    end
+  end
+
+  def next_organisation_with_similarly_named
+    organisation = next_organisation
+    while (organisation && organisation.similarly_named.empty?)
+      organisation = organisation.next_organisation
+    end
+    organisation
+  end
+
+  def next_organisation
+    next_id = self.id + 1
+    last_id = Organisation.last.id
+    while next_id <= last_id && !Organisation.exists?(next_id)
+      next_id += 1
+    end
+    if next_id > last_id
+      nil
+    else
+      Organisation.find(next_id)
     end
   end
 
@@ -132,12 +156,27 @@ class Organisation < ActiveRecord::Base
     nil
   end
 
+  def set_organisation_ids collection, organisation
+    collection.each {|item| item.organisation_id = organisation.id, item.save! }
+  end
+
   def merge! organisation
     if organisation.id
-      data_sources.each {|x| x.organisation_id = organisation.id; x.save! }
-      register_entries.each {|x| x.organisation_id = organisation.id; x.save!}
-      consultancy_clients.each {|x| x.organisation_id = organisation.id; x.save!}
-      monitoring_clients.each {|x| x.organisation_id = organisation.id; x.save!}
+      if quango
+        quango.organisation_id = organisation.id; quango.save!
+      end
+      set_organisation_ids data_sources, organisation
+      set_organisation_ids register_entries, organisation
+      set_organisation_ids consultancy_clients, organisation
+      set_organisation_ids monitoring_clients, organisation
+      set_organisation_ids appointments, organisation
+      set_organisation_ids members_organisation_interests, organisation
+
+      company_classifications.each do |classificiation|
+        classificiation.organisation_id = nil
+        classificiation.save!
+      end
+
       destroy
     end
   end
