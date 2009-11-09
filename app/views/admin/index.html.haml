@@ -1,5 +1,11 @@
 - @title = 'Admin'
 
+- unless @recommended_merges.empty?
+  %h3 Recommended Merges
+
+  - @recommended_merges.each do |to_merge|
+    %p= to_merge.collect(&:registered_name).compact.uniq.join(', ') + ' -> ' + to_merge.collect(&:name).join(', ')
+
 %h3 Users
 
 %p.text

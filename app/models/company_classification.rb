@@ -5,7 +5,7 @@ class CompanyClassification < ActiveRecord::Base
   belongs_to :company
 
   # validates_presence_of :organisation
-  # validates_presence_of :company
+  validates_presence_of :company
   validates_presence_of :sic_uk_class
 
   class << self

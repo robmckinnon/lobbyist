@@ -35,6 +35,14 @@ class Organisation < ActiveRecord::Base
 
   class << self
 
+    def recommended_limited_merges
+      organisations = Organisation.all
+      ltds = organisations.select{|x| x.name[/ltd$/i]} ; nil
+      limiteds = organisations.select{|x| x.name[/limited$/i]} ; nil
+      grouped = (ltds + limiteds).group_by {|x| x.name.sub(/ltd$/i,'').sub(/limited$/i,'').strip }
+      duplicates = grouped.values.select {|x| x.size > 1}.sort_by{|x| x.first.name}
+    end
+
     def quangos
       Quango.find(:all, :include => :organisation).collect(&:organisation)
     end
@@ -196,30 +204,38 @@ class Organisation < ActiveRecord::Base
       entries_by_client
     end
 
-    def set_company company
-      puts "setting company to: #{company.name}"
-      self.company_number = company.company_number
-      self.registered_name = company.name
-
-      company.company_classifications.each do |classification|
-        self.company_classifications << classification
-      end
-    end
-
     def save_classifications
       if company_number
         company = Company.find_by_company_number(company_number)
         if company
           company.company_classifications.each do |classification|
-            classification.organisation_id = self.id
-            classification.save!
+            if classification.organisation_id
+              unless classification.organisation_id == self.id
+                new_classification = classification.clone
+                new_classification.organisation_id = self.id
+                puts "cloning: #{new_classification.inspect}"
+                new_classification.save!
+              end
+            else
+              classification.organisation_id = self.id
+              puts "setting: #{classification.inspect}"
+              classification.save!
+            end
           end
         end
       end
     end
 
+    def set_company company
+      puts "setting company to: #{company.name}"
+      self.company_number = company.company_number
+      self.registered_name = company.name
+    end
+
     def populate_company_number
-      company = Company.find_match(name)
-      set_company(company) if company
+      unless company_number
+        company = Company.find_match(name)
+        set_company(company) if company
+      end
     end
 end
