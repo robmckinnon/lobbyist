@@ -117,8 +117,16 @@ class Organisation < ActiveRecord::Base
     parts = name.split(/( |-)/)
     first_name = parts.first
     first_name = parts[2] if parts.first == 'The'
-    if first_name == 'Association'
+    try_index = (parts.first == 'The') ? 4 : 2
+
+    if first_name == 'Association' && (parts[try_index] && parts[try_index][/of|for/])
       name[/Association\s(of|for)\s\w+/]
+    elsif first_name == 'Institute' && parts[try_index][/of|for/]
+      name[/Institute\s(of|for)\s\w+/]
+    elsif first_name == 'Council' && parts[try_index][/on|of|for/]
+      name[/Council\s(on|of|for)\s\w+/]
+    elsif first_name == 'St'
+      name[/St\s\w+/]
     elsif count == 1
       first_name
     else
@@ -137,11 +145,23 @@ class Organisation < ActiveRecord::Base
 
     if organisations.size > 9
       normalized = normalize_name_part(name_part(name,2))
-      name_parts = (organisations + [self]).collect{|x| name_part(x.name,2) }.uniq
-      name_parts.delete_if{|x| normalize_name_part(x) != normalized}
+      name_parts = (organisations + [self]).collect{|x| name_part(x.name, 2) }.uniq
+      name_parts.delete_if {|x| normalize_name_part(x) != normalized}
       organisations = name_parts.collect {|name_part| find_similarly_named(name_part)}.flatten.uniq
     end
+    if organisations.size > 9
+      if name[/All(-| )Party/]
+        basic = remove_all_party(name)
+        organisations = organisations.select {|x| remove_all_party(x.name) == basic }
+      end
+    end
     organisations
+  end
+
+  def remove_all_party name
+    name.sub('All-Party Parliamentary Group for ','').sub(/All(-|\s)Party\s(Parliamentary|Assembly\s)?Group\s(for|on)\s/,'').
+        sub(/All(-|\s)Party\sParliamentary\s/,'').
+        sub('Group','').split(' ').first
   end
 
   def is_lobbyist_firm?
