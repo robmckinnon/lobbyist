@@ -158,7 +158,8 @@ class Organisation < ActiveRecord::Base
       end
     end
     ['All Party', 'All-Party', 'Cross Party', 'Special Interest', 'East Midlands',
-    'Northern Ireland','Royal College', 'Greater Manchester','Local Government'].
+    'Northern Ireland','Royal College', 'Greater Manchester','Local Government',
+    'West Midlands'].
       each {|phrase| match_words.gsub!(phrase, '')}
     match_words.gsub!(/^[A-Z] /,'')
     match_words.strip

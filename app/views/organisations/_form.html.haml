@@ -11,10 +11,15 @@
           Likely company
         %span
           = @organisation.company.name
+          - unless @organisation.company.company_classifications.empty?
+            %span{:style=>'color: grey'}
+              = h(@organisation.company.company_classifications.first.sic_uk_class.description)
     - unless @similarly_named.empty?
       %div
         %label
-          Similarly named
+          Similarly named to
+        %span{ :style => 'font-weight: bold' }
+          = link_to h(@organisation.name), @organisation
         %br
         %ul
           - @similarly_named.each do |organisation|
