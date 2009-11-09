@@ -21,7 +21,7 @@
             %li
               = link_to h(organisation.name), organisation
               - if organisation.company_number
-                %span.company_number= organisation.company_number
+                %span.company_number= organisation.registered_name
     - if @organisation.id
       %p
         = f.label :merge_with_id

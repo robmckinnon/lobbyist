@@ -67,8 +67,8 @@ class OrganisationsController < ApplicationController
   end
 
   def edit
-    @next_organisation_with_similarly_named = @organisation.next_organisation_with_similarly_named
     @similarly_named = @organisation.similarly_named
+    @next_organisation_with_similarly_named = @organisation.next_organisation_with_similarly_named
     @organisations = Organisation.all_with_matches_at_top(@organisation)
   end
 

@@ -105,6 +105,8 @@ class Organisation < ActiveRecord::Base
 
   def find_similarly_named name_part
     organisations = Organisation.find(:all, :conditions => %Q|name like "#{name_part} %"|) +
+        Organisation.find(:all, :conditions => %Q|name like "% #{name_part}"|) +
+        Organisation.find(:all, :conditions => %Q|name like "% #{name_part} %"|) +
         Organisation.find(:all, :conditions => %Q|name like "#{name_part}-%"|) +
         Organisation.find(:all, :conditions => %Q|name like "The #{name_part} %"|) +
         Organisation.find(:all, :conditions => %Q|name like "The #{name_part}-%"|) +
@@ -129,6 +131,8 @@ class Organisation < ActiveRecord::Base
       name[/St\s\w+/]
     elsif count == 1
       first_name
+    elsif count == 3
+      (parts.first == 'The') ? "#{first_name}#{parts[3]}#{parts[4]}#{parts[5]}#{parts[6]}" : "#{first_name}#{parts[1]}#{parts[2]}#{parts[3]}#{parts[4]}"
     else
       (parts.first == 'The') ? "#{first_name}#{parts[3]}#{parts[4]}" : "#{first_name}#{parts[1]}#{parts[2]}"
     end
@@ -139,21 +143,48 @@ class Organisation < ActiveRecord::Base
     part.gsub('-',' ').gsub('&','and')
   end
 
-  def similarly_named
-    part = name_part(name)
-    organisations = find_similarly_named(part)
-
-    if organisations.size > 9
-      normalized = normalize_name_part(name_part(name,2))
-      name_parts = (organisations + [self]).collect{|x| name_part(x.name, 2) }.uniq
-      name_parts.delete_if {|x| normalize_name_part(x) != normalized}
-      organisations = name_parts.collect {|name_part| find_similarly_named(name_part)}.flatten.uniq
-    end
-    if organisations.size > 9
-      if name[/All(-| )Party/]
-        basic = remove_all_party(name)
-        organisations = organisations.select {|x| remove_all_party(x.name) == basic }
+  def match_words name
+    match_words = String.new name
+    match_words.gsub!('-',' ')
+    match_words.gsub!('&','and')
+    unless match_words.split.size < 3
+      %w[National Offshore Association of on for the The British Parliamentary
+      Advisory Group Council Ulster Associated Yorkshire Advanced
+      Worldwide].each do |word|
+        match_words.gsub!(/^#{word}\s/,'')
+        match_words.gsub!(/\s#{word}$/,'')
+        match_words.gsub!(/\s#{word}\s/,'')
+        match_words = '' if word == match_words
       end
+    end
+    ['All Party', 'All-Party', 'Cross Party', 'Special Interest', 'East Midlands',
+    'Northern Ireland','Royal College', 'Greater Manchester','Local Government'].
+      each {|phrase| match_words.gsub!(phrase, '')}
+    match_words.gsub!(/^[A-Z] /,'')
+    match_words.strip
+  end
+
+  def similarly_named
+    first_relevant_word = name_part(match_words(name))
+    return [] if first_relevant_word.blank?
+    organisations = find_similarly_named(first_relevant_word)
+    # raise organisations.size.to_s
+    if organisations.size > 4
+      normalized = normalize_name_part(name_part(match_words(name),2))
+      name_parts = (organisations + [self]).collect{|x| name_part(match_words(x.name), 2) }.uniq
+      name_parts.delete_if {|x| normalize_name_part(x) != normalized}
+      organisations = name_parts.collect do |name_part|
+        if name_part[/ and$/]
+          term = name_part(match_words(name),3)
+          orgs = find_similarly_named(term)
+          orgs += find_similarly_named(term.sub(' and',' &'))
+        else
+          orgs = find_similarly_named(name_part)
+        end
+        orgs
+      end.flatten.uniq
+
+      organisations = organisations.flatten
     end
     organisations
   end
