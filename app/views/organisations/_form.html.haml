@@ -1,32 +1,35 @@
 = error_messages_for :data_source
 
+- if @organisation.company
+  %p
+    %label
+      Likely company
+    %span
+      = @organisation.company.name
+      - unless @organisation.company.company_classifications.empty?
+        %span{:style=>'color: grey'}
+          = h(@organisation.company.company_classifications.first.sic_uk_class.description)
+- unless @similarly_named.empty?
+  %div
+    %label
+      Similarly named to
+    %span{ :style => 'font-weight: bold' }
+      = link_to h(@organisation.name), @organisation
+    %br
+    %ul
+      - @similarly_named.each do |organisation|
+        %li
+          = link_to h(organisation.name), organisation
+          - if organisation.company_number
+            %span.company_number= organisation.registered_name
+    = button_to 'Create new group', :controller => 'organisation_groups', :action => 'new'
+
 - form_for @organisation do |f|
   - field_set_tag 'Organisation' do
     %p
       = f.label :name
       = f.text_field :name, :size=>40
-    - if @organisation.company
-      %p
-        %label
-          Likely company
-        %span
-          = @organisation.company.name
-          - unless @organisation.company.company_classifications.empty?
-            %span{:style=>'color: grey'}
-              = h(@organisation.company.company_classifications.first.sic_uk_class.description)
-    - unless @similarly_named.empty?
-      %div
-        %label
-          Similarly named to
-        %span{ :style => 'font-weight: bold' }
-          = link_to h(@organisation.name), @organisation
-        %br
-        %ul
-          - @similarly_named.each do |organisation|
-            %li
-              = link_to h(organisation.name), organisation
-              - if organisation.company_number
-                %span.company_number= organisation.registered_name
+
     - if @organisation.id
       %p
         = f.label :merge_with_id

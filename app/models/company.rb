@@ -1,8 +1,8 @@
-class Slug < ActiveRecord::Base
-  def to_friendly_id
-    name
-  end
-end
+# class Slug < ActiveRecord::Base
+  # def to_friendly_id
+    # name
+  # end
+# end
 
 class Company < ActiveRecord::Base
 

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091106214154) do
+ActiveRecord::Schema.define(:version => 20091112151115) do
 
   create_table "advisor_lobbyists", :force => true do |t|
     t.integer  "special_advisor_id"
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(:version => 20091106214154) do
     t.integer  "register_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name_in_parentheses"
   end
 
   add_index "consultancy_staff_members", ["person_id"], :name => "index_consultancy_staff_members_on_person_id"

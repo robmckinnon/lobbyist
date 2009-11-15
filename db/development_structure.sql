@@ -58,7 +58,7 @@ CREATE TABLE `companies` (
   KEY `index_companies_on_company_category` (`company_category`),
   KEY `index_companies_on_company_status` (`company_status`),
   KEY `index_companies_on_country_code` (`country_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=24421 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25273 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `company_classifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -75,7 +75,7 @@ CREATE TABLE `company_classifications` (
   KEY `index_company_classifications_on_sic_uk_class_code` (`sic_uk_class_code`),
   KEY `index_company_classifications_on_sic_uk_section_code` (`sic_uk_section_code`),
   KEY `index_company_classifications_on_company_id` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15272 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15809 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `company_search_results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -86,7 +86,7 @@ CREATE TABLE `company_search_results` (
   PRIMARY KEY (`id`),
   KEY `index_company_search_results_on_company_search_id` (`company_search_id`),
   KEY `index_company_search_results_on_company_id` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16810 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17736 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `company_searches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -95,7 +95,7 @@ CREATE TABLE `company_searches` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_company_searches_on_term` (`term`)
-) ENGINE=InnoDB AUTO_INCREMENT=912 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1066 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `consultancy_clients` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -118,6 +118,7 @@ CREATE TABLE `consultancy_staff_members` (
   `register_entry_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `name_in_parentheses` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_consultancy_staff_members_on_person_id` (`person_id`),
   KEY `index_consultancy_staff_members_on_register_entry_id` (`register_entry_id`)
@@ -332,6 +333,9 @@ CREATE TABLE `organisation_groups` (
   `sic_uk_class_id` int(11) DEFAULT NULL,
   `sic_uk_class_code` int(11) DEFAULT NULL,
   `sic_uk_section_code` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `wikipedia_url` varchar(255) DEFAULT NULL,
+  `spinprofiles_url` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -503,7 +507,7 @@ CREATE TABLE `slugs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_slugs_on_name_and_sluggable_type_and_scope_and_sequence` (`name`,`sluggable_type`,`scope`,`sequence`),
   KEY `index_slugs_on_sluggable_id` (`sluggable_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=41964 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=42816 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `special_advisor_appointing_ministers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -537,6 +541,28 @@ CREATE TABLE `special_advisors` (
   KEY `index_special_advisors_on_special_advisor_list_id` (`special_advisor_list_id`),
   KEY `index_special_advisors_on_special_advisor_appointing_minister_id` (`special_advisor_appointing_minister_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2034 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(255) DEFAULT NULL,
+  `crypted_password` varchar(255) DEFAULT NULL,
+  `password_salt` varchar(255) DEFAULT NULL,
+  `persistence_token` varchar(255) DEFAULT NULL,
+  `login_count` int(11) DEFAULT NULL,
+  `last_request_at` datetime DEFAULT NULL,
+  `last_login_at` datetime DEFAULT NULL,
+  `current_login_at` datetime DEFAULT NULL,
+  `last_login_ip` varchar(255) DEFAULT NULL,
+  `current_login_ip` varchar(255) DEFAULT NULL,
+  `perishable_token` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `admin` tinyint(1) DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_users_on_perishable_token` (`perishable_token`),
+  KEY `index_users_on_email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 INSERT INTO schema_migrations (version) VALUES ('20090130170909');
 
@@ -615,3 +641,7 @@ INSERT INTO schema_migrations (version) VALUES ('20091026095506');
 INSERT INTO schema_migrations (version) VALUES ('20091030175019');
 
 INSERT INTO schema_migrations (version) VALUES ('20091030175124');
+
+INSERT INTO schema_migrations (version) VALUES ('20091106214154');
+
+INSERT INTO schema_migrations (version) VALUES ('20091112151115');

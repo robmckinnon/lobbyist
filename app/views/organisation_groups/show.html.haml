@@ -1,0 +1,8 @@
+- @title = @group.name
+#organisation_group_members
+  - unless @organisations.empty?
+    %h2 Organisations in group
+    %ul
+      - @organisations.each do |organisation|
+        %li= link_to organisation.name, organisation_path(organisation)
+

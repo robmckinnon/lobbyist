@@ -1,0 +1,9 @@
+.organisation_group_member
+  %p
+    = form.label :organisation_id, 'Organisation'
+    = render :partial=>'organisation', :object=>nil, :locals=>{:f=>form, :index=>nil}
+  %p
+    %label
+      &nbsp;
+    = link_to_function "delete this organisation_group_member", "$(this).up('.organisation_group_member').remove()"
+

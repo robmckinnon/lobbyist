@@ -105,6 +105,18 @@ class ApplicationController < ActionController::Base
       @data_sources = DataSource.find(:all, :order => "name") || []
     end
 
+    def set_sic_uk_classes sic_uk_class_id=session[:sic_uk_class_id]
+      @sic_uk_classes = nil
+      if sic_uk_class_id
+        begin
+          session[:sic_uk_class_id] = nil
+          @sic_uk_class = SicUkClass.find(sic_uk_class_id)
+        rescue
+        end
+      end
+      @sic_uk_classes = SicUkClass.find(:all, :conditions => 'year = 2003', :order => "description") || []
+    end
+
     def set_organisations organisation_id=session[:organisation_id]
       @organisation = nil
       if organisation_id
@@ -122,6 +134,7 @@ class ApplicationController < ActionController::Base
       @organisations.insert(0,appc)
       @organisations.insert(0,acoba)
       @organisations.compact!
+      # @organisations = @organisations.select {|x| x.name[/Tesco/]}
       @organisations_list = @organisations.collect{|o| [o.name, o.id]}
     end
 

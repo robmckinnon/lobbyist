@@ -5,9 +5,8 @@
   - form_tag(search_url, :method => :post) do
     = text_field_with_auto_complete :organisation, :name
     = submit_tag 'Find organisation'
-
-- if flash['organisation_not_found']
-  %p= flash['organisation_not_found']
+  - if flash['organisation_not_found']
+    %p= flash['organisation_not_found']
 
 #people_search
   %h2 Find person
@@ -15,6 +14,6 @@
     = #text_field_tag 'q', (@last_search_term ? h(sanitize(@last_search_term)) : ''), :size => 24
     = text_field_with_auto_complete :person, :name
     = submit_tag 'Find person'
-- if flash['person_not_found']
-  %p= flash['person_not_found']
+  - if flash['person_not_found']
+    %p= flash['person_not_found']
 

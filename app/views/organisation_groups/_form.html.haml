@@ -1,0 +1,31 @@
+= error_messages_for :group
+
+- form_for @group do |f|
+  - field_set_tag 'Group' do
+    %p
+      = f.label :name
+      = f.text_field :name, :size=>40
+    %p
+      = f.label :sic_uk_class_id, 'SIC class'
+      - if @sic_uk_class
+        = select_tag 'organisation_group[sic_uk_class_id]', options_from_collection_for_select(@sic_uk_classes, 'id', 'description', @sic_uk_class.id)
+      - else
+        = f.collection_select(:sic_uk_class_id, @sic_uk_classes, :id, :description, {:prompt => true}, { :index => nil }).gsub('organisation_group[]','organisation_group')
+    %p
+      = f.label :url
+      = f.text_field :url, :size=>40
+    %p
+      = f.label :wikipedia_url
+      = f.text_field :wikipedia_url, :size=>40
+    %p
+      = f.label :spinprofiles_url
+      = f.text_field :spinprofiles_url, :size=>40
+  - field_set_tag 'Organisations in group' do
+    #group_members
+      = add_organisation_group_member f, "Add new organisation"
+      = render :partial => 'organisation_group_member', :collection => @group.organisation_group_members
+
+  %p
+    = f.submit "Save"
+
+= link_to 'Back to groups', organisation_groups_path

@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   map.edit_organisation 'organisations/:id/edit', :controller => 'organisations', :action => 'edit'
   map.show_staff_member 'organisations/:id/:person_id', :controller => 'organisations', :action => 'show_staff_member'
   map.resources :organisations
+  map.resources :organisation_groups
 
   map.resources :register_entries
   map.resources :appc_register_entries

@@ -33,13 +33,13 @@ class Organisation < ActiveRecord::Base
   after_save :save_classifications
 
   class << self
-
     def recommended_limited_merges
       organisations = Organisation.all
       ltds = organisations.select{|x| x.name[/ltd$/i]} ; nil
       limiteds = organisations.select{|x| x.name[/limited$/i]} ; nil
-      grouped = (ltds + limiteds).group_by {|x| x.name.sub(/ltd$/i,'').sub(/limited$/i,'').strip }
-      duplicates = grouped.values.select {|x| x.size > 1}.sort_by{|x| x.first.name}
+      grouped = (ltds + limiteds).group_by {|x| x.name.gsub('(','').gsub(')','').sub(/ltd$/i,'').sub(/limited$/i,'').strip }
+      duplicates = grouped.values.select {|x| x.size > 1 }
+      duplicates = duplicates.sort_by{|x| x.first.name}
       duplicates = duplicates.collect do |companies|
         companies.sort_by {|x| x.name[/#{x.registered_name}/i] ? 1 : 0}
       end
@@ -324,9 +324,9 @@ class Organisation < ActiveRecord::Base
     end
 
     def populate_company_number
-      unless company_number
+      # unless company_number
         company = Company.find_match(name)
         set_company(company) if company
-      end
+      # end
     end
 end
