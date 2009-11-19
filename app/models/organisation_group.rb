@@ -8,6 +8,14 @@ class OrganisationGroup < ActiveRecord::Base
 
   validates_presence_of :name
 
+  def members_interests_items
+    organisations.collect(&:members_interests_items).flatten
+  end
+
+  def appointments
+    organisations.collect(&:appointments).flatten
+  end
+
   def new_organisation_group_member_attributes=(member_attributes)
     member_attributes.each do |key, attributes|
       organisation_group_members.build(attributes)

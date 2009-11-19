@@ -23,27 +23,9 @@
     is the government department governing
     = @organisation.name + '.'
 #members_interests_items
-  - unless @members_interests_items.empty?
-    %h2 Members Financial Interests
-    %ul
-      - items = @members_interests_items.group_by{|x| x.person_name+x.description}.values
-      - items.each do |interests|
-        - interest = interests.first
-        %li
-          %strong= link_to h(interest.person_name), interest.person
-          = h interest.description
-          %em= h interest.category_name
+  = render :partial => 'members_interests_items', :object => @members_interests_items
 #appointments
-  - unless @appointments.empty?
-    %h2 Appointments reported by ACOBA
-    %ul
-      - @appointments.each do |appointment|
-        %li
-          %strong= link_to h(appointment.person_name), appointment.person
-          = " - #{h(appointment.title)}, #{h(appointment.organisation_name)}"
-          %span
-            = "(tendered #{ h appointment.date_tendered.to_s(:mmm_year) },"
-            = "taken up #{ h appointment.date_taken_up.to_s(:mmm_year) })"
+  = render :partial => 'appointments', :object => @appointments
 #lobbying_clients
   - unless @consultancy_client_organisations.empty? && @monitoring_client_organisations.empty?
     %h2 Public Affairs Clients

@@ -1,0 +1,10 @@
+- unless members_interests_items.empty?
+  %h2 Members Financial Interests
+  %ul
+    - items = members_interests_items.group_by{|x| x.person_name+x.description}.values
+    - items.each do |interests|
+      - interest = interests.first
+      %li
+        %strong= link_to h(interest.person_name), interest.person
+        = h interest.description
+        %em= h interest.category_name

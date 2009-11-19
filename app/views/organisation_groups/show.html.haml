@@ -5,4 +5,8 @@
     %ul
       - @organisations.each do |organisation|
         %li= link_to organisation.name, organisation_path(organisation)
+#members_interests_items
+  = render :partial => 'organisations/members_interests_items', :object => @members_interests_items
+#appointments
+  = render :partial => 'organisations/appointments', :object => @appointments
 

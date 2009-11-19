@@ -7,6 +7,8 @@ class OrganisationGroupsController < ApplicationController
 
   def show
     @organisations = @group.organisations
+    @members_interests_items = @group.members_interests_items
+    @appointments = @group.appointments
   end
 
   def new
