@@ -10,12 +10,11 @@
         %span{:style=>'color: grey'}
           = h(@organisation.company.company_classifications.first.sic_uk_class.description)
 - unless @similarly_named.empty?
-  %div
-    %label
+  - field_set_tag "Similarly Named" do
+    %p
       Similarly named to
-    %span{ :style => 'font-weight: bold' }
-      = link_to h(@organisation.name), @organisation
-    %br
+      %span{ :style => 'font-weight: bold' }
+        = link_to h(@organisation.name), @organisation
     %ul
       - @similarly_named.each do |organisation|
         %li
@@ -23,6 +22,19 @@
           - if organisation.company_number
             %span.company_number= organisation.registered_name
     = button_to 'Create new group', :controller => 'organisation_groups', :action => 'new'
+
+- unless @groups.empty?
+  - @groups.each do |group|
+    - field_set_tag "#{group.name} Group" do
+      %ul
+        - group.organisations.each do |organisation|
+          %li
+            - if organisation == @organisation
+              %b= h(organisation.name)
+            - else
+              = link_to h(organisation.name), organisation
+      %p
+        = button_to "Edit group", { :controller => 'organisation_groups', :action => 'edit', :id => group.friendly_id }, :method => :get
 
 - form_for @organisation do |f|
   - field_set_tag 'Organisation' do

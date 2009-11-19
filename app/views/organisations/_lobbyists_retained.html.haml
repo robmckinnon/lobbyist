@@ -1,0 +1,18 @@
+- unless @consultancy_lobbyist_firms.empty? && @monitoring_lobbyist_firms.empty?
+  %h2 Lobbyists retained
+  - unless @consultancy_lobbyist_firms.empty?
+    %p Most recently retained public affairs consultancy services from:
+    %ul
+      = render :partial => 'lobbyist_firm_retained', :collection => @consultancy_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @consultancy_entries_by_lobbyist_firm}
+  - unless @monitoring_lobbyist_firms.empty?
+    %p Most recently retained public affairs monitoring services from:
+    %ul
+      = render :partial => 'lobbyist_firm_retained', :collection => @monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}
+  - unless @past_consultancy_lobbyist_firms.empty?
+    %p In past retained public affairs consultancy services from:
+    %ul
+      = render :partial => 'lobbyist_firm_retained', :collection => @past_consultancy_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @past_consultancy_entries_by_lobbyist_firm}
+  - unless @past_monitoring_lobbyist_firms.empty?
+    %p In past retained public affairs monitoring services from:
+    %ul
+      = render :partial => 'lobbyist_firm_retained', :collection => @past_monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @past_monitoring_entries_by_lobbyist_firm}

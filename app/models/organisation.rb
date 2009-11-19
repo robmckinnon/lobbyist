@@ -23,6 +23,9 @@ class Organisation < ActiveRecord::Base
   has_many :company_classifications, :dependent => :delete_all
   has_many :sic_uk_classes, :through => :company_classifications
 
+  has_many :organisation_group_members
+  has_many :organisation_groups, :through => :organisation_group_members
+
   validates_presence_of :name
   validates_uniqueness_of :name
 
@@ -234,18 +237,18 @@ class Organisation < ActiveRecord::Base
   end
 
   def consultancy_entries_by_lobbyist_firm
-    entries = entries_by_lobbyist_firm consultancy_clients
-    return [sort_by_name(entries.keys), entries]
+    recent, past = entries_by_lobbyist_firm(consultancy_clients)
+    return recent, past
   end
 
   def monitoring_entries_by_lobbyist_firm
-    entries = entries_by_lobbyist_firm monitoring_clients
-    return [sort_by_name(entries.keys), entries]
+    recent, past = entries_by_lobbyist_firm(monitoring_clients)
+    return recent, past
   end
 
   def entries_by_consultancy_staff_member2
     entries = entries_by_client_organisation :consultancy_staff_members, nil
-    return [sort_by_name(entries.keys), entries]
+    return [entries.keys.sort, entries]
   end
 
   def entries_by_consultancy_staff_member
@@ -255,12 +258,12 @@ class Organisation < ActiveRecord::Base
 
   def consultancy_entries_by_client_organisation
     entries = entries_by_client_organisation :consultancy_clients
-    return [sort_by_name(entries.keys), entries]
+    return [entries.keys.sort, entries]
   end
 
   def monitoring_entries_by_client_organisation
     entries = entries_by_client_organisation :monitoring_clients
-    return [sort_by_name(entries.keys), entries]
+    return [entries.keys.sort, entries]
   end
 
   def company
@@ -277,10 +280,23 @@ class Organisation < ActiveRecord::Base
       list.sort_by {|x| x.name.to_s.downcase}
     end
 
+    def entries_by_organisation entries
+      [sort_by_name(entries.keys), entries]
+    end
+
+    def group_entries_by_organisation entries
+      entries_by_lobbyist = entries.group_by(&:organisation)
+      entries_by_lobbyist.each {|k,v| entries_by_lobbyist[k] = v.sort_by{|entry| entry.period_start} }
+      return [sort_by_name(entries_by_lobbyist.keys), entries_by_lobbyist]
+    end
+
     def entries_by_lobbyist_firm clients
-      entries_by_lobbyist_firm = clients.collect(&:register_entry).group_by(&:organisation)
-      entries_by_lobbyist_firm.each {|k,v| entries_by_lobbyist_firm[k] = v.sort_by{|x| x.data_source.period_start} }
-      entries_by_lobbyist_firm
+      entries = clients.collect(&:register_entry)
+      most_recent_period_end = entries.collect(&:period_end).max
+      recent_entries = entries.select {|entry| entry.period_end == most_recent_period_end}
+      past_entries = entries - recent_entries
+
+      return [group_entries_by_organisation(recent_entries), group_entries_by_organisation(past_entries)]
     end
 
     def entries_by_client_organisation client_type, entity_type=:organisation
