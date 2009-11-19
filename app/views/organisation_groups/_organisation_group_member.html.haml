@@ -3,7 +3,6 @@
   - prefix = "organisation_group[#{new_or_existing}_organisation_group_member_attributes][]"
   - fields_for prefix, organisation_group_member do |f|
     %p
-      = f.label :organisation_id, 'Organisation'
       - organisation = organisation_group_member.organisation_id ? Organisation.find(organisation_group_member.organisation_id) : nil
       = render :partial=>'organisation', :object=>organisation, :locals=>{:f=>f, :index=>nil}
     %p

@@ -22,7 +22,10 @@
       = f.text_field :spinprofiles_url, :size=>40
   - field_set_tag 'Organisations in group' do
     #group_members
-      = add_organisation_group_member f, "Add new organisation"
+      %label
+        &nbsp;
+      %p
+        = add_organisation_group_member f, "Add new organisation"
       = render :partial => 'organisation_group_member', :collection => @group.organisation_group_members
 
   %p

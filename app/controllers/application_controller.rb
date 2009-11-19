@@ -138,7 +138,7 @@ class ApplicationController < ActionController::Base
       @organisations.insert(0,appc)
       @organisations.insert(0,acoba)
       @organisations.compact!
-      # @organisations = @organisations.select {|x| x.name[/Tesco/]}
+      # @organisations = @organisations.select {|x| x.name[/Finmeccanica/]}
       @organisations_list = @organisations.collect{|o| [o.name, o.id]}
     end
 

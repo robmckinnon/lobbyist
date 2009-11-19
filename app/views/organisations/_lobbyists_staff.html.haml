@@ -3,8 +3,8 @@
   - unless @consultancy_lobbyist_firms.empty?
     %p Staff of firms doing public affairs consultancy services:
     %ul
-      = render :partial => 'retained_lobbyist_staff', :collection => @consultancy_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @consultancy_entries_by_lobbyist_firm}
+      = render :partial => "#{partial_path}retained_lobbyist_staff", :collection => @consultancy_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @consultancy_entries_by_lobbyist_firm}
   - unless @monitoring_lobbyist_firms.empty?
     %p Staff of firms doing public affairs monitoring:
     %ul
-      = render :partial => 'retained_lobbyist_staff', :collection => @monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}
+      = render :partial => "#{partial_path}retained_lobbyist_staff", :collection => @monitoring_lobbyist_firms, :locals => {:entries_by_lobbyist_firm => @monitoring_entries_by_lobbyist_firm}

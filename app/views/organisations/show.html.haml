@@ -27,16 +27,7 @@
 #appointments
   = render :partial => 'appointments', :object => @appointments
 #lobbying_clients
-  - unless @consultancy_client_organisations.empty? && @monitoring_client_organisations.empty?
-    %h2 Public Affairs Clients
-    - unless @consultancy_client_organisations.empty?
-      %p Provided public affairs consultancy services to:
-      %ul
-        = render :partial => 'client_organisation', :collection => @consultancy_client_organisations, :locals => {:entries_by_client_organisation => @consultancy_entries_by_client_organisation}
-    - unless @monitoring_client_organisations.empty?
-      %p Provided public affairs monitoring services to:
-      %ul
-        = render :partial => 'client_organisation', :collection => @monitoring_client_organisations, :locals => {:entries_by_client_organisation => @monitoring_entries_by_client_organisation}
+  = render :partial => 'lobbying_clients', :locals => {:consultancy_client_organisations => @consultancy_client_organisations, :consultancy_entries_by_client_organisation => @consultancy_entries_by_client_organisation, :monitoring_client_organisations => @monitoring_client_organisations, :monitoring_entries_by_client_organisation => @monitoring_entries_by_client_organisation }
 
 #consultancy_staff
   - unless @consultancy_staff_members.empty?
@@ -44,9 +35,9 @@
     %ul
       = render :partial => 'staff_member', :collection => @consultancy_staff_members, :locals => {:entries_by_staff_member => @entries_by_consultancy_staff_member}
 #lobbyists_retained
-  = render :partial => 'lobbyists_retained'
+  = render :partial => 'lobbyists_retained', :locals => {:partial_path => ''}
 #lobbyist_staff
-  = render :partial => 'lobbyists_staff'
+  = render :partial => 'lobbyists_staff', :locals => {:partial_path => ''}
 
 - unless @organisation.data_sources.empty?
   %h2 Data sources

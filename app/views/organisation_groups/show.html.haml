@@ -9,4 +9,10 @@
   = render :partial => 'organisations/members_interests_items', :object => @members_interests_items
 #appointments
   = render :partial => 'organisations/appointments', :object => @appointments
+#lobbying_clients
+  = render :partial => 'organisations/lobbying_clients', :locals => {:consultancy_client_organisations => @consultancy_client_organisations, :consultancy_entries_by_client_organisation => @consultancy_entries_by_client_organisation, :monitoring_client_organisations => @monitoring_client_organisations, :monitoring_entries_by_client_organisation => @monitoring_entries_by_client_organisation }
+#lobbyists_retained
+  = render :partial => 'organisations/lobbyists_retained', :locals => {:partial_path => 'organisations/'}
+#lobbyist_staff
+  = render :partial => 'organisations/lobbyists_staff', :locals => {:partial_path => 'organisations/'}
 

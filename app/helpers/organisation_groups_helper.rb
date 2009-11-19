@@ -5,8 +5,6 @@ module OrganisationGroupsHelper
         html = render(:partial => 'organisation_groups/new_organisation_group_member', :locals => { :form => f })
         page << "$('group_members').insert({ bottom: '#{escape_javascript(html)}'.replace(/__/g, '_' + (new Date().getTime()) + '_' ).replace('][organisation_id]', '][' + (new Date().getTime()) + '][organisation_id]') });"
       end
-        # page << "$('group_members').insert({ bottom: '#{escape_javascript(html)}'.replace(/__/g, '_' + (new Date().getTime()) + '_' ).replace(/organisation_group_organisation_group/g, 'organisation_group') });"
-      # page.insert_html :bottom, :group_members, :partial => 'organisation_groups/organisation_group_member', :object => OrganisationGroupMember.new
     end
   end
 end
