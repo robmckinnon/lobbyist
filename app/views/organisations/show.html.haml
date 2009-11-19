@@ -48,14 +48,6 @@
 #lobbyist_staff
   = render :partial => 'lobbyists_staff'
 
-- if false # unless @client_data_sources.empty?
-  %h2 Lobbyists retained
-  = render :partial => 'client_data_source', :collection => @client_data_sources
-
-- if false # unless @register_entries.empty?
-  %h2 Public affairs clients
-  = render :partial => 'register_entry', :collection => @register_entries
-
 - unless @organisation.data_sources.empty?
   %h2 Data sources
   - @organisation.data_sources.each do |data_source|
