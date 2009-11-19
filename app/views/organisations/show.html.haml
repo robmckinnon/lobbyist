@@ -7,6 +7,13 @@
       Company No.
       = @organisation.company_number
 
+- unless @groups.empty?
+  - @groups.each do |group|
+    %p
+      We've put this organisation in a
+      = link_to group.name, organisation_group_path(group)
+      group.
+
 - if @organisation.quango
   %p
     = @organisation.name

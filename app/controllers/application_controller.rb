@@ -39,7 +39,11 @@ class ApplicationController < ActionController::Base
         name = params['organisation']['name']
         organisation = Organisation.find_by_name(name)
         if organisation
-          redirect_to organisation_path(organisation)
+          if organisation.organisation_groups.empty?
+            redirect_to organisation_path(organisation)
+          else
+            redirect_to organisation_group_path(organisation.organisation_groups.first)
+          end
         else
           flash['organisation_not_found'] = "#{name} not found"
         end

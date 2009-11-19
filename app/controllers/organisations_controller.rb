@@ -61,6 +61,7 @@ class OrganisationsController < ApplicationController
 
     @similarly_named = @organisation.similarly_named
 
+    @groups = @organisation.organisation_groups
     @company = @organisation.company_number.blank? ? nil : Company.find_by_company_number(@organisation.company_number)
     render :template => 'organisations/show.html.haml'
   end
