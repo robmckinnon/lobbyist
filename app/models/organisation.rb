@@ -247,23 +247,19 @@ class Organisation < ActiveRecord::Base
   end
 
   def entries_by_consultancy_staff_member2
-    entries = entries_by_client_organisation :consultancy_staff_members, nil
-    return [entries.keys.sort, entries]
+    entries_by_client_organisation :consultancy_staff_members, nil
   end
 
   def entries_by_consultancy_staff_member
-    entries = entries_by_client_organisation :consultancy_staff_members, :name
-    return [entries.keys.sort, entries]
+    entries_by_client_organisation :consultancy_staff_members, :name
   end
 
   def consultancy_entries_by_client_organisation
-    entries = entries_by_client_organisation :consultancy_clients
-    return [entries.keys.sort, entries]
+    entries_by_client_organisation :consultancy_clients
   end
 
   def monitoring_entries_by_client_organisation
-    entries = entries_by_client_organisation :monitoring_clients
-    return [entries.keys.sort, entries]
+    entries_by_client_organisation :monitoring_clients
   end
 
   def company
@@ -308,7 +304,11 @@ class Organisation < ActiveRecord::Base
         end
       end
       entries_by_client.each {|k,v| entries_by_client[k] = v.sort_by{|x| x.data_source.period_start} }
-      entries_by_client
+      if entity_type == :name
+        return [entries_by_client.keys.sort, entries_by_client]
+      else
+        entries_by_organisation(entries_by_client)
+      end
     end
 
     def save_classifications
