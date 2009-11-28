@@ -1,0 +1,5 @@
+- @title = @groups.size.to_s + ' Groups'
+#organisation_groups
+  - @groups.each do |group|
+    %p= link_to group.name, group
+

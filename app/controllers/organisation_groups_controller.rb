@@ -5,6 +5,10 @@ class OrganisationGroupsController < ApplicationController
   before_filter :set_organisations, :only => [:new, :edit]
   before_filter :set_sic_uk_classes, :only => [:new, :edit]
 
+  def index
+    @groups = OrganisationGroup.all
+  end
+
   def show
     @organisations = @group.organisations
     @members_interests_items = @group.members_interests_items

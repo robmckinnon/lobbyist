@@ -1,10 +1,11 @@
+- partial_path ||= ''
 - unless consultancy_client_organisations.empty? && monitoring_client_organisations.empty?
   %h2 Public Affairs Clients
   - unless consultancy_client_organisations.empty?
     %p Provided public affairs consultancy services to:
     %ul
-      = render :partial => 'client_organisation', :collection => consultancy_client_organisations, :locals => {:entries_by_client_organisation => consultancy_entries_by_client_organisation}
+      = render :partial => "#{partial_path}client_organisation", :collection => consultancy_client_organisations, :locals => {:entries_by_client_organisation => consultancy_entries_by_client_organisation}
   - unless monitoring_client_organisations.empty?
     %p Provided public affairs monitoring services to:
     %ul
-      = render :partial => 'client_organisation', :collection => monitoring_client_organisations, :locals => {:entries_by_client_organisation => monitoring_entries_by_client_organisation}
+      = render :partial => "#{partial_path}client_organisation", :collection => monitoring_client_organisations, :locals => {:entries_by_client_organisation => monitoring_entries_by_client_organisation}
