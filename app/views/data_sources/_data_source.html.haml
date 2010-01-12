@@ -1,8 +1,9 @@
 %p
   = #link_to data_source.name, data_source_path(data_source)
   = data_source.name
-  %small{:style=>"color:grey;"}
-    = link_to 'Edit', edit_data_source_path(data_source)
+  - if is_admin?
+    %small{:style=>"color:grey;"}
+      = link_to 'Edit', edit_data_source_path(data_source)
   - unless data_source.appointees.empty?
     %br
     %small{:style=>"color:grey;"}
