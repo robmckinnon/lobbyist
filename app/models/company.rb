@@ -47,7 +47,7 @@ class Company < ActiveRecord::Base
 
         return nil
       rescue Exception => e
-        puts "#{Exception.class.name} while populating company for '#{name.inspect}': #{e.to_s}"
+        puts "#{e.class.name} while populating company for '#{name.inspect}': #{e.to_s}"
       end
     end
 

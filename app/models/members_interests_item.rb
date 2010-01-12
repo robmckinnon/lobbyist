@@ -1,3 +1,5 @@
+# coding:utf-8
+
 require 'acts_as_proper_noun_identifier'
 
 class MembersInterestsItem < ActiveRecord::Base

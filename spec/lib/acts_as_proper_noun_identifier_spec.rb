@@ -1,3 +1,4 @@
+# coding:utf-8
 require File.dirname(__FILE__) + '/../../lib/acts_as_proper_noun_identifier.rb'
 require File.dirname(__FILE__) + '/../spec_helper'
 

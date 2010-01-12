@@ -1,3 +1,5 @@
+# coding:utf-8
+
 class AppcRegisterEntry
 
   attr_reader :register_entry

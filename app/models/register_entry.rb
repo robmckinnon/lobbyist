@@ -1,3 +1,5 @@
+# coding:utf-8
+
 class RegisterEntry < ActiveRecord::Base
 
   belongs_to :data_source
