@@ -15,19 +15,19 @@
 %blockquote "that any system of regulation ...voluntary...or statutory...requires a register of lobbyists to ensure that lobbying activity is transparent."
 %p However neither the government nor the lobbyist industry has yet created such a register. Here we have started to aggregate public information about lobbyist activity, for you to browse and track what we currently know:
 #organisation_search
-  %h2 Find organisation
+  %h2 Look up an organisation
   - form_tag(search_url, :method => :post) do
     = text_field_with_auto_complete :organisation, :name
-    = submit_tag 'Find organisation'
+    = submit_tag 'Look up'
   - if flash['organisation_not_found']
     %p= flash['organisation_not_found']
 
 #people_search
-  %h2 Find person
+  %h2 Look up a person
   - form_tag(search_url, :method => :post) do
     = #text_field_tag 'q', (@last_search_term ? h(sanitize(@last_search_term)) : ''), :size => 24
     = text_field_with_auto_complete :person, :name
-    = submit_tag 'Find person'
+    = submit_tag 'Look up'
   - if flash['person_not_found']
     %p= flash['person_not_found']
 
