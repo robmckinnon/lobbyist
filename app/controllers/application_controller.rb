@@ -194,7 +194,9 @@ class ApplicationController < ActionController::Base
     end
 
     def require_admin_user
-      require_user
+      unless require_user
+        return false
+      end
       unless current_user.admin?
         redirect_to admin_path
         return false
