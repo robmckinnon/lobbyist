@@ -1,3 +1,5 @@
 %li
   = link_to client_organisation.name, organisation_path(client_organisation)
   %small= link_to_periods entries_by_client_organisation[client_organisation]
+  - # if client_organisation.company && !client_organisation.sic_uk_classes.empty?
+  - # %small= h client_organisation.sic_uk_classes.first.inspect
