@@ -47,12 +47,13 @@
           - # = link_to 'Register entries', register_entries_path
       - if RAILS_ENV == 'production'
         #analytics
-          = %Q[<script type="text/javascript">]
-          = %Q[var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");]
-          = %Q[document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));]
-          = %Q[</script>]
-          = %Q[<script type="text/javascript">]
-          = %Q[try {]
-          = %Q[var pageTracker = _gat._getTracker("UA-7723073-1");]
-          = %Q[pageTracker._trackPageview();]
-          = %Q[} catch(err) {}</script>]
+          = %Q|<script type="text/javascript">|
+          = %Q^  var _gaq = _gaq || [];^
+          = %Q|  _gaq.push(['_setAccount', 'UA-18183959-3']);|
+          = %Q|  _gaq.push(['_trackPageview']);|
+          = %Q|  (function() {|
+          = %Q|    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;|
+          = %Q|    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';|
+          = %Q|    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);|
+          = %Q|  })();|
+          = %Q|</script>|
