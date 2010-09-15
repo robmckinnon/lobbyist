@@ -38,6 +38,9 @@ ActionController::Routing::Routes.draw do |map|
   map.special_advisors_list 'special_advisors/:date', :controller => 'special_advisors', :action => 'show'
   map.special_advisor 'special_advisors/:date/:person_id', :controller => 'special_advisors', :action => 'show_advisor'
 
+  map.scorecard '/uk/gov_transparency', :controller => 'scorecard', :action => 'show'
+  map.scorecard '/uk/gov_transparency/:date', :controller => 'scorecard', :action => 'show'
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
