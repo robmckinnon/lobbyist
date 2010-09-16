@@ -6,7 +6,20 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>Who's Lobbying? Let's find out! | WhosLobbying.com</title>
   <style>
-    h1 {
+  a {
+    color: #864B00;
+    text-decoration: none;
+  }
+
+  a:visited {
+    color: #B96D00;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
       width: 513px;
       height: 310px;
       margin: 6em auto;
@@ -22,7 +35,13 @@
       top: 2em;
       right: 5em;
     }
-    p#twitter a {
+    p#blog {
+      display: block;
+      position: absolute;
+      bottom: 4em;
+      right: 5em;
+    }
+    p#twitter {
       display: block;
       position: absolute;
       bottom: 2em;
@@ -39,7 +58,8 @@
   <h2>We'll need your help soon. Follow WhosLobbying on Twitter.</h2>
 </a>
 <p id='login'><a href="/search"><span>Sign in</span></a></p>
-<p id='twitter'><a href="http://twitter.com/whoslobbying"><span>Follow @WhosLobbying on Twitter</span></a></p>
+<p id='blog'>Read the <a href="http://blog.whoslobbying.com/"><span>Who's Lobbying? blog</span></a></p>
+<p id='twitter'>Follow <a href="http://twitter.com/whoslobbying"><span>@WhosLobbying</span></a> on Twitter</p>
 <div id='analytics'>
 <% if RAILS_ENV == 'production' %>
 <script type="text/javascript">
