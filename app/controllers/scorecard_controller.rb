@@ -7,6 +7,8 @@ class ScorecardController < ActionController::Base
       render 'scorecard/2010_09_12', :layout => false
     elsif params[:date] == '2010-10-07'
       render 'scorecard/2010_10_07', :layout => false
+    elsif params[:date] == '2010-10-21'
+      render 'scorecard/2010_10_21', :layout => false
     elsif params[:date].nil?
       render 'scorecard/show', :layout => false
     else
